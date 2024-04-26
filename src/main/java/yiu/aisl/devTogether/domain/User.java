@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @Id // pk
+    @Id // pk9
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
