@@ -2,30 +2,37 @@ package yiu.aisl.devTogether.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
-    private String name;
 
     @Column(nullable = false, unique = true, length = 255)
     private String email;
+
+    @Column(nullable = false, length = 255, unique = true)
+    @JsonIgnore
+    private String pwd;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
 
     @Column(nullable = false)
     private Integer role;
@@ -33,30 +40,26 @@ public class User {
     @Column(nullable = false)
     private Integer gender;
 
-
-
-    @Column(nullable = false, length = 255)
-    @JsonIgnore
-    private String pwd;
+    @Column(nullable = false)
+    private String img;
 
     @Column(nullable = false)
     private Integer age;
 
     @Column(nullable = false)
-    private String method;
+    private String phone;
 
-    @Column(nullable = false)
-    private Integer fee;
-
-    @Column(nullable = false)
+    @Column(nullable = false,length = 255)
     private String location1;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 255)
     private String location2;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 255)
     private String location3;
 
+    @Column(columnDefinition = "TEXT")
+    private String refreshToken;
 
     @CreationTimestamp
     @Column
@@ -65,23 +68,16 @@ public class User {
     @UpdateTimestamp
     @Column
     private LocalDateTime updatedAt;
-
-
-    public User(Long id, String name, String email, Integer role, Integer gender, String pwd, Integer age, String method, Integer fee, String location1, String location2, String location3, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.role = role;
-        this.gender = gender;
-
-        this.pwd = pwd;
-        this.age = age;
-        this.method = method;
-        this.fee = fee;
-        this.location1 = location1;
-        this.location2 = location2;
-        this.location3 = location3;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public void encodePwd(PasswordEncoder passwordEncoder){
+        this.pwd = passwordEncoder.encode(pwd);
     }
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public User(String email, String refreshToken) {
+        this.email = email;
+        this.refreshToken = refreshToken;
+    }
+
 }
