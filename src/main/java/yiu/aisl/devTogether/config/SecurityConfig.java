@@ -85,7 +85,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 // 모두 승인
-                                .requestMatchers("/register", "/login", "/refresh", "/token").permitAll()
+                                .requestMatchers("/register", "/login","/register/email","/pwd/email",
+                                        "/pwd/change","/refresh", "/token").permitAll()
 
 
 

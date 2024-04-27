@@ -1,10 +1,13 @@
 package yiu.aisl.devTogether.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.mail.javamail.JavaMailSender;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.dto.*;
@@ -13,10 +16,10 @@ import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.TokenRepository;
 import yiu.aisl.devTogether.repository.UserRepository;
 import yiu.aisl.devTogether.security.TokenProvider;
-
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -25,10 +28,13 @@ import java.util.UUID;
 public class MainService {
 
     private final UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
     private final TokenProvider tokenProvider;
+    private final JavaMailSender javaMailSender;
+
     private long exp_refreshToken = Duration.ofDays(14).toMillis(); // 만료시간 2주
+    private String authNum;
 
     //회원가입
     public boolean register(RegisterDto request) throws Exception {
@@ -60,7 +66,7 @@ public class MainService {
                     .email(request.getEmail())
                     .pwd(passwordEncoder.encode(request.getPwd()))
                     .name(request.getName())
-                    .name(request.getNickname())
+                    .nickname(request.getNickname())
                     .role(request.getRole())
                     .gender(request.getGender())
                     .img(request.getImg())
@@ -113,6 +119,115 @@ public class MainService {
 
         }
     }
+
+
+    public String registerEmail(String email) throws MessagingException, UnsupportedEncodingException {
+        if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+        MimeMessage emailForm = createEmailForm(email + "@naver.com", "devTogether 회원가입 인증번호");
+        javaMailSender.send(emailForm);
+        return authNum;
+    }
+
+    public String pwdEmail(String email) throws MessagingException, UnsupportedEncodingException {
+        if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+        MimeMessage emailForm = createEmailForm(email + "@naver.com", "비밀번호 재설정을 위한 안내");
+        javaMailSender.send(emailForm);
+        return authNum;
+    }
+    private MimeMessage createEmailForm(String email, String title) throws MessagingException, UnsupportedEncodingException {
+        // 코드 생성
+        createCode();
+        String setFrom = "yiuaiservicelab@naver.com";
+        String toEmail = email;
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
+        message.setSubject(title);
+
+        // 메일 내용 설정
+        String msgOfEmail = "";
+        msgOfEmail += "<div style='margin: 20px;'>";
+        msgOfEmail += "<h1>안녕하세요 용인대학교 devTogether 입니다.</h1>";
+        msgOfEmail += "<br>";
+        if (title.equals("devTogether 회원가입 인증번호")) {
+            msgOfEmail += "<p><strong>devTogether 가입을 위한 인증번호입니다.</strong><p>";
+        } else if (title.equals("비밀번호 재설정을 위한 안내")) {
+            msgOfEmail += "<p><strong>비밀번호 재설정을 위한 안내입니다.</strong><p>";
+        }
+        msgOfEmail += "<br>";
+        msgOfEmail += "<p>아래 인증번호를 확인하여 이메일 주소 인증을 완료해주세요.<p>";
+        msgOfEmail += "<br>";
+        msgOfEmail += "<div align='center' style='border-top: 1px solid black; border-bottom: 1px solid black; font-family: verdana;'>";
+        msgOfEmail += "<div style='font-size: 150%; justify-content: center; align-items: center; display: flex; flex-direction: column; height: 100px;'>";
+        msgOfEmail += "<strong style='color: blue; margin-top: auto; margin-bottom: auto;'>";
+        msgOfEmail += authNum + "</strong>";
+        msgOfEmail += "</div>";
+        msgOfEmail += "</div>";
+        msgOfEmail += "</div>";
+        message.setFrom(setFrom);
+        message.setText(msgOfEmail, "utf-8", "html");
+        return message;
+    }
+
+
+    public void createCode() {
+        Random random = new Random();
+        StringBuilder key = new StringBuilder();
+
+        for(int i = 0; i < 4; i++) {
+            int digit = random.nextInt(10);
+            key.append(digit);
+        }
+        authNum = key.toString();
+    }
+
+    public Boolean pwdChange(PwdChangeRequestDto request)  throws MessagingException, UnsupportedEncodingException{
+        // 400 데이터 없음
+        if(request.getEmail() == null || request.getPwd() == null)
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+        // 401  유저 존재 확인
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()
+                -> new CustomException(ErrorCode.MEMBER_NOT_EXIST));
+
+        try {
+            user.setPwd(passwordEncoder.encode(request.getPwd()));
+            userRepository.save(user);
+        }
+        catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+        return true;
+    }
+    public Boolean nicknameCheck(NicknameCheckRequestDto request) throws MessagingException, UnsupportedEncodingException{
+
+        // 409 - 닉네임 중복
+        if (userRepository.findByNickname(request.getNickname()).isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE);
+        }
+        return true;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -190,4 +305,20 @@ public class MainService {
         }
     }
 
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

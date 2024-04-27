@@ -8,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import yiu.aisl.devTogether.dto.LoginRequestDto;
-import yiu.aisl.devTogether.dto.LoginResponseDto;
-import yiu.aisl.devTogether.dto.RegisterDto;
+import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.service.MainService;
 
 @RestController  //controller + responsebody > json형태로 객체 반환
@@ -35,6 +33,26 @@ public class MainController {
     public ResponseEntity<LoginResponseDto>login(LoginRequestDto request) throws  Exception{
         System.out.println("login request" + request);
         return new ResponseEntity<LoginResponseDto>(mainService.login(request), HttpStatus.OK);
+    }
+    @PostMapping(value = "/register/email", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<String>registerEmail(EmailRequestDto request) throws  Exception{
+        System.out.println("registerEmail request" + request);
+        return new ResponseEntity<String>(mainService.registerEmail(request.getEmail()), HttpStatus.OK);
+    }
+    @PostMapping(value = "/pwd/email", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<String>pwdEmail(EmailRequestDto request) throws  Exception{
+        System.out.println("pwdEmail request" + request);
+        return new ResponseEntity<String>(mainService.pwdEmail(request.getEmail()), HttpStatus.OK);
+    }
+    @PostMapping(value = "/pwd/change", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Boolean> pwdChange(PwdChangeRequestDto request) throws  Exception{
+        System.out.println("pwdChange request" + request);
+        return new ResponseEntity<Boolean>(mainService.pwdChange(request), HttpStatus.OK);
+    }
+    @PostMapping(value = "/nickname", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Boolean> nicknameCheck(NicknameCheckRequestDto request) throws  Exception{
+        System.out.println("nicknameCheck request" + request);
+        return new ResponseEntity<Boolean>(mainService.nicknameCheck(request), HttpStatus.OK);
     }
 
 }
