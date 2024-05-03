@@ -7,8 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.devTogether.dto.NoticeRequestDto;
-import yiu.aisl.devTogether.dto.PwdChangeRequestDto;
-import yiu.aisl.devTogether.dto.RegisterDto;
+
 import yiu.aisl.devTogether.service.NoticeService;
 
 import java.util.List;
