@@ -27,6 +27,12 @@ public class Image {
     private Integer typeId;
 
     @Column(columnDefinition = "TEXT")
+    private String originName;
+
+    @Column(columnDefinition = "TEXT")
+    private String storageName;
+
+    @Column(columnDefinition = "TEXT")
     private String path;
 
     @CreationTimestamp

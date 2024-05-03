@@ -1,10 +1,7 @@
 package yiu.aisl.devTogether.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
@@ -22,6 +20,9 @@ public class Board {
     private Long boardId;
 
     @Column(length = 50)
+    private String title;
+
+    @Column
     private String contents;
 
     @CreationTimestamp
