@@ -13,6 +13,7 @@ import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
+import yiu.aisl.devTogether.repository.TokenRepository;
 import yiu.aisl.devTogether.repository.UserRepository;
 import yiu.aisl.devTogether.security.TokenProvider;
 import java.io.UnsupportedEncodingException;
@@ -257,7 +258,7 @@ public class MainService {
         }
 
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new CustomException(ErrorCode.MEMBER_NOT_EXIST));
+                new CustomException(ErrorCode.NOT_EXIST_MEMBER));
 
         Token refreshToken = validRefreshToken(user, token.getRefreshToken());
 
@@ -287,7 +288,7 @@ public class MainService {
     }
 
     public Token validRefreshToken(User user, String refreshToken) throws Exception {
-        Token token = tokenRepository.findById(user.getEmail())
+        Token token = tokenRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_REQUIRED));
 
         if(token.getRefreshToken() == null) throw new CustomException(ErrorCode.REFRESH_TOKEN_EXPIRED);
@@ -306,7 +307,4 @@ public class MainService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-
 }

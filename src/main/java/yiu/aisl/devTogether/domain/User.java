@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -71,7 +72,8 @@ public class User {
     private String subject4;
     @Column(nullable = false)
     private String subject5;
-
+    @Column(columnDefinition = "TEXT")
+    private String refreshToken;
 
     @CreationTimestamp
     @Column
@@ -106,5 +108,25 @@ public class User {
 
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public void encodePwd(PasswordEncoder passwordEncoder){
+        this.pwd = passwordEncoder.encode(pwd);
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+
+
+    public User(String email, String refreshToken) {
+        this.email = email;
+        this.refreshToken = refreshToken;
+    }
+
+    public User update(String newRefreshToken) {
+        this.refreshToken = newRefreshToken;
+        return this;
     }
 }

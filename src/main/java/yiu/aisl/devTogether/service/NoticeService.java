@@ -30,7 +30,7 @@ public class NoticeService {
     //공지사항 등록
     public Boolean create(NoticeRequestDto.CreateDTO request) {
         //400 데이터 미입력
-        if(request.getTitle() == null || request.getContents() == null ||  request.getCategory() < 0)
+        if(request.getTitle() == null || request.getContents() == null ||  request.getCategory() ==null )
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         try{
             Notice notice = Notice.builder()
@@ -69,7 +69,7 @@ public class NoticeService {
     //공지사항 수정
     public Boolean update(NoticeRequestDto.UpdateDTO request) {
         //400 데이터 미입력
-        if(request.getTitle() == null || request.getContents() == null ||  request.getCategory() < 0)
+        if(request.getTitle() == null || request.getContents() == null ||  request.getCategory() ==null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         // 404 - id 없음
@@ -91,6 +91,6 @@ public class NoticeService {
 
     private Notice findBynNoticeId(Long noticeId) {
         return noticeRepository.findByNoticeId(noticeId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 }

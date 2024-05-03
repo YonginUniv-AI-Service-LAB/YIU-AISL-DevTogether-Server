@@ -47,24 +47,24 @@ public class CustomUserDetails implements UserDetails {
         return user.getName();
     }
 
-    //이하 4개의 메소드는 jwt를 사용하기에 true로 설정
+
     @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired() { //계정 만료되어있는지
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked() {//계정 잠겨있는지
         return true;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() {//계정 자격 증명이 만료되었는지
         return true;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled() {//계정 활성화되어있는지
         return true;
     }
 }

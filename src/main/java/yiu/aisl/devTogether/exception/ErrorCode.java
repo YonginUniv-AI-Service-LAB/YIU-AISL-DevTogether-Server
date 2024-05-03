@@ -10,6 +10,9 @@ public enum ErrorCode {
     INSUFFICIENT_DATA(400),
     //회원정보 불일치
     USER_DATA_INCONSISTENCY(401),
+    //로그인 필요
+    LOGIN_REQUIRED(401),
+
     //권한 없음
     NO_AUTH(403),
     //AccessToken 만료
@@ -28,6 +31,8 @@ public enum ErrorCode {
 
     //서버 오류
     INTERNAL_SERVER_ERROR(500);
+
+
 
 
     private final int status;
@@ -62,6 +67,8 @@ public enum ErrorCode {
                 return "회원 정보 불일치";
             case INTERNAL_SERVER_ERROR:
                 return "내부 서버 오류";
+            case LOGIN_REQUIRED:
+                return "로그인 필요";
             default:
                 return "알 수 없는 오류";
         }
