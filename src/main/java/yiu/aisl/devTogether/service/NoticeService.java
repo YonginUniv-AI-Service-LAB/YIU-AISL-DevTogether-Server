@@ -25,15 +25,13 @@ public class NoticeService {
         List<NoticeResponseDto>  getListDTO= new ArrayList<>();
         notice.forEach(s->getListDTO.add(NoticeResponseDto.GetNoticeDTO(s)));
         return getListDTO;
-
-
     }
+
     //공지사항 등록
     public Boolean create(NoticeRequestDto.CreateDTO request) {
         //400 데이터 미입력
-        if(request.getTitle() == null || request.getContents() == null ||  request.getCategory() <= 0)
+        if(request.getTitle() == null || request.getContents() == null ||  request.getCategory() < 0)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-
         try{
             Notice notice = Notice.builder()
                     .title(request.getTitle())
@@ -49,19 +47,13 @@ public class NoticeService {
         }
         return true;
 
-
-
     }
     //공지사항 삭제
     public Boolean delete(NoticeRequestDto.DeleteDTO request) {
-        //400 데이터 미입력
-        if(request.getNoticeId() == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         // 404 - id 없음
         Notice notice = findBynNoticeId(request.getNoticeId());
-        
         try{
-
             //deleteByNoticeId로 하면 SQL에서 NoticeId 프로퍼티를 인식하지못함
             noticeRepository.deleteById(request.getNoticeId());
             return true;
@@ -71,16 +63,13 @@ public class NoticeService {
         }
     }
 
-    private Notice findBynNoticeId(Long noticeId) {
-        return noticeRepository.findByNoticeId(noticeId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
-    }
+
 
 
     //공지사항 수정
     public Boolean update(NoticeRequestDto.UpdateDTO request) {
         //400 데이터 미입력
-        if(request.getNoticeId() == null || request.getTitle() == null || request.getContents() == null ||  request.getCategory() <= 0)
+        if(request.getTitle() == null || request.getContents() == null ||  request.getCategory() < 0)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         // 404 - id 없음
@@ -98,13 +87,10 @@ public class NoticeService {
         }
         return true;
 
+    }
 
-
-
-
-
-
-
-
+    private Notice findBynNoticeId(Long noticeId) {
+        return noticeRepository.findByNoticeId(noticeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
     }
 }

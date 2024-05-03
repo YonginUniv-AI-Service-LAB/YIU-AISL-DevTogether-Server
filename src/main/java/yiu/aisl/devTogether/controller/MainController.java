@@ -19,11 +19,9 @@ public class MainController {
 
     private final MainService mainService;
 
-
-
+    //ResponseEntity는 HTTP 응답을 나타내는 Spring 클래스
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE )
     public ResponseEntity<Boolean> register( RegisterDto request) throws Exception{
-
         System.out.println(" registration request: " + request);
         return new ResponseEntity<Boolean>(mainService.register(request), HttpStatus.OK);
     }

@@ -3,14 +3,17 @@ package yiu.aisl.devTogether.domain.state;
 import lombok.Getter;
 
 @Getter
-public enum NoticeCategory  {
-    NOTICE(0), //
-    EVENT(1), //
-    UPDATE(2); //업데이트
+public enum StatusCategory {
+
+    APPLICATION(0), //신청
+    PROGRESSION(1), //진행
+    COMPLETION(2), //완료
+    REJECTION(3);//거절
+
 
     private final int value;
 
-    NoticeCategory(int value) {
+    StatusCategory(int value) {
         this.value = value;
     }
 
@@ -18,8 +21,8 @@ public enum NoticeCategory  {
         return value;
     }
 
-    public static NoticeCategory fromValue(int value) {
-        for (NoticeCategory category : NoticeCategory.values()) {
+    public static StatusCategory fromValue(int value) {
+        for (StatusCategory category : StatusCategory.values()) {
             if (category.getValue() == value) {
                 return category;
             }

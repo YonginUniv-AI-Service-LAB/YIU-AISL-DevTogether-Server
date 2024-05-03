@@ -9,11 +9,11 @@ import yiu.aisl.devTogether.domain.User;
 import java.util.Optional;
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
 
-    Optional<User> findByName(String name);
+    //Optional은 값의 존재 여부를 나타내는 컨테이너 값이 존재할 때는 값을 반환하고, 값이 없을 때는 명시적으로 표현
+    Optional<User> findByEmail(String email);
 
     Optional<User>findByNickname(String name);
 
-    Optional<User> findByRefreshToken(String refreshToken);
+
 }

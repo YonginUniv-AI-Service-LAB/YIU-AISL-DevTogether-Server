@@ -41,9 +41,10 @@ public class MainService {
         //400 데이터 미입력
         if ( request.getEmail() == null || request.getPwd() == null || request.getName() == null
                 || request.getNickname() == null   || request.getRole() == null   || request.getGender() == null
-                || request.getImg() == null   || request.getAge() == null   || request.getPhone() == null
-                || request.getLocation1() == null   || request.getLocation2() == null   || request.getLocation3() == null
-        )
+                || request.getImg() == null   || request.getAge() == null   || request.getFee() == null
+                || request.getMethod() == null   || request.getLocation1() == null   || request.getLocation2() == null   || request.getLocation3() == null
+                || request.getSubject1() == null   || request.getSubject2() == null   || request.getSubject3() == null
+                || request.getSubject4() == null   || request.getSubject5() == null)
         {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
@@ -70,10 +71,16 @@ public class MainService {
                     .gender(request.getGender())
                     .img(request.getImg())
                     .age(request.getAge())
-                    .phone(request.getPhone())
+                    .fee(request.getFee())
+                    .method(request.getMethod())
                     .location1(request.getLocation1())
                     .location2(request.getLocation2())
                     .location3(request.getLocation3())
+                    .subject1(request.getSubject1())
+                    .subject2(request.getSubject2())
+                    .subject3(request.getSubject3())
+                    .subject4(request.getSubject4())
+                    .subject5(request.getSubject5())
                     .build();
             userRepository.save(user);
         }
@@ -83,15 +90,15 @@ public class MainService {
         return true;
     }
 
-
+    //로그인
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
         // 400 데이터 미입력
         if (request.getEmail() == null || request.getPwd() == null || request.getRole() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
-        // 404 회원 없음(회원정보 확인)
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
+        // 404 회원 없음
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
 
         // 401 회원정보 불일치
         if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) || !Objects.equals(request.getRole(), user.getRole())) {
@@ -101,7 +108,6 @@ public class MainService {
         try {
             // 토큰 발급 (추가 정보 확인 하기 위해 이름 포함 시킴)
             user.setRefreshToken(createRefreshToken(user));
-
             LoginResponseDto response = LoginResponseDto.builder()
                     .email(user.getEmail())
                     .name(user.getName())
@@ -119,18 +125,16 @@ public class MainService {
         }
     }
 
-
+    //회원가입 시 이메일 인증
     public String registerEmail(String email) throws MessagingException, UnsupportedEncodingException {
         if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-
         MimeMessage emailForm = createEmailForm(email + "@naver.com", "devTogether 회원가입 인증번호");
         javaMailSender.send(emailForm);
         return authNum;
     }
-
+    //비밀번호 변경 시 이메일 인증
     public String pwdEmail(String email) throws MessagingException, UnsupportedEncodingException {
         if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-
         MimeMessage emailForm = createEmailForm(email + "@naver.com", "비밀번호 재설정을 위한 안내");
         javaMailSender.send(emailForm);
         return authNum;
@@ -180,16 +184,15 @@ public class MainService {
         }
         authNum = key.toString();
     }
-
+    //비밀번호 변경
     public Boolean pwdChange(PwdChangeRequestDto request)  throws MessagingException, UnsupportedEncodingException{
         // 400 데이터 없음
         if(request.getEmail() == null || request.getPwd() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
-        // 401  유저 존재 확인
+        // 404  회원 존재 확인
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()
-                -> new CustomException(ErrorCode.MEMBER_NOT_EXIST));
-
+                -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
         try {
             user.setPwd(passwordEncoder.encode(request.getPwd()));
             userRepository.save(user);
@@ -199,9 +202,9 @@ public class MainService {
         }
         return true;
     }
+    //닉네임 중복
     public Boolean nicknameCheck(NicknameCheckRequestDto request) throws MessagingException, UnsupportedEncodingException{
-
-        // 409 - 닉네임 중복
+        // 409 데이터 중복
         if (userRepository.findByNickname(request.getNickname()).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE);
         }
