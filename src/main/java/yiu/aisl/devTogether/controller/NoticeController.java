@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.dto.NoticeRequestDto;
 import yiu.aisl.devTogether.service.NoticeService;
 
@@ -23,15 +24,15 @@ public class NoticeController {
     }
 
     // 공지사항 등록
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PostMapping
-    public ResponseEntity<Boolean> create(@ModelAttribute NoticeRequestDto.CreateDTO request) throws Exception {
+    public ResponseEntity<Boolean> create(@ModelAttribute NoticeRequestDto.CreateDTO request, User user) throws Exception {
         System.out.println("Notice_create request: " + request);
-        return new ResponseEntity<>(noticeService.create(request), HttpStatus.OK);
+        return new ResponseEntity<>(noticeService.create(request, user), HttpStatus.OK);
     }
 
     // 공지사항 삭제
-    @PreAuthorize("hasRole('ADMIN')")
+
     @DeleteMapping
     public ResponseEntity<Boolean> delete(@ModelAttribute NoticeRequestDto.DeleteDTO request) throws Exception {
         System.out.println("Notice_delete request" + request);
@@ -39,7 +40,7 @@ public class NoticeController {
     }
 
     // 공지사항 수정
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PutMapping
     public ResponseEntity<Boolean> update(@ModelAttribute NoticeRequestDto.UpdateDTO request) throws Exception {
         System.out.println("Notice_update request" + request);

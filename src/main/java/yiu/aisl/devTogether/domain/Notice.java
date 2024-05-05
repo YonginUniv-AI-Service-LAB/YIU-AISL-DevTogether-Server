@@ -5,11 +5,12 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Data
+@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,6 +20,10 @@ public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long noticeId;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private RoleCategory roleCategory;
 
     @Column(columnDefinition = "TEXT")
     private String contents;
@@ -30,6 +35,8 @@ public class Notice {
     @Column(length = 255)
     private String file;
 
+
+
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt;
@@ -38,12 +45,14 @@ public class Notice {
     @Column
     private LocalDateTime updatedAt;
 
-    @JoinColumn
     @ManyToOne
-    private User userId;
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
 
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private NoticeCategory category;
+    private NoticeCategory noticeCategory;
 
 }

@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.service.JpaUserDetailsService;
 
 import java.nio.charset.StandardCharsets;
@@ -63,9 +64,10 @@ public class TokenProvider {
                 .claim("nickname", user.getNickname())
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
-        if(user.getEmail().equals(admin1)){
+        if (user.getEmail().equals(admin1) ||  user.getRole() == RoleCategory.MANAGER) {
             jwtBuilder.claim("role", "ADMIN");
         }
+
 
         else jwtBuilder.claim("role", "USER");
 

@@ -6,12 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.NoticeRequestDto;
 import yiu.aisl.devTogether.dto.NoticeResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.NoticeRepository;
 
+import yiu.aisl.devTogether.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,18 +34,34 @@ public class NoticeService {
     }
 
     //공지사항 등록
-    public Boolean create(NoticeRequestDto.CreateDTO request) {
-        //400 데이터 미입력
-        if(request.getTitle() == null || request.getContents() == null || request.getCategory() == null)
+    public Boolean create(NoticeRequestDto.CreateDTO request, User user) {
+        // 400 데이터 미입력
+        if (request.getTitle() == null || request.getContents() == null
+                || request.getNoticeCategory() == null || request.getRoleCategory() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+
+
+        NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());
+        RoleCategory roleCategory = RoleCategory.fromInt(request.getRoleCategory());
+        int roleCategoryValue = request.getRoleCategory();
+
+        // 관리자 권한 확인
+        if (roleCategoryValue != RoleCategory.MANAGER.getValue()) {
+            throw new CustomException(ErrorCode.NO_AUTH);
+        }
+
         try {
 
-            NoticeCategory category = NoticeCategory.fromValue(request.getCategory());
+
+
+            // Notice 객체 생성 및 저장
             Notice notice = Notice.builder()
+                    .roleCategory(roleCategory)
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .file(request.getFile())
-                    .category(category)
+                    .noticeCategory(noticeCategory)
                     .build();
 
             noticeRepository.save(notice);
@@ -51,8 +69,9 @@ public class NoticeService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
         return true;
-
     }
+
+
     //공지사항 삭제
     public Boolean delete(NoticeRequestDto.DeleteDTO request) {
 
@@ -74,30 +93,33 @@ public class NoticeService {
     // 공지사항 수정
     public Boolean update(NoticeRequestDto.UpdateDTO request) {
         // 400 데이터 미입력
-        if (request.getTitle() == null || request.getContents() == null || request.getCategory() == null
-                || request.getNoticeId() == null|| request.getFile() == null ) {
+        if (request.getTitle() == null || request.getContents() == null || request.getNoticeCategory() == null
+                || request.getNoticeId() == null|| request.getFile() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        }
-        Optional<Notice> modifyNotice = noticeRepository.findByNoticeId(request.getNoticeId());
-        if (modifyNotice.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
         try {
 
-            NoticeCategory category = NoticeCategory.fromValue(request.getCategory());
+            NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());
+
+
+            Optional<Notice> modifyNotice = noticeRepository.findByNoticeId(request.getNoticeId());
+            if (modifyNotice.isEmpty()) {
+                throw new CustomException(ErrorCode.NOT_EXIST_ID);
+            }
+
+
             Notice modifiedNotice = modifyNotice.get();
             modifiedNotice.setTitle(request.getTitle());
             modifiedNotice.setContents(request.getContents());
-            modifiedNotice.setCategory(category);
+            modifiedNotice.setNoticeCategory(noticeCategory);
             modifiedNotice.setFile(request.getFile());
 
 
             noticeRepository.save(modifiedNotice);
-            return true;
         }    catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
+        return true;
     }
 
 

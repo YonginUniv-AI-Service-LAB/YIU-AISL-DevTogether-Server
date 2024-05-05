@@ -6,6 +6,7 @@ import org.springframework.lang.NonNullApi;
 import yiu.aisl.devTogether.domain.User;
 
 
+import javax.management.relation.Role;
 import java.util.Optional;
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -14,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     Optional<User>findByNickname(String name);
+
 
 
     Optional<User> findByRefreshToken(String refreshToken);
