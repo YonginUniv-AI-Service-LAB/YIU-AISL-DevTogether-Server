@@ -1,0 +1,53 @@
+[33mcommit d2f7060ce931d0e1244190296687c04ed70c0fd9[m[33m ([m[1;36mHEAD -> [m[1;32mjuyeon[m[33m, [m[1;31morigin/juyeon[m[33m)[m
+Author: dkswndus <dkswndus6988@naver.com>
+Date:   Mon May 6 02:16:32 2024 +0900
+
+    feat: 스프링 시권한 설정 ì완료
+
+[33mcommit 0f1618dfb99d69c7550a1d6907db2e709d66125c[m
+Author: dkswndus <dkswndus6988@naver.com>
+Date:   Sun May 5 22:15:39 2024 +0900
+
+    feat: 스프링 시큐리티, 공지사항 수정
+
+[33mcommit 4ee7b16a50fdb4cf1e212edcd246eae98f9f71a1[m
+Author: dkswndus <dkswndus6988@naver.com>
+Date:   Sat May 4 02:15:07 2024 +0900
+
+    feat: enum설정, errorcode 수정, security와 accessTiken 설정(30% 남음)
+
+[33mcommit 4d85d3ba76b92e955aad276d185df74538a56e22[m
+Author: dkswndus <dkswndus6988@naver.com>
+Date:   Fri May 3 18:29:29 2024 +0900
+
+    feat: 공지ìãENUM 설정 코드 복구
+
+[33mcommit 6b318aa7f1ce7f470446362d29a35c89ac360854[m
+Author: dkswndus <dkswndus6988@naver.com>
+Date:   Fri May 3 14:27:40 2024 +0900
+
+    feat: main 복구작업
+
+[33mcommit ec3936885152ef4bbcfe7886b07c9c6f7155cee5[m
+Author: dkswndus <dkswndus6988@naver.com>
+Date:   Tue Apr 30 19:42:21 2024 +0900
+
+    feat: 공지사항 기능 구현
+
+[33mcommit 6a3c042c9e9ca0ffa78fb12a0b983ee89058f602[m[33m ([m[1;31morigin/sj[m[33m)[m
+Author: sj0404k <ksj06030@naver.com>
+Date:   Sun Apr 14 03:12:37 2024 +0900
+
+    feat : repository 1차 작성
+
+[33mcommit aa2103f90b2600d6ae7651971c0be71adb882ff4[m
+Author: dkswndus <dkswndus6988@naver.com>
+Date:   Fri Apr 5 20:25:52 2024 +0900
+
+    feat: 회원가입 작성
+
+[33mcommit f3a520944254896148cf513296d58d6e25cd3df7[m
+Author: callikys <callikys@naver.com>
+Date:   Mon Mar 25 01:10:23 2024 +0900
+
+    devTogether Server 프로젝트 파일 생성
