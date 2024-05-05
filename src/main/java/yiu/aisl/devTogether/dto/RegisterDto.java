@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor // 기본 생성자 추가
 
 public class RegisterDto {
@@ -16,7 +16,7 @@ public class RegisterDto {
     private String  pwd;
     private String  name;
     private String  nickname;
-    private Integer role;
+    private RoleCategory role;
     private Integer gender;
     private String  img;
     private Integer age;

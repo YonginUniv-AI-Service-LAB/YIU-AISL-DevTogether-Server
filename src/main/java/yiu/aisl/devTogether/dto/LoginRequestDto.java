@@ -1,6 +1,7 @@
 package yiu.aisl.devTogether.dto;
 
 import lombok.*;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 @Getter
 @Setter
@@ -8,5 +9,5 @@ import lombok.*;
 public class LoginRequestDto {
     private String  email;
     private String  pwd;
-    private Integer role;
+    private RoleCategory role;
 }

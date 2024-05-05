@@ -10,7 +10,7 @@ public enum NoticeCategory  {
 
     private final int value;
 
-    NoticeCategory(int value) {
+    NoticeCategory(Integer value) {
         this.value = value;
     }
 
@@ -18,12 +18,13 @@ public enum NoticeCategory  {
         return value;
     }
 
-    public static NoticeCategory fromValue(int value) {
-        for (NoticeCategory category : NoticeCategory.values()) {
-            if (category.getValue() == value) {
-                return category;
+    public static NoticeCategory fromInt(int value) {
+        for (NoticeCategory noticeCategory : NoticeCategory.values()) {
+            if (noticeCategory.getValue() == value) {
+                return noticeCategory;
             }
         }
         throw new IllegalArgumentException("Invalid category value: " + value);
     }
 }
+

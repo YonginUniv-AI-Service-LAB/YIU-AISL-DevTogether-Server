@@ -8,6 +8,7 @@ import org.checkerframework.checker.units.qual.A;
 import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.time.LocalDateTime;
 
@@ -17,9 +18,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class NoticeResponseDto {
     private Long noticeId;
+    private RoleCategory roleCategory;
     private String title;
     private String contents;
-    private NoticeCategory category;
+    private NoticeCategory noticeCategory;
     private String file;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
@@ -27,10 +29,12 @@ public class NoticeResponseDto {
 
     public static NoticeResponseDto GetNoticeDTO(Notice notice) {
         return new NoticeResponseDto(
+
                 notice.getNoticeId(),
+                notice.getRoleCategory(),
                 notice.getTitle(),
                 notice.getContents(),
-                notice.getCategory(),
+                notice.getNoticeCategory(),
                 notice.getFile(),
                 notice.getCreatedAt(),
                 notice.getUpdatedAt()

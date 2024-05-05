@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.state.NoticeCategory;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
@@ -37,7 +39,7 @@ public class MainService {
     private String authNum;
 
     //회원가입
-    public boolean register(RegisterDto request) throws Exception {
+    public Boolean register(RegisterDto request) throws Exception {
 
         //400 데이터 미입력
         if ( request.getEmail() == null || request.getPwd() == null || request.getName() == null
@@ -63,12 +65,18 @@ public class MainService {
 
         // 데이터 저장
         try {
+
+
+            RoleCategory roleCategory = request.getRole();
+
+
+
             User user = User.builder()
                     .email(request.getEmail())
                     .pwd(passwordEncoder.encode(request.getPwd()))
                     .name(request.getName())
                     .nickname(request.getNickname())
-                    .role(request.getRole())
+                    .role(roleCategory)
                     .gender(request.getGender())
                     .img(request.getImg())
                     .age(request.getAge())
