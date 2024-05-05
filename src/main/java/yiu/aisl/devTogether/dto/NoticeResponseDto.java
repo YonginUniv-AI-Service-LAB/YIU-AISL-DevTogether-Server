@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.checkerframework.checker.units.qual.A;
 import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.state.NoticeCategory;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +19,7 @@ public class NoticeResponseDto {
     private Long noticeId;
     private String title;
     private String contents;
-    private Integer category;
+    private NoticeCategory category;
     private String file;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
@@ -28,9 +29,9 @@ public class NoticeResponseDto {
         return new NoticeResponseDto(
                 notice.getNoticeId(),
                 notice.getTitle(),
-                notice.getFile(),
-                notice.getCategory(),
                 notice.getContents(),
+                notice.getCategory(),
+                notice.getFile(),
                 notice.getCreatedAt(),
                 notice.getUpdatedAt()
         );

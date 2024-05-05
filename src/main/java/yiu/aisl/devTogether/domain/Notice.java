@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import yiu.aisl.devTogether.domain.state.NoticeCategory;
 
 import java.time.LocalDateTime;
 
@@ -43,6 +44,6 @@ public class Notice {
 
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private Integer category;
+    private NoticeCategory category;
 
 }

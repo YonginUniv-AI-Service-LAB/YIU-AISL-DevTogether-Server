@@ -41,9 +41,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(final @NotNull HttpSecurity http) throws Exception {
         http
 
-                .httpBasic(HttpBasicConfigurer::disable)
+                .httpBasic(HttpBasicConfigurer::disable) //HTTP 기본 인증을 비활성화
 
-                .csrf(CsrfConfigurer::disable)
+                .csrf(CsrfConfigurer::disable)   //CSRF(Cross-Site Request Forgery) 보호를 비활성화  : 한 사이트의 사용자가 의도치 않게 다른 사이트에 요청을 보내는 공격을 의미
 
                 .cors(c -> {
                     CorsConfigurationSource source = request -> {
@@ -58,27 +58,35 @@ public class SecurityConfig {
                         return config;
                     };
                     c.configurationSource(source);
-                })
+                })        //CORS는 다른 출처에서 리소스에 접근할 수 있는 권한을 부여하는 메커니즘
 
-                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 관리 설정을 구성하여 세션을 상태를 가지지 않는(Stateless) 방식으로 생성하도록 지정
+                //세션을 상태를 가지지 않는(Stateless) 방식으로 사용하는 이유        공부하기
+                //1. 확장성
+                //2. 보안
+                //3. 클라이언트 호환성
+                //4. 캐싱
+                //5. RESTful API
+
+
 
                 .authorizeHttpRequests(authorize ->
                         authorize
+                                //공통
+                                .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change", "token/change", "/token/refresh", "/nickname",
+                                        "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice").permitAll()
 
-                                .requestMatchers( "/main", "/login", "/register", "/nickcheck", "/mail", "/refresh", "/changepwd/mail", "/changepwd", "/token").permitAll()
-                                .requestMatchers("/delivery", "/delivery/detail", "/taxi", "/taxi/detail", "/notice", "/notice/detail").permitAll()
                                 .requestMatchers("/delivery/**").authenticated()
-                                .requestMatchers("/taxi/**").authenticated()
-                                .requestMatchers("/user/**").authenticated()
-                                .requestMatchers("/report/create").authenticated()
-                                .requestMatchers("/notice/**", "/report").hasRole("ADMIN")
+
+                                .requestMatchers("/manager/faq", "/notice").hasRole("ADMIN")
+
                                 .anyRequest().authenticated()
                 )
 
-                .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)   //특정 필터를 추가하여 사용자가 제공한 토큰을 사용한 인증을 수행
 
                 .exceptionHandling(authenticationManager -> authenticationManager
-                        .authenticationEntryPoint(new AuthenticationEntryPoint() {
+                        .authenticationEntryPoint(new AuthenticationEntryPoint() { //인증되지 않은 경우 예외처리
                             @Override
                             public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
@@ -88,7 +96,9 @@ public class SecurityConfig {
                                 response.getWriter().write("인증되지 않은 사용자입니다");
                             }
                         })
-                        .accessDeniedHandler(new AccessDeniedHandler() {
+
+
+                        .accessDeniedHandler(new AccessDeniedHandler() { //접근 거부 예외처리
                             @Override
                             public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
 

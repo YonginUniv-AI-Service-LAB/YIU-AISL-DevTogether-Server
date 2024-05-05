@@ -31,8 +31,8 @@ public class TokenProvider {
 
     private Key secretKey;
 
-    @Value("${admin.email1=}")
-    private Long admin1;
+    @Value("${admin.email1}")
+    private String admin1;
 
 
 
@@ -63,8 +63,10 @@ public class TokenProvider {
                 .claim("nickname", user.getNickname())
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
-        if(user.getEmail().equals(admin1))
+        if(user.getEmail().equals(admin1)){
             jwtBuilder.claim("role", "ADMIN");
+        }
+
         else jwtBuilder.claim("role", "USER");
 
         return jwtBuilder.compact();

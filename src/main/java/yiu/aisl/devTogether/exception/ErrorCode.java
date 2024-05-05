@@ -8,21 +8,28 @@ import lombok.Getter;
 public enum ErrorCode {
     // 데이터 미입력
     INSUFFICIENT_DATA(400),
+
     //회원정보 불일치
     USER_DATA_INCONSISTENCY(401),
+
     //로그인 필요
     LOGIN_REQUIRED(401),
 
     //권한 없음
     NO_AUTH(403),
+
     //AccessToken 만료
     ACCESS_TOKEN_EXPIRED(403),
+
     //RefreshToken 만료
     REFRESH_TOKEN_EXPIRED(403),
-    //데이터 없음
+
+    //회원 없음
     NOT_EXIST_MEMBER(404),
+
     //id 없음
     NOT_EXIST_ID(404),
+
     // to_user_id 없음
     To_USER_ID_NOT_EXIST(404),
 
