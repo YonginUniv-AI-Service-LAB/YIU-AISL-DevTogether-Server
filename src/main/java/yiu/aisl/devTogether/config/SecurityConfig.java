@@ -76,7 +76,7 @@ public class SecurityConfig {
                                 .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change", "token/change", "/token/refresh", "/nickname",
                                         "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice").permitAll()
 
-                                .requestMatchers("/delivery/**").authenticated()
+                               // .requestMatchers("/delivery/**").authenticated()
 
                                 .requestMatchers("/manager/faq", "/notice").hasRole("ADMIN")
 

@@ -1,61 +1,58 @@
 package yiu.aisl.devTogether.dto;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
 
-public class NoticeRequestDto {
+
+public class FaqRequestDto {
 
     @Getter
     @Setter
-    public static class CreateDTO {
-        private Long noticeId;
+    public class CreateDTO {
+        private Long faqId;
         private Integer roleCategory;
         private String title;
         private String contents;
-        private Integer noticeCategory;
-        private String file;
         @Override
         public String toString() {
             return "CreateDTO{" +
-                    "noticeId=" + noticeId +
+                    ", faqId='" + faqId + '\'' +
                     ", roleCategory=" + roleCategory +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
-                    ", noticeCategory=" + noticeCategory +
-                    ", file='" + file + '\'' +
                     '}';
         }
 
-    }
 
+    }
     @Getter
     @Setter
-    public static class DeleteDTO {
-        private Long noticeId;
+    public class DeleteDTO {
+        private Long faqId;
         private Integer roleCategory;
 
-    }
 
+
+    }
     @Getter
     @Setter
-    public static class UpdateDTO {
-        private Long noticeId;
+    public class UpdateDTO {
+        private Long faqId;
         private Integer roleCategory;
         private String title;
         private String contents;
-        private Integer noticeCategory;
-        private String file;
         @Override
         public String toString() {
-            return "CreateDTO{" +
-                    "noticeId=" + noticeId +
+            return "UpdateDTO{" +
+                    ", faqId='" + faqId + '\'' +
                     ", roleCategory=" + roleCategory +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
-                    ", noticeCategory=" + noticeCategory +
-                    ", file='" + file + '\'' +
                     '}';
         }
+
+
     }
 }

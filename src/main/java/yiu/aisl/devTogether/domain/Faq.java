@@ -2,30 +2,35 @@ package yiu.aisl.devTogether.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FAQ {
+public class Faq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long faqId;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private RoleCategory roleCategory;
 
     @Column(length = 50)
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String contents;
+
+
 
     @CreationTimestamp
     @Column

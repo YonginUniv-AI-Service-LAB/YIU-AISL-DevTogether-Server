@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.checkerframework.checker.units.qual.A;
 import yiu.aisl.devTogether.domain.Notice;
-import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 

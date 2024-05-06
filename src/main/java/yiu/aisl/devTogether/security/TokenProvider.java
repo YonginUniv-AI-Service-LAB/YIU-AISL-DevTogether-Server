@@ -64,7 +64,8 @@ public class TokenProvider {
                 .claim("nickname", user.getNickname())
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
-        if (user.getEmail().equals(admin1) ||  user.getRole() == RoleCategory.MANAGER) {
+
+        if (user.getEmail().equals(admin1) || user.getRole() == RoleCategory.MANAGER  ) {
             jwtBuilder.claim("role", "ADMIN");
         }
 

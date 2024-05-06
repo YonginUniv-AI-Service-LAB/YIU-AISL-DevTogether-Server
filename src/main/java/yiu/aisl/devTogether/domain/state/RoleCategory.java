@@ -1,6 +1,7 @@
 package yiu.aisl.devTogether.domain.state;
 
 import lombok.Getter;
+import yiu.aisl.devTogether.domain.Faq;
 
 @Getter
 public enum RoleCategory {
@@ -24,4 +25,6 @@ public enum RoleCategory {
         }
         throw new IllegalArgumentException("Invalid category value: " + value);
     }
+
+
 }
