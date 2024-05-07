@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum ErrorCode {
     // 데이터 미입력
     INSUFFICIENT_DATA(400, ResultMessage.INSUFFICIENT_DATA),
-
+    // 데이터를 찾을 수 없음
+    NOT_EXIST(404, ResultMessage.NOT_EXIST),
     // 인증 실패
     UNAUTHORIZED(401, ResultMessage.UNAUTHORIZED),
     //접근 권한 없음
@@ -75,7 +76,7 @@ public enum ErrorCode {
         String MEMBER_NOT_EXIST = "존재하지 않는 사용자";
         String LOGIN_REQUIRED = "로그인 필요";
         String INSUFFICIENT_DATA = "데이터 미입력";
-
+        String NOT_EXIST = "존재하지 않음";
         String CONFLICT = "데이터 충돌";
         String DUPLICATE = "데이터 중복";
         String INTERNAL_SERVER_ERROR = "내부 서버 오류";

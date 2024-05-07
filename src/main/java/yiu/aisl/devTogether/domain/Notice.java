@@ -1,10 +1,7 @@
 package yiu.aisl.devTogether.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notice {
@@ -23,6 +21,13 @@ public class Notice {
 
     @Column(columnDefinition = "TEXT")
     private String contents;
+
+
+    @Column(nullable = false,length = 255)
+    private String title;
+
+    @Column(length = 255)
+    private String file;
 
     @CreationTimestamp
     @Column
@@ -37,6 +42,7 @@ public class Notice {
     private User userId;
 
     @Column
+    @Enumerated(EnumType.ORDINAL)
     private Integer category;
 
 }

@@ -49,13 +49,13 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false,length = 255)
+    @Column(nullable = false, length = 255)
     private String location1;
 
-    @Column(nullable = false,length = 255)
+    @Column(nullable = false, length = 255)
     private String location2;
 
-    @Column(nullable = false,length = 255)
+    @Column(nullable = false, length = 255)
     private String location3;
 
     @Column(columnDefinition = "TEXT")
@@ -68,9 +68,11 @@ public class User {
     @UpdateTimestamp
     @Column
     private LocalDateTime updatedAt;
-    public void encodePwd(PasswordEncoder passwordEncoder){
+
+    public void encodePwd(PasswordEncoder passwordEncoder) {
         this.pwd = passwordEncoder.encode(pwd);
     }
+
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }

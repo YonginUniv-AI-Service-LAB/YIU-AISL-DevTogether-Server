@@ -1,17 +1,16 @@
 package yiu.aisl.devTogether.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
@@ -20,7 +19,7 @@ public class Comment {
     @Column
     private Long commentId;
 
-    @JoinColumn
+    @JoinColumn(name = "board_id")
     @ManyToOne
     private Board boardId;
 
@@ -35,7 +34,7 @@ public class Comment {
     @Column
     private LocalDateTime updatedAt;
 
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     @ManyToOne
     private User userId;
 
