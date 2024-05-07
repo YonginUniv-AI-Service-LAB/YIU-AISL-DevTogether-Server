@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import yiu.aisl.devTogether.domain.Board;
+import yiu.aisl.devTogether.domain.Comment;
 import yiu.aisl.devTogether.domain.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +24,7 @@ public class BoardDto {
     private Integer check;
     private Integer majorId;
     private Long like;
+    private List<Comment> comments;
 
     public static BoardDto getboardDto(Board board){
         return new BoardDto(
@@ -32,7 +35,8 @@ public class BoardDto {
                 board.getUserId(),
                 board.getCheck(),
                 board.getMajorId(),
-                board.getLike()
+                board.getLike(),
+                board.getComments()
         );
     }
 }

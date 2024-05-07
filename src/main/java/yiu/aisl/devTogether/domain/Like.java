@@ -1,10 +1,7 @@
 package yiu.aisl.devTogether.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {
@@ -31,8 +29,11 @@ public class Like {
     @Column
     private Integer type;
 
-    @Column(columnDefinition = "TEXT")
-    private String contents;
+//    @Column(columnDefinition = "TEXT")
+//    private String contents;
+
+    @Column
+    private Boolean count;
 
     @CreationTimestamp
     @Column

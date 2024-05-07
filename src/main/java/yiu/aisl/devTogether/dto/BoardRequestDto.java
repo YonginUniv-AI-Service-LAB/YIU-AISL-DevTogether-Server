@@ -20,13 +20,13 @@ public class BoardRequestDto {
     @Getter
     @Setter
     public class DeleteDto{
-        private Long BoardId;
+        private Long boardId;
 
     }
     @Getter
     @Setter
     public class UpdateDto{
-        private Long BoardId;
+        private Long boardId;
         private String title;
         private String contents;
         private String file;
@@ -34,8 +34,22 @@ public class BoardRequestDto {
     @Getter
     @Setter
     public class likeDto {
-        private Long BoardId;
-        private Long like;
+        private Long boardId;
+        private Long likeId;
+        private Boolean count;
+        //private int type;
     }
+    @Getter
+    @Setter
+    public class CreateCommentDto {
+        private Long boardId;
+        private String contents;
+    }
+    @Getter
+    @Setter
+    public class DeleteCommentDto{
+        private Long boardId;
+        private Long CommentId;
 
+    }
 }
