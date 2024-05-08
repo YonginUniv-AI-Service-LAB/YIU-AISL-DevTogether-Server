@@ -3,12 +3,10 @@ package yiu.aisl.devTogether.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import yiu.aisl.devTogether.domain.Board;
-import yiu.aisl.devTogether.domain.Comment;
-import yiu.aisl.devTogether.domain.Like;
-import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.*;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
+import yiu.aisl.devTogether.dto.ScrapDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.BoardRepository;
@@ -63,7 +61,7 @@ public class BoardService {
     public BoardDto getDetail(BoardRequestDto.DetailDto request) throws Exception {
         //404 id 없음
         Board board = boardRepository.findByBoardId(request.getBoardID()).orElseThrow(() -> {
-            throw new CustomException(ErrorCode.NOT_EXIST);
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
         });
         try {
             BoardDto response = BoardDto.getboardDto(board);
@@ -82,12 +80,12 @@ public class BoardService {
         //404: id 없음"
         Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
         if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST);
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
         //403: 권한없음 ????
         Board existingboard = board.get();
         if (!existingboard.getUserId().equals(user)) {
-            throw new CustomException(ErrorCode.ACCESS_NO_AUTH);
+            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
 
         try {
@@ -111,12 +109,12 @@ public class BoardService {
         //404: id 없음
         Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
         if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST);
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
         //403: 권한없음
         Board existingboard = board.get();
         if (!existingboard.getUserId().equals(user)) {
-            throw new CustomException(ErrorCode.ACCESS_NO_AUTH);
+            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
         try {
             existingboard.setTitle(request.getTitle());
@@ -137,13 +135,13 @@ public class BoardService {
         // 404: id 없음
         Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
         if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST);
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
         User user = findByUserEmail(usermail);
-        Optional<Like> like = likeRepository.findByEmail(user);
+        Optional<Like> like = likeRepository.findByUseridEmail(user);
         try {
             //좋아요 db 에서 해당 보드/댓글 아이디에 유저가 db에 저장 되어있는지 찾기 ---- 타입 구분 추가 필요
-            if(likeRepository.findByEmail(user).isPresent()){
+            if(likeRepository.findByUseridEmail(user).isPresent()){
                 Boolean count = request.getCount();
                 Like getlike = like.get();
                 if(getlike.getCount())
@@ -166,6 +164,15 @@ public class BoardService {
 
 
     //게시글 스크렙
+    public Boolean createScrap(String user, BoardRequestDto.CreatScrapDto request) throws Exception{
+        try {
+
+
+            return true;
+        }catch (Exception e){
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     //댓글 등록
     public Boolean createComment(String user ,BoardRequestDto.CreateCommentDto request, Long boardId) throws Exception {
@@ -203,18 +210,18 @@ public class BoardService {
         //404: id 없음"
         Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
         if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST);
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
 //        Board board = findByBoardId(request.getBoardId());
         Optional<Comment> comment = commentRepository.findByCommentId(request.getCommentId());
         if (comment.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST);
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
-        //403: 권한없음 ????
+        //403: 권한없음 -- 다시 확인하기
         Board existingboard = board.get();
         Comment existingComment = comment.get();
         if (!existingboard.getUserId().equals(user)) {
-            throw new CustomException(ErrorCode.ACCESS_NO_AUTH);
+            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
 
         try {
@@ -232,10 +239,11 @@ public class BoardService {
 
     public Board findByBoardId(Long boardId) {
         return boardRepository.findByBoardId(boardId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
     public User findByUserEmail(String studentId) {
         return userRepository.findByEmail(studentId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_EXIST));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
+
 }

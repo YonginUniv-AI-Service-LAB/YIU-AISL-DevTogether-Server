@@ -48,10 +48,10 @@ public class Board {
     private Long like;
 
     // board가 관계 주인   게시판 로드시 즉시 댓글 가져오기  보드 삭제시 댓글 자동삭제
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "boardId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("commentId asc")
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "typeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Like> likes;
 }

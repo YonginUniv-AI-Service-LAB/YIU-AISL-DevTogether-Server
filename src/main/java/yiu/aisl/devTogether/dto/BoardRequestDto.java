@@ -50,6 +50,10 @@ public class BoardRequestDto {
     public class DeleteCommentDto{
         private Long boardId;
         private Long CommentId;
-
+    }
+    @Getter
+    @Setter
+    public class CreatScrapDto{
+        private Long boardId;
     }
 }
