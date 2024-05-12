@@ -56,24 +56,34 @@ public enum ErrorCode {
         switch (this) {
             case INSUFFICIENT_DATA:
                 return "데이터 미입력";
+
             case NOT_EXIST_MEMBER:
                 return "회원 없음";
+
             case NOT_EXIST_ID:
                 return "id 없음";
+
             case NO_AUTH:
                 return "권한 없음";
+
             case ACCESS_TOKEN_EXPIRED:
                 return "AccessToken 만료";
+
             case REFRESH_TOKEN_EXPIRED:
                 return "RefreshToken 만료";
+
             case To_USER_ID_NOT_EXIST:
                 return "to_user_id 없음";
+
             case DUPLICATE:
                 return "데이터 중복";
+
             case USER_DATA_INCONSISTENCY:
                 return "회원 정보 불일치";
+
             case INTERNAL_SERVER_ERROR:
                 return "내부 서버 오류";
+
             case LOGIN_REQUIRED:
                 return "로그인 필요";
             default:

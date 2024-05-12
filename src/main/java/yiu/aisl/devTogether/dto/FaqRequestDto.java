@@ -12,14 +12,14 @@ public class FaqRequestDto {
     @Setter
     public class CreateDTO {
         private Long faqId;
-        private Integer roleCategory;
+        private Integer role;
         private String title;
         private String contents;
         @Override
         public String toString() {
             return "CreateDTO{" +
                     ", faqId='" + faqId + '\'' +
-                    ", roleCategory=" + roleCategory +
+                    ", roleCategory=" + role +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     '}';
@@ -31,7 +31,7 @@ public class FaqRequestDto {
     @Setter
     public class DeleteDTO {
         private Long faqId;
-        private Integer roleCategory;
+        private Integer role;
 
 
 
@@ -40,14 +40,14 @@ public class FaqRequestDto {
     @Setter
     public class UpdateDTO {
         private Long faqId;
-        private Integer roleCategory;
+        private Integer role;
         private String title;
         private String contents;
         @Override
         public String toString() {
             return "UpdateDTO{" +
                     ", faqId='" + faqId + '\'' +
-                    ", roleCategory=" + roleCategory +
+                    ", roleCategory=" + role +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     '}';

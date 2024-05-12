@@ -39,6 +39,7 @@ public class JpaUserDetailsService implements UserDetailsService {
         );
         CustomUserDetails userDetails = new CustomUserDetails(user);
 
+
         if (user.getEmail().equals(admin1)) {
             userDetails.setRole("ADMIN");
         } else {

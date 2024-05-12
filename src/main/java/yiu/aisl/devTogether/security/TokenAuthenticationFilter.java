@@ -30,7 +30,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, //라이언트가 보낸 HTTP 요청에 대한 정보를 담고 있는 객체
-            HttpServletResponse response, //버가 클라이언트에게 보낼 HTTP 응답에 대한 정보를 담고 있는 객체
+            HttpServletResponse response, //서버가 클라이언트에게 보낼 HTTP 응답에 대한 정보를 담고 있는 객체
             FilterChain filterChain)  throws ServletException, IOException //필터들의 체인을 나타내며, 현재 필터가 요청을 처리한 후 다음 필터로 요청을 전달하는 역할
     {
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION); // HTTP 요청 헤더에서 "Authorization" 헤더 값을 가져와서

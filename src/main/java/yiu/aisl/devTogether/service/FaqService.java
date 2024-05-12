@@ -25,7 +25,7 @@ public class FaqService {
 
     //faq 조회
     public List <FaqResponsetDto> getList() throws Exception{
-        List<Faq> faq = faqRepository.findByOrderByCreatedAtDesc();
+        List<Faq> faq = faqRepository.findByOrderByCreatedAtDesc();  //생성 일자를 기준으로 내림차순으로 정렬
         List<FaqResponsetDto> getListDto = new ArrayList<>();
         faq.forEach(s->getListDto.add(FaqResponsetDto.GetFaqDTO(s)));
         return getListDto;
@@ -35,18 +35,18 @@ public class FaqService {
     //faq 등록
     public Boolean create(FaqRequestDto.CreateDTO request) {
 
-        RoleCategory roleCategory = RoleCategory.fromInt(request.getRoleCategory());
+        RoleCategory role = RoleCategory.fromInt(request.getRole());
         //400 - 데이터 미입력
-        if(request.getTitle() == null || request.getContents() == null || request.getRoleCategory() == null)
+        if(request.getTitle() == null || request.getContents() == null || request.getRole() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         //403 - 권한 없음
-        if(roleCategory != RoleCategory.MANAGER){
+        if(role != RoleCategory.MANAGER){
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try{
             Faq faq = Faq.builder()
-                    .roleCategory(roleCategory)
+                    .role(role)
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .build();
@@ -61,7 +61,7 @@ public class FaqService {
 
     //faq 삭제
     public Boolean delete(FaqRequestDto.DeleteDTO request) {
-        RoleCategory roleCategory = RoleCategory.fromInt(request.getRoleCategory());
+        RoleCategory role = RoleCategory.fromInt(request.getRole());
 
         //404 - id없음
         Faq faq = findByFaqId(request.getFaqId());
@@ -69,7 +69,7 @@ public class FaqService {
             throw  new CustomException(ErrorCode.NOT_EXIST_ID);
         }
         //403 - 권한 없음
-        if(roleCategory != RoleCategory.MANAGER){
+        if(role != RoleCategory.MANAGER){
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try{
@@ -86,21 +86,21 @@ public class FaqService {
     //faq 수정
     public Boolean update(FaqRequestDto.UpdateDTO request) {
 
-        RoleCategory roleCategory = RoleCategory.fromInt(request.getRoleCategory());
+        RoleCategory role = RoleCategory.fromInt(request.getRole());
 
         //400 - 데이터 미입력
         if(request.getTitle() == null || request.getContents() == null
-                || request.getRoleCategory() == null|| request.getFaqId() == null)
+                || request.getRole() == null|| request.getFaqId() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         //403 - 권한 없음
-        if(roleCategory != RoleCategory.MANAGER){
+        if(role != RoleCategory.MANAGER){
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try{
             Optional<Faq> modifyFaq = faqRepository.findByFaqId(request.getFaqId());
             Faq modifiedFaq = modifyFaq.get();
-            modifiedFaq.setRoleCategory(roleCategory);
+            modifiedFaq.setRole(role);
             modifiedFaq.setTitle(request.getTitle());
             modifiedFaq.setContents(request.getContents());
             faqRepository.save(modifiedFaq);

@@ -10,7 +10,7 @@ public class NoticeRequestDto {
     @Setter
     public static class CreateDTO {
         private Long noticeId;
-        private Integer roleCategory;
+        private Integer role;
         private String title;
         private String contents;
         private Integer noticeCategory;
@@ -19,7 +19,7 @@ public class NoticeRequestDto {
         public String toString() {
             return "CreateDTO{" +
                     "noticeId=" + noticeId +
-                    ", roleCategory=" + roleCategory +
+                    ", roleCategory=" + role +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     ", noticeCategory=" + noticeCategory +
@@ -28,29 +28,50 @@ public class NoticeRequestDto {
         }
 
     }
+    @Getter
+    @Setter
+    public static class DetailDTO {
+        private Long noticeId;
+
+        @Override
+        public String toString() {
+            return "DetailDTO{" +
+                    "noticeId=" + noticeId +
+                    '}';
+        }
+
+    }
+
+
 
     @Getter
     @Setter
     public static class DeleteDTO {
         private Long noticeId;
-        private Integer roleCategory;
-
+        private Integer role;
+        @Override
+        public String toString() {
+            return "DeleteDTO{" +
+                    "noticeId=" + noticeId +
+                    ", roleCategory=" + role +
+                    '}';
+        }
     }
 
     @Getter
     @Setter
     public static class UpdateDTO {
         private Long noticeId;
-        private Integer roleCategory;
+        private Integer role;
         private String title;
         private String contents;
         private Integer noticeCategory;
         private String file;
         @Override
         public String toString() {
-            return "CreateDTO{" +
+            return "UpdateDTO{" +
                     "noticeId=" + noticeId +
-                    ", roleCategory=" + roleCategory +
+                    ", roleCategory=" + role +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     ", noticeCategory=" + noticeCategory +
@@ -58,4 +79,6 @@ public class NoticeRequestDto {
                     '}';
         }
     }
+
+
 }

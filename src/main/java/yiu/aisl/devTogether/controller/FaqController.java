@@ -14,8 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/faq")
 public class FaqController {
-    private final
-    FaqService faqService;
+    private final FaqService faqService;
 
     // faq 조회
     @GetMapping

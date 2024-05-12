@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.state.GenderCategory;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
@@ -38,12 +39,15 @@ public class MainService {
     private long exp_refreshToken = Duration.ofDays(14).toMillis(); // 만료시간 2주
     private String authNum;
 
+
     //회원가입
     public Boolean register(RegisterDto request) throws Exception {
+        RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
+        GenderCategory genderCategory = GenderCategory.fromInt(request.getGenderCategory());
 
-        //400 데이터 미입력
+        //400 - 데이터 미입력
         if ( request.getEmail() == null || request.getPwd() == null || request.getName() == null
-                || request.getNickname() == null   || request.getRole() == null   || request.getGender() == null
+                || request.getNickname() == null   || request.getRole() == null   || request.getGenderCategory() == null
                 || request.getImg() == null   || request.getAge() == null   || request.getFee() == null
                 || request.getMethod() == null   || request.getLocation1() == null   || request.getLocation2() == null   || request.getLocation3() == null
                 || request.getSubject1() == null   || request.getSubject2() == null   || request.getSubject3() == null
@@ -52,12 +56,12 @@ public class MainService {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
-        //409 데이터 중복 (이메일)
+        //409 - 데이터 중복 (이메일)
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
 
             throw new CustomException(ErrorCode.DUPLICATE);
         }
-        //409 데이터 중복 (닉네임)
+        //409 - 데이터 중복 (닉네임)
         if (userRepository.findByNickname(request.getNickname()).isPresent()) {
 
             throw new CustomException(ErrorCode.DUPLICATE);
@@ -67,9 +71,6 @@ public class MainService {
         try {
 
 
-            RoleCategory roleCategory = request.getRole();
-
-
 
             User user = User.builder()
                     .email(request.getEmail())
@@ -77,7 +78,7 @@ public class MainService {
                     .name(request.getName())
                     .nickname(request.getNickname())
                     .role(roleCategory)
-                    .gender(request.getGender())
+                    .genderCategory(genderCategory)
                     .img(request.getImg())
                     .age(request.getAge())
                     .fee(request.getFee())
@@ -101,16 +102,20 @@ public class MainService {
 
     //로그인
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
-        // 400 데이터 미입력
+        RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
+        // 400 - 데이터 미입력
         if (request.getEmail() == null || request.getPwd() == null || request.getRole() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
-        // 404 회원 없음
+        // 404 - 회원 없음
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
 
-        // 401 회원정보 불일치
-        if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) || !Objects.equals(request.getRole(), user.getRole())) {
+
+
+
+        // 401 - 회원정보 불일치
+        if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) ||    user.getRole() != roleCategory     ) {
             throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
         }
 
@@ -195,11 +200,11 @@ public class MainService {
     }
     //비밀번호 변경
     public Boolean pwdChange(PwdChangeRequestDto request)  throws MessagingException, UnsupportedEncodingException{
-        // 400 데이터 없음
+        // 400 - 데이터 없음
         if(request.getEmail() == null || request.getPwd() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
-        // 404  회원 존재 확인
+        // 404 - 회원 존재 확인
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()
                 -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
         try {
@@ -212,7 +217,7 @@ public class MainService {
         return true;
     }
     //닉네임 중복
-    public Boolean nicknameCheck(NicknameCheckRequestDto request) throws MessagingException, UnsupportedEncodingException{
+    public Boolean nicknameCheck(NicknameCheckRequestDto request) throws Exception{
         // 409 데이터 중복
         if (userRepository.findByNickname(request.getNickname()).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE);
@@ -223,60 +228,28 @@ public class MainService {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public TokenDto refreshAccessToken(TokenDto token) throws Exception {
         String email = null;
         try {
             email = tokenProvider.getEmail(token.getAccessToken());
-        } catch (ExpiredJwtException e) {
+        }//만료된 경우
+        catch (ExpiredJwtException e) {
             email = e.getClaims().get("email", String.class);
         }
-
+        //이메일을 사용하여 해당 사용자를 db에서 찾음
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new CustomException(ErrorCode.NOT_EXIST_MEMBER));
-
+        //유효성 검사
         Token refreshToken = validRefreshToken(user, token.getRefreshToken());
 
         try {
-            if (refreshToken != null) {
+            if (refreshToken != null) {    //유효하다면 토큰 생성
                 return TokenDto.builder()
                         .accessToken(tokenProvider.createToken(user))
                         .refreshToken(refreshToken.getRefreshToken())
                         .build();
-            } else {
+            }//로그인 필요
+            else {
                 throw new CustomException(ErrorCode.LOGIN_REQUIRED);
             }
         }
@@ -284,6 +257,7 @@ public class MainService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+    // refresh token을 생성
     private String createRefreshToken(User user) {
         Token token = tokenRepository.save(
                 Token.builder()
@@ -294,17 +268,21 @@ public class MainService {
         );
         return token.getRefreshToken();
     }
-
+    //유효성 검사
     public Token validRefreshToken(User user, String refreshToken) throws Exception {
+        //토큰 없을 시 로그인 필요
         Token token = tokenRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_REQUIRED));
 
+        //RefreshToken 만료
         if(token.getRefreshToken() == null) throw new CustomException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         try{
-            if(token.getExpiration() < 10){
-                token.setExpiration(1000L);
+            if(token.getExpiration() < 10){   //10초
+                token.setExpiration(1000L); //1000초
                 tokenRepository.save(token);
             }
+
+            //로그인 필요
             if(!token.getRefreshToken().equals(refreshToken)){
                 throw new CustomException(ErrorCode.LOGIN_REQUIRED);
             }else{

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class NoticeResponseDto {
     private Long noticeId;
-    private RoleCategory roleCategory;
+    private RoleCategory role;
     private String title;
     private String contents;
     private NoticeCategory noticeCategory;
@@ -25,11 +25,11 @@ public class NoticeResponseDto {
     private LocalDateTime updatedAt;
 
 
-    public static NoticeResponseDto GetNoticeDTO(Notice notice) {
+    public static NoticeResponseDto getNoticeDTO(Notice notice) {
         return new NoticeResponseDto(
 
                 notice.getNoticeId(),
-                notice.getRoleCategory(),
+                notice.getRole(),
                 notice.getTitle(),
                 notice.getContents(),
                 notice.getNoticeCategory(),
@@ -38,4 +38,6 @@ public class NoticeResponseDto {
                 notice.getUpdatedAt()
         );
     }
+
+
 }

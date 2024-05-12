@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.devTogether.dto.NoticeRequestDto;
+import yiu.aisl.devTogether.dto.NoticeResponseDto;
 import yiu.aisl.devTogether.service.NoticeService;
 
 import java.util.List;
@@ -20,12 +21,19 @@ public class NoticeController {
     public ResponseEntity<List> getList() throws Exception {
         return new ResponseEntity<List>(noticeService.getList(), HttpStatus.OK);
     }
+    //공지사항 상세조회
+    @GetMapping("/detail")
+    public ResponseEntity<NoticeResponseDto> getDetail(@ModelAttribute NoticeRequestDto.DetailDTO request) throws Exception {
+        return new ResponseEntity<NoticeResponseDto>(noticeService.getDetail(request), HttpStatus.OK);
+    }
 
     // 공지사항 등록
     @PostMapping
     public ResponseEntity<Boolean> create(@ModelAttribute NoticeRequestDto.CreateDTO request) throws Exception {
+        //request 객체를 받아온다
         System.out.println("Notice_create request: " + request);
         return new ResponseEntity<Boolean>(noticeService.create(request), HttpStatus.OK);
+        //new: 생성
     }
 
     // 공지사항 삭제
