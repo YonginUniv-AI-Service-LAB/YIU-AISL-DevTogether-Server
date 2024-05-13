@@ -40,7 +40,7 @@ public class CustomUserDetails implements UserDetails {
 
     public String getEmail() {
         return user.getEmail();
-    }
+    }                //추가함
 
     @Override
     public String getPassword() {      //계정의 비밀번호 리턴

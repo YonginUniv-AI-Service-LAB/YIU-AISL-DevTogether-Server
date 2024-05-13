@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class FaqResponsetDto {
     private Long faqId;
-    private RoleCategory roleCategory;
+    private RoleCategory role;
     private String title;
     private String contents;
     private LocalDateTime createAt;
@@ -26,7 +26,7 @@ public class FaqResponsetDto {
         return new FaqResponsetDto(
 
                 faq.getFaqId(),
-                faq.getRoleCategory(),
+                faq.getRole(),
                 faq.getTitle(),
                 faq.getContents(),
                 faq.getCreatedAt(),

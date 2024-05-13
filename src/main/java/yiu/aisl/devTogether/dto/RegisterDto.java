@@ -16,8 +16,8 @@ public class RegisterDto {
     private String  pwd;
     private String  name;
     private String  nickname;
-    private RoleCategory role;
-    private Integer gender;
+    private Integer role;
+    private Integer genderCategory;
     private String  img;
     private Integer age;
     private String method;

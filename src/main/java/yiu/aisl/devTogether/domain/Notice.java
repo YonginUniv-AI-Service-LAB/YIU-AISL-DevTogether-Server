@@ -18,12 +18,12 @@ public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(unique = true)
     private Long noticeId;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private RoleCategory roleCategory;
+    private RoleCategory role;
 
     @Column(columnDefinition = "TEXT")
     private String contents;
@@ -45,9 +45,6 @@ public class Notice {
     @Column
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
 
 

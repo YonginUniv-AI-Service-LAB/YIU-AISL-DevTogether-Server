@@ -21,10 +21,10 @@ public enum StatusCategory {
         return value;
     }
 
-    public static StatusCategory fromValue(int value) {
-        for (StatusCategory category : StatusCategory.values()) {
-            if (category.getValue() == value) {
-                return category;
+    public static StatusCategory fromInt(int value) {
+        for (StatusCategory status : StatusCategory.values()) {
+            if (status.getValue() == value) {
+                return status;
             }
         }
         throw new IllegalArgumentException("Invalid category value: " + value);

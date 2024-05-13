@@ -25,33 +25,53 @@ public class NoticeService {
 
     //공지사항 전체조회
     public List<NoticeResponseDto> getList() throws  Exception{
-        List<Notice> notice = noticeRepository.findByOrderByCreatedAtDesc();
+        List<Notice> notice = noticeRepository.findByOrderByCreatedAtDesc();   //내림차순으로 정렬한걸 Notice객체의 리스트 형태를 notice로 하겠다
         List<NoticeResponseDto>  getListDTO= new ArrayList<>();
-        notice.forEach(s->getListDTO.add(NoticeResponseDto.GetNoticeDTO(s)));
+        notice.forEach(s->getListDTO.add(NoticeResponseDto.getNoticeDTO(s)));
         return getListDTO;
     }
+
+    //공지사항 상세조회
+    public NoticeResponseDto getDetail(NoticeRequestDto.DetailDTO request)throws Exception {
+
+        // 404 - id 없음
+        Notice notice = findByNoticeId(request.getNoticeId());
+        if(notice == null) {
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
+        }
+        try{
+            NoticeResponseDto response = NoticeResponseDto.getNoticeDTO(notice);
+            return response;
+        }catch (Exception e){
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+
 
 
     //공지사항 등록
     public Boolean create(NoticeRequestDto.CreateDTO request) {
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());    //열거형 상수
-        RoleCategory roleCategory = RoleCategory.fromInt(request.getRoleCategory());
+        RoleCategory role = RoleCategory.fromInt(request.getRole());
         // 400 - 데이터 미입력
         if (request.getTitle() == null || request.getContents() == null
-                || request.getNoticeCategory() == null || request.getRoleCategory() == null
+                || request.getNoticeCategory() == null || request.getRole() == null
                 || request.getFile() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
         // 403 - 권한 없음
-        if (roleCategory != RoleCategory.MANAGER) {
+        if (role != RoleCategory.MANAGER) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try {
             Notice notice = Notice.builder()
-                    .roleCategory(roleCategory)
+                    .role(role)
                     .title(request.getTitle())
                     .contents(request.getContents())
-                    .file(request.getFile())
                     .noticeCategory(noticeCategory)
+                    .file(request.getFile())
                     .build();
             noticeRepository.save(notice);
         } catch (Exception e) {
@@ -63,14 +83,21 @@ public class NoticeService {
 
     //공지사항 삭제
     public Boolean delete(NoticeRequestDto.DeleteDTO request) {
-        RoleCategory roleCategory = RoleCategory.fromInt(request.getRoleCategory());
+        RoleCategory role = RoleCategory.fromInt(request.getRole());
         // 404 - id 없음
-        Notice notice = findBynNoticeId(request.getNoticeId());
+        Notice notice = findByNoticeId(request.getNoticeId());
         if(notice == null){
             throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
         // 403 - 권한 없음
-        if(roleCategory != RoleCategory.MANAGER){
+
+        //Optional<Faq> faq = faqRepository.findByFaqId(request.getFaqId());
+        // Faq faqRole = faq.get();
+        //        if(!faqRole.getUserId().equals(user)){
+        //            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+        //        }
+
+        if(role != RoleCategory.MANAGER){
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try{
@@ -90,21 +117,21 @@ public class NoticeService {
     // 공지사항 수정
     public Boolean update(NoticeRequestDto.UpdateDTO request) {
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());
-        RoleCategory roleCategory = RoleCategory.fromInt(request.getRoleCategory());
+        RoleCategory role = RoleCategory.fromInt(request.getRole());
         // 400 - 데이터 미입력
         if (request.getTitle() == null || request.getContents() == null
-                || request.getNoticeCategory() == null || request.getRoleCategory() == null
+                || request.getNoticeCategory() == null || request.getRole() == null
                 || request.getNoticeId() == null|| request.getFile() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         // 403 - 권한 없음
-        if (roleCategory != RoleCategory.MANAGER) {
+        if (role != RoleCategory.MANAGER) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try {
             Optional<Notice> modifyNotice = noticeRepository.findByNoticeId(request.getNoticeId());
             Notice modifiedNotice = modifyNotice.get();
-            modifiedNotice.setRoleCategory(roleCategory);
+            modifiedNotice.setRole(role);
             modifiedNotice.setTitle(request.getTitle());
             modifiedNotice.setContents(request.getContents());
             modifiedNotice.setNoticeCategory(noticeCategory);
@@ -115,8 +142,10 @@ public class NoticeService {
         }
         return true;
     }
-    private Notice findBynNoticeId(Long noticeId) {
+
+    private Notice findByNoticeId(Long noticeId) {
         return noticeRepository.findByNoticeId(noticeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
+
 }

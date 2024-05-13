@@ -9,5 +9,13 @@ import yiu.aisl.devTogether.domain.state.RoleCategory;
 public class LoginRequestDto {
     private String  email;
     private String  pwd;
-    private RoleCategory role;
+    private Integer role;
+    @Override
+    public String toString() {
+        return "LoginRequestDto{" +
+                "email='" + email + '\'' +
+                ", pwd='" + pwd + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }

@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import yiu.aisl.devTogether.domain.state.GenderCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.time.LocalDateTime;
@@ -39,7 +40,8 @@ public class User {
 
 
     @Column(nullable = false)
-    private Integer gender;
+    @Enumerated(EnumType.ORDINAL)
+    private GenderCategory genderCategory;
 
     @Column(nullable = false)
     private Integer fee;
@@ -87,14 +89,14 @@ public class User {
     private LocalDateTime updatedAt;
 
 
-    public User(Long id, String name, String nickname,  String email,String img,  RoleCategory role, Integer gender, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String name, String nickname,  String email,String img,  RoleCategory role, GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.pwd = pwd;
         this.name = name;
         this.nickname = nickname;
         this.role = role;
-        this.gender = gender;
+        this.genderCategory = genderCategory;
         this.img = img;
         this.age = age;
         this.method = method;

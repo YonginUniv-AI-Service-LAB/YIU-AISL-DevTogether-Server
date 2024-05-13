@@ -18,9 +18,9 @@ public enum RoleCategory {
     public int getValue() { return value; }
 
     public static RoleCategory fromInt(int value) {
-        for (RoleCategory roleCategory : RoleCategory.values()) {
-            if (roleCategory.getValue() == value) {
-                return roleCategory;
+        for (RoleCategory role : RoleCategory.values()) {
+            if (role.getValue() == value) {
+                return role;
             }
         }
         throw new IllegalArgumentException("Invalid category value: " + value);
@@ -28,3 +28,4 @@ public enum RoleCategory {
 
 
 }
+

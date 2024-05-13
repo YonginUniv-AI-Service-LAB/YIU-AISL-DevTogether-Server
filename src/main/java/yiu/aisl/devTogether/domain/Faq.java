@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 public class Faq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(unique = true)
     private Long faqId;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private RoleCategory roleCategory;
+    private RoleCategory role;
 
     @Column(length = 50)
     private String title;
