@@ -6,13 +6,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Board {
 
     @Id
@@ -34,24 +35,16 @@ public class Board {
     @Column
     private LocalDateTime updatedAt;
 
-    @JoinColumn
-    @ManyToOne
-    private User userId;
+//    @JoinColumn(name = "user_id")
+//    @ManyToOne
+//    private User user;
 
-    @Column
-    private Integer check;
-
-    @Column
-    private Integer majorId;
-
-    @Column
-    private Long like;
 
     // board가 관계 주인   게시판 로드시 즉시 댓글 가져오기  보드 삭제시 댓글 자동삭제
-    @OneToMany(mappedBy = "boardId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("commentId asc")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "typeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Like> likes;
+    private List<Likes> likes;
 }

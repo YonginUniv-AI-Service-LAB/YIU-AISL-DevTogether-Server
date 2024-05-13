@@ -12,15 +12,16 @@ import yiu.aisl.devTogether.domain.Board;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
 import yiu.aisl.devTogether.service.BoardService;
+import yiu.aisl.devTogether.service.ImageService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/board")
 public class BoardController {
     private final BoardService boardService;
-
+    private final ImageService imageService;
     //게시판 전체조회
     @GetMapping
     public ResponseEntity<List> getList() throws Exception{
@@ -39,24 +40,24 @@ public class BoardController {
     public ResponseEntity<Boolean> create(BoardRequestDto.CreateDto request) throws Exception{
         return new ResponseEntity<Boolean>(boardService.create(request),HttpStatus.OK);
     }
-
-    //게시판 삭제
-    @DeleteMapping
-    public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteDto request) throws Exception{
-        return new ResponseEntity<Boolean>(boardService.delete(user.getEmail() ,request),HttpStatus.OK);
-    }
-
-    //게시판 수정 ~~~~~~~~~~~  user 확인 필요
-    @PutMapping
-    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request) throws Exception{
-        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), request), HttpStatus.OK);
-    }
-
-    //게시판 좋아요
-    @PostMapping("/like")
-    public ResponseEntity<Boolean> likeCount(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.likeDto request) throws Exception{
-        return new ResponseEntity<Boolean>(boardService.likeCount(user.getEmail(), request), HttpStatus.OK);
-    }
+//
+//    //게시판 삭제
+//    @DeleteMapping
+//    public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteDto request) throws Exception{
+//        return new ResponseEntity<Boolean>(boardService.delete(user.getEmail() ,request),HttpStatus.OK);
+//    }
+//
+//    //게시판 수정 ~~~~~~~~~~~  user 확인 필요
+//    @PutMapping
+//    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request) throws Exception{
+//        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), request), HttpStatus.OK);
+//    }
+//
+//    //게시판 좋아요
+//    @PostMapping("/like")
+//    public ResponseEntity<Boolean> likeCount(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.likeDto request) throws Exception{
+//        return new ResponseEntity<Boolean>(boardService.likeCount(user.getEmail(), request), HttpStatus.OK);
+//    }
 //
 //    //게시글 스크렙
 //    @PostMapping("/scrap")
@@ -65,10 +66,10 @@ public class BoardController {
 //    }
 //
     //댓글 등록
-    @PostMapping("/comment")
-    public ResponseEntity<Boolean> createComment(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.CreateCommentDto request, Long boardId) throws Exception{
-        return new ResponseEntity<Boolean>(boardService.createComment(user.getEmail(), request, boardId),HttpStatus.OK);
-    }
+//    @PostMapping("/comment")
+//    public ResponseEntity<Boolean> createComment(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.CreateCommentDto request, Long boardId) throws Exception{
+//        return new ResponseEntity<Boolean>(boardService.createComment(user.getEmail(), request, boardId),HttpStatus.OK);
+//    }
 //    //댓글 삭제
 //    @DeleteMapping("/comment")
 //    public ResponseEntity<Boolean> deleteComment(BoardRequestDto.DeleteCommentDto request) throws Exception{

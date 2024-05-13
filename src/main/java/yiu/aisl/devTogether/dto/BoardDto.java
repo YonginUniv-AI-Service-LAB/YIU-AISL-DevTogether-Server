@@ -16,26 +16,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDto {
+
+    private Long boardId;
     private String title;
     private String contents;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
-    private User userId;
-    private Integer check;
-    private Integer majorId;
-    private Long like;
+//    private User userId;
     private List<Comment> comments;
 
     public static BoardDto getboardDto(Board board){
         return new BoardDto(
+                board.getBoardId(),
                 board.getTitle(),
                 board.getContents(),
                 board.getCreatedAt(),
                 board.getUpdatedAt(),
-                board.getUserId(),
-                board.getCheck(),
-                board.getMajorId(),
-                board.getLike(),
+//                board.getUser(),
                 board.getComments()
         );
     }

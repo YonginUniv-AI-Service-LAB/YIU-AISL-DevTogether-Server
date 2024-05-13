@@ -1,5 +1,6 @@
 package yiu.aisl.devTogether.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +22,8 @@ public class Comment {
 
     @JoinColumn(name = "board_id")
     @ManyToOne
-    private Board boardId;
+    @JsonBackReference
+    private Board board;
 
     @Column(columnDefinition = "TEXT")
     private String contents;
@@ -36,9 +38,6 @@ public class Comment {
 
     @JoinColumn(name = "user_id")
     @ManyToOne
-    private User userId;
-
-    @Column
-    private Long like;
+    private User user;
 
 }
