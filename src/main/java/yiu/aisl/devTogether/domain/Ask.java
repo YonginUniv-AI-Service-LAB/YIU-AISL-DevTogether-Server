@@ -22,9 +22,10 @@ public class Ask {
     @Column
     private Long askId;
 
-    @JoinColumn
-    @ManyToOne
-    private User userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(columnDefinition = "TEXT")
     private String title;

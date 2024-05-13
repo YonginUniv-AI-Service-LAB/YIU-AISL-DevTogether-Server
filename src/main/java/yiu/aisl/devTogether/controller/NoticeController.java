@@ -23,9 +23,10 @@ public class NoticeController {
     }
     //공지사항 상세조회
     @GetMapping("/detail")
-    public ResponseEntity<NoticeResponseDto> getDetail(@ModelAttribute NoticeRequestDto.DetailDTO request) throws Exception {
+    public ResponseEntity<NoticeResponseDto> getDetail(@ModelAttribute("id") NoticeRequestDto.DetailDTO request) throws Exception {
         return new ResponseEntity<NoticeResponseDto>(noticeService.getDetail(request), HttpStatus.OK);
     }
+
 
     // 공지사항 등록
     @PostMapping

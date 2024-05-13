@@ -72,11 +72,11 @@ public class SecurityConfig {
                         authorize
                                 //공통
                                 .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change", "token/change", "/token/refresh", "/nickname",
-                                        "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask").permitAll()
+                                        "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask/**").permitAll()
 
                                // .requestMatchers("/delivery/**").authenticated()  /delivery로 시작하는 url에 대해 인증된 사용자만 접근
 
-                                .requestMatchers("/manager/faq", "/notice", "/ask/**").hasRole("ADMIN")
+                                .requestMatchers("/manager/faq", "/notice", "/ask/**","/ask/answer").hasRole("ADMIN")
 
                                 .anyRequest().authenticated()
                 )

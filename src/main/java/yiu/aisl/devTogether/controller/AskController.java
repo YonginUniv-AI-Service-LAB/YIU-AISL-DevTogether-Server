@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.dto.AskRequestDto;
 import yiu.aisl.devTogether.service.AskService;
 
@@ -23,10 +24,16 @@ public class AskController {
     }
     // ask 등록
     @PostMapping
-    public ResponseEntity<Boolean> create(@ModelAttribute AskRequestDto.CreateDTO request) throws Exception {
+    public ResponseEntity<Boolean> create(@ModelAttribute User user,AskRequestDto.CreateDTO request ) throws Exception {
 
         System.out.println("ask_create request: " + request);
-        return new ResponseEntity<Boolean>(askService.create(request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(askService.create(user,request), HttpStatus.OK);
+    }
+    // ask 답변
+    @PostMapping("/{askId}/answer")
+    public ResponseEntity<Boolean> answer(@ModelAttribute("askId") Long askId,  AskRequestDto.AnswerDTO request) throws Exception {
+        System.out.println("ask_answer request: " + request);
+        return new ResponseEntity<Boolean>(askService.answer(askId, request), HttpStatus.OK);
     }
 
     // ask 삭제

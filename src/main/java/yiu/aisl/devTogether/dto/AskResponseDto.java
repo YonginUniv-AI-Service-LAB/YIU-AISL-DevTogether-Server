@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import yiu.aisl.devTogether.domain.Ask;
-import yiu.aisl.devTogether.domain.User;
+
 import yiu.aisl.devTogether.domain.state.AskCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AskResponseDto {
     private Long askId;
-    private User userId;
+    private Long userId;
     private String title;
     private String contents;
     private StatusCategory status;
@@ -32,7 +32,7 @@ public class AskResponseDto {
         return new AskResponseDto(
 
                 ask.getAskId(),
-                ask.getUserId(),
+                ask.getUser().getId(),
                 ask.getTitle(),
                 ask.getContents(),
                 ask.getStatus(),

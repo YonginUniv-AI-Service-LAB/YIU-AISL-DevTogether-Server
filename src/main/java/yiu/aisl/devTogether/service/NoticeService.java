@@ -36,9 +36,7 @@ public class NoticeService {
 
         // 404 - id 없음
         Notice notice = findByNoticeId(request.getNoticeId());
-        if(notice == null) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
+
         try{
             NoticeResponseDto response = NoticeResponseDto.getNoticeDTO(notice);
             return response;
@@ -145,7 +143,7 @@ public class NoticeService {
 
     private Notice findByNoticeId(Long noticeId) {
         return noticeRepository.findByNoticeId(noticeId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
 
 }

@@ -65,9 +65,6 @@ public class FaqService {
 
         //404 - id없음
         Faq faq = findByFaqId(request.getFaqId());
-        if(faq == null){
-            throw  new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
         //403 - 권한 없음
         if(role != RoleCategory.MANAGER){
             throw new CustomException(ErrorCode.NO_AUTH);
@@ -89,7 +86,7 @@ public class FaqService {
         RoleCategory role = RoleCategory.fromInt(request.getRole());
 
         //400 - 데이터 미입력
-        if(request.getTitle() == null || request.getContents() == null
+        if(request.getFaqId() == null || request.getTitle() == null || request.getContents() == null
                 || request.getRole() == null|| request.getFaqId() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
@@ -111,8 +108,10 @@ public class FaqService {
 
     }
 
+
+
     private Faq findByFaqId(Long faqId) {
         return faqRepository.findById(faqId)
-                .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+                .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
 }
