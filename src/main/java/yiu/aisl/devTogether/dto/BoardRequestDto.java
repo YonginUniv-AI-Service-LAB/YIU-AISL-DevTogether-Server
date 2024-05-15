@@ -21,17 +21,17 @@ public class BoardRequestDto {
     }
     @Getter
     @Setter
-    public class DeleteDto{
-        private Long boardId;
-
-    }
-    @Getter
-    @Setter
     public class UpdateDto{
         private Long boardId;
         private String title;
         private String contents;
         private String file;
+    }
+    @Getter
+    @Setter
+    public class DeleteDto{
+        private Long boardId;
+
     }
     @Getter
     @Setter
@@ -43,8 +43,22 @@ public class BoardRequestDto {
     }
     @Getter
     @Setter
+    public class CreatScrapDto{
+        private Long boardId;
+    }
+
+    //----------------댓글--------------------
+    @Getter
+    @Setter
     public class CreateCommentDto {
         private Long boardId;
+        private String contents;
+    }
+    @Getter
+    @Setter
+    public class UpdateCommentDto {
+        private Long boardId;
+        private Long CommentId;
         private String contents;
     }
     @Getter
@@ -55,7 +69,11 @@ public class BoardRequestDto {
     }
     @Getter
     @Setter
-    public class CreatScrapDto{
+    public class likeCommentDto {
         private Long boardId;
+        private Long likeId;
+        private Boolean count;
+        //private int type;
     }
+
 }

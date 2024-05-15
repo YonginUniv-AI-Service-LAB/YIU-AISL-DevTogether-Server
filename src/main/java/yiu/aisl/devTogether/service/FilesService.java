@@ -12,51 +12,74 @@ import yiu.aisl.devTogether.repository.FilesRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class FilesService {
 
-    private final FilesRepository imageRepository;
+    private final FilesRepository filesRepository;
     @Value("${file.dir}")
     private String fileDir;
 
     //파일 dir 저장
-    public void saveFileDir(MultipartFile file) throws IOException {    //프젝 안에 저장
-
-    }
-    public void saveFileProj(MultipartFile file) throws Exception{
+    public String saveFileProj(MultipartFile file) throws Exception {
         try {
-            File files = new File(fileDir, file.getOriginalFilename());
-            System.out.println("저장 위치 알려줘!!!!!" + files);
+            LocalDateTime currenTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            String fileName = currenTime.format(formatter) + "_" + file.getOriginalFilename();
+            File files = new File(fileDir, fileName);
             file.transferTo(files);
-        }catch (Exception e){
+            return fileName;
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
     //파일 서버 저장
     public Boolean saveFileDb(MultipartFile file, Integer type, Long id) throws Exception {
-        String oName = getFileName(file);
-        String filedir = fileDir+file.getOriginalFilename();
+        String originName = getFileName(file);
+        String storageName = saveFileProj(file);
+        String filedir = fileDir + storageName;
         try {
             Files files = Files.builder()
                     .type(type)
                     .typeId(id)
-                    .originName(oName)
-                    .storageName(oName)
+                    .originName(originName)
+                    .storageName(storageName)
                     .path(filedir)
                     .build();
-            imageRepository.save(files);
+            filesRepository.save(files);
             return true;
         } catch (Exception e) {
             throw new Exception(e);
         }
+    }
+
+    //파일 dir, 서버 삭제 --- dir 삭제 규제 필요
+    public void deleteFile(Integer type, Long id) throws Exception {
+        List<Files> filesId = filesRepository.findByTypeAndTypeId(type, id);
+        try {
+
+            filesRepository.deleteById(filesId.get(0).getFileId());
+            File dfile =new File(filesId.get(0).getPath());
+            dfile.delete();
+
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
 
     }
-    //파일 dir 삭제
 
     //파일 보기
+    public List<Files> getFiles(Integer type, Long typeId) {
+        List<Files> filestype = filesRepository.findByTypeAndTypeId(type, typeId);
+        return filestype;
+    }
 
 
     //파일 다운로드
@@ -66,5 +89,13 @@ public class FilesService {
     public String getFileName(MultipartFile file) {
         String fileOrignalName = file.getOriginalFilename();
         return fileOrignalName;
+    }
+
+    // 파일 유무 탐색
+    public Boolean isFile(MultipartFile files) {
+        if (!files.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }

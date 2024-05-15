@@ -42,19 +42,19 @@ public class BoardController {
     public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteDto request) throws Exception{
         return new ResponseEntity<Boolean>(boardService.delete(user.getEmail() ,request),HttpStatus.OK);
     }
-//
-//    //게시판 수정 ~~~~~~~~~~~  user 확인 필요
-//    @PutMapping
-//    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request) throws Exception{
-//        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), request), HttpStatus.OK);
-//    }
-//
-//    //게시판 좋아요
-//    @PostMapping("/like")
-//    public ResponseEntity<Boolean> likeCount(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.likeDto request) throws Exception{
-//        return new ResponseEntity<Boolean>(boardService.likeCount(user.getEmail(), request), HttpStatus.OK);
-//    }
-//
+
+    //게시판 수정 ~~~~~~~~~~~  user 확인 필요
+    @PutMapping
+    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request) throws Exception{
+        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), request), HttpStatus.OK);
+    }
+
+    //게시판 좋아요
+    @PostMapping("/like")
+    public ResponseEntity<Boolean> likeCount(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.likeDto request) throws Exception{
+        return new ResponseEntity<Boolean>(boardService.likeCount(user.getEmail(), request), HttpStatus.OK);
+    }
+
 //    //게시글 스크렙
 //    @PostMapping("/scrap")
 //    public ResponseEntity<Boolean> scrap(BoardRequestDto.scrapDto request) throws Exception{
@@ -62,15 +62,15 @@ public class BoardController {
 //    }
 //
     //댓글 등록
-//    @PostMapping("/comment")
-//    public ResponseEntity<Boolean> createComment(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.CreateCommentDto request, Long boardId) throws Exception{
-//        return new ResponseEntity<Boolean>(boardService.createComment(user.getEmail(), request, boardId),HttpStatus.OK);
-//    }
-//    //댓글 삭제
-//    @DeleteMapping("/comment")
-//    public ResponseEntity<Boolean> deleteComment(BoardRequestDto.DeleteCommentDto request) throws Exception{
-//        return new ResponseEntity<Boolean>(boardService.deleteComment(request),HttpStatus.OK);
-//    }
+    @PostMapping("/comment")
+    public ResponseEntity<Boolean> createComment(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.CreateCommentDto request, Long boardId) throws Exception{
+        return new ResponseEntity<Boolean>(boardService.createComment(user.getEmail(), request, boardId),HttpStatus.OK);
+    }
+    //댓글 삭제
+    @DeleteMapping("/comment")
+    public ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal CustomUserDetails user ,BoardRequestDto.DeleteCommentDto request) throws Exception{
+        return new ResponseEntity<Boolean>(boardService.deleteComment(user.getEmail(),request),HttpStatus.OK);
+    }
 //    //댓글 수정
 //    @PutMapping("/comment")
 //    public ResponseEntity<Boolean> updateCommet(BoardRequestDto.UpdateCommentDto request) throws Exception{
