@@ -1,18 +1,16 @@
 package yiu.aisl.devTogether.controller;
 
-import com.google.api.Http;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.config.CustomUserDetails;
-import yiu.aisl.devTogether.domain.Board;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
 import yiu.aisl.devTogether.service.BoardService;
-import yiu.aisl.devTogether.service.ImageService;
+import yiu.aisl.devTogether.service.FilesService;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ import java.util.List;
 @RequestMapping(value = "/board")
 public class BoardController {
     private final BoardService boardService;
-    private final ImageService imageService;
+    private final FilesService imageService;
     //게시판 전체조회
     @GetMapping
     public ResponseEntity<List> getList() throws Exception{
@@ -35,17 +33,15 @@ public class BoardController {
     }
 
     //게시판 등록
-
     @PostMapping
-    public ResponseEntity<Boolean> create(BoardRequestDto.CreateDto request) throws Exception{
-        return new ResponseEntity<Boolean>(boardService.create(request),HttpStatus.OK);
+    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateDto request, MultipartFile file) throws Exception{
+        return new ResponseEntity<Boolean>(boardService.create(user.getEmail(),request,file),HttpStatus.OK);
     }
-//
-//    //게시판 삭제
-//    @DeleteMapping
-//    public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteDto request) throws Exception{
-//        return new ResponseEntity<Boolean>(boardService.delete(user.getEmail() ,request),HttpStatus.OK);
-//    }
+    //게시판 삭제
+    @DeleteMapping
+    public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteDto request) throws Exception{
+        return new ResponseEntity<Boolean>(boardService.delete(user.getEmail() ,request),HttpStatus.OK);
+    }
 //
 //    //게시판 수정 ~~~~~~~~~~~  user 확인 필요
 //    @PutMapping

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,10 +36,12 @@ public class Board {
     @Column
     private LocalDateTime updatedAt;
 
-//    @JoinColumn(name = "user_id")
-//    @ManyToOne
-//    private User user;
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
 
+    @Column
+    private Boolean files;
 
     // board가 관계 주인   게시판 로드시 즉시 댓글 가져오기  보드 삭제시 댓글 자동삭제
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -47,4 +50,8 @@ public class Board {
 
     @OneToMany(mappedBy = "typeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Likes> likes;
+
+    public List<Files> getFilesList() {
+        return null;
+    }
 }

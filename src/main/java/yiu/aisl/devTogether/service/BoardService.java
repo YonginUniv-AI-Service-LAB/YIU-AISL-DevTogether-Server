@@ -3,16 +3,13 @@ package yiu.aisl.devTogether.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.*;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
-import yiu.aisl.devTogether.dto.ScrapDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
-import yiu.aisl.devTogether.repository.BoardRepository;
-import yiu.aisl.devTogether.repository.CommentRepository;
-import yiu.aisl.devTogether.repository.LikeRepository;
-import yiu.aisl.devTogether.repository.UserRepository;
+import yiu.aisl.devTogether.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +23,8 @@ public class BoardService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+    private final FilesService filesService;
+    private final FilesRepository filesRepository;
 
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
@@ -35,69 +34,86 @@ public class BoardService {
         return getList;
     }
 
-    //게시판 부분 조회
+    //게시판 부분 조회 -- 파일 보내기 필요
     public BoardDto getDetail(BoardRequestDto.DetailDto request) throws Exception {
         //404 id 없음
-        Board board = boardRepository.findByBoardId(request.getBoardID()).orElseThrow(() -> {
+        Board board = boardRepository.findByBoardId(request.getBoardId()).orElseThrow(() -> {
             throw new CustomException(ErrorCode.NOT_EXIST_ID);
         });
+
         try {
             BoardDto response = BoardDto.getboardDto(board);
+
+// 이미지 조건 필요함
+            List<Files> filestype = filesRepository.findByTypeAndTypeId(2, board.getBoardId());
+            System.out.println(filestype);
+            response.setFilesList(filestype);
+
+
             return response;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-    //게시판 등록 - 이미지 관련 넣기
-    public Boolean create(BoardRequestDto.CreateDto request) {
-        //403 권한 없음
 
+    //게시판 등록 - 이미지 관련 넣기
+    public Boolean create(String email, BoardRequestDto.CreateDto request, MultipartFile file) {
+        //403 권한 없음 - db 유무만 탐색
+        User user = findByUserEmail(email);
+        System.out.println(user);
         //400 데이터 미입력
         if (request.getTitle() == null || request.getContents() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-
+        Boolean files = false;
+        if (!file.isEmpty()) {
+            files = true;
+        }
         try {
             Board board = Board.builder()
                     .title(request.getTitle())
                     .contents(request.getContents())
-                    //file 추가 없음
+                    .user(user)
+                    .files(files)
                     .build();
-
             boardRepository.save(board);
+            if (files) {
+                filesService.saveFileDb(file, 2, board.getBoardId());
+            }
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
         return true;
     }
 
-//
-//    //게시판 삭제 -- 저장된 파일도 삭제 하기
-//    public Boolean delete(String user,BoardRequestDto.DeleteDto request) throws Exception {
-//        //400: 데이터 미입력
-//        if (request.getBoardId() == null) {
-//            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-//        }
-//        //404: id 없음"
-//        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
-//        if (board.isEmpty()) {
-//            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-//        }
-//        //403: 권한없음 ????
-//        Board existingboard = board.get();
-//        if (!existingboard.getUserId().equals(user)) {
-//            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
-//        }
-//
-//        try {
-//            boardRepository.deleteById(request.getBoardId());
-//            return true;
-//        } catch (Exception e) {
-//            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-//        }
-//
-//    }
-//
+    //게시판 삭제 -- 저장된 파일도 삭제 하기
+    public Boolean delete(String email, BoardRequestDto.DeleteDto request) throws Exception {
+        //400: 데이터 미입력
+        if (request.getBoardId() == null) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+        //404: id 없음"
+        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
+        if (board.isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
+        }
+        //403: 권한없음 ????
+        Board existingboard = board.get();
+        System.out.println(existingboard);
+        if (!existingboard.getUser().equals(email)) {
+            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+        }
+
+        try {
+            boardRepository.deleteById(request.getBoardId());
+            return true;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    //
 //    //게시판 수정 -- 이미지 코드 확인 필요
 //    public Boolean update(String userId, BoardRequestDto.UpdateDto request) throws Exception {
 //        User user = findByUserEmail(userId);
@@ -238,13 +254,14 @@ public class BoardService {
 //    //댓글 좋아요
 //
 //
-//    public Board findByBoardId(Long boardId) {
-//        return boardRepository.findByBoardId(boardId)
-//                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
-//    }
-//    public User findByUserEmail(String studentId) {
-//        return userRepository.findByEmail(studentId)
-//                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
-//    }
+    public Board findByBoardId(Long boardId) {
+        return boardRepository.findByBoardId(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
+    }
+
+    public User findByUserEmail(String studentId) {
+        return userRepository.findByEmail(studentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+    }
 
 }

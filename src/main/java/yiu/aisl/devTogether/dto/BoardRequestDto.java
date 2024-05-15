@@ -3,7 +3,6 @@ package yiu.aisl.devTogether.dto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-import yiu.aisl.devTogether.domain.Image;
 
 import java.util.List;
 
@@ -11,15 +10,14 @@ public class BoardRequestDto {
     @Getter
     @Setter
     public class DetailDto{
-        private Long boardID;
+        private Long boardId;
     }
     @Getter
     @Setter
     public static class CreateDto{
         private String title;
         private String contents;
-        private List<MultipartFile> files;
-        private Long userId;
+//        private List<MultipartFile> files;
     }
     @Getter
     @Setter
