@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.domain.Faq;
 
+import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.FaqRequestDto;
 import yiu.aisl.devTogether.dto.FaqResponsetDto;
@@ -12,6 +13,7 @@ import yiu.aisl.devTogether.dto.FaqResponsetDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.FaqRepository;
+import yiu.aisl.devTogether.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.Optional;
 @Transactional
 public class FaqService {
     private final FaqRepository faqRepository;
-
+    private  final UserRepository userRepository;
     //faq 조회
     public List <FaqResponsetDto> getList() throws Exception{
         List<Faq> faq = faqRepository.findByOrderByCreatedAtDesc();  //생성 일자를 기준으로 내림차순으로 정렬
@@ -33,7 +35,7 @@ public class FaqService {
     }
 
     //faq 등록
-    public Boolean create(FaqRequestDto.CreateDTO request) {
+    public Boolean create(String email,FaqRequestDto.CreateDTO request) {
 
         RoleCategory role = RoleCategory.fromInt(request.getRole());
         //400 - 데이터 미입력
@@ -41,8 +43,9 @@ public class FaqService {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         //403 - 권한 없음
-        if(role != RoleCategory.MANAGER){
-            throw new CustomException(ErrorCode.NO_AUTH);
+        User user = findByEmail(email);
+        if(user.getRole() !=RoleCategory.MANAGER ){
+            throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{
             Faq faq = Faq.builder()
@@ -60,14 +63,15 @@ public class FaqService {
 
 
     //faq 삭제
-    public Boolean delete(FaqRequestDto.DeleteDTO request) {
+    public Boolean delete(String email,FaqRequestDto.DeleteDTO request) {
         RoleCategory role = RoleCategory.fromInt(request.getRole());
 
         //404 - id없음
         Faq faq = findByFaqId(request.getFaqId());
         //403 - 권한 없음
-        if(role != RoleCategory.MANAGER){
-            throw new CustomException(ErrorCode.NO_AUTH);
+        User user = findByEmail(email);
+        if(user.getRole() !=RoleCategory.MANAGER ){
+            throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{
             faqRepository.deleteById(request.getFaqId());
@@ -81,7 +85,7 @@ public class FaqService {
 
 
     //faq 수정
-    public Boolean update(FaqRequestDto.UpdateDTO request) {
+    public Boolean update(String email,FaqRequestDto.UpdateDTO request) {
 
         RoleCategory role = RoleCategory.fromInt(request.getRole());
 
@@ -91,8 +95,9 @@ public class FaqService {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         //403 - 권한 없음
-        if(role != RoleCategory.MANAGER){
-            throw new CustomException(ErrorCode.NO_AUTH);
+        User user = findByEmail(email);
+        if(user.getRole() !=RoleCategory.MANAGER ){
+            throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{
             Optional<Faq> modifyFaq = faqRepository.findByFaqId(request.getFaqId());
@@ -113,5 +118,9 @@ public class FaqService {
     private Faq findByFaqId(Long faqId) {
         return faqRepository.findById(faqId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXIST_ID));
+    }
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 }

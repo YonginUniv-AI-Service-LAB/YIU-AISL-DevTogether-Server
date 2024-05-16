@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import yiu.aisl.devTogether.domain.state.StatusCategory;
 
 import java.time.LocalDateTime;
 
@@ -35,5 +36,6 @@ public class Matching {
     private LocalDateTime updatedAt;
 
     @Column
-    private Integer status;
+    @Enumerated(EnumType.ORDINAL)
+    private StatusCategory status;
 }

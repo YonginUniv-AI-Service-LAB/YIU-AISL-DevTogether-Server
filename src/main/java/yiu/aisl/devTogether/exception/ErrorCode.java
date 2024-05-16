@@ -30,6 +30,9 @@ public enum ErrorCode {
     //id 없음
     NOT_EXIST_ID(404),
 
+    //수정 불가
+    NOT_MODIFICATION(404),
+
     // to_user_id 없음
     To_USER_ID_NOT_EXIST(404),
 
@@ -74,6 +77,8 @@ public enum ErrorCode {
 
             case To_USER_ID_NOT_EXIST:
                 return "to_user_id 없음";
+            case NOT_MODIFICATION:
+                return "수정 불가";
 
             case DUPLICATE:
                 return "데이터 중복";

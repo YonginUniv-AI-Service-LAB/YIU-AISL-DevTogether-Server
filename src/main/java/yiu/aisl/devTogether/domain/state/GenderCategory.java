@@ -21,9 +21,9 @@ public enum GenderCategory {
     }
 
     public static GenderCategory fromInt(int value) {
-        for (GenderCategory genderCategory : GenderCategory.values()) {
-            if (genderCategory.getValue() == value) {
-                return genderCategory;
+        for (GenderCategory gender : GenderCategory.values()) {
+            if (gender.getValue() == value) {
+                return gender;
             }
         }
         throw new IllegalArgumentException("Invalid category value: " + value);

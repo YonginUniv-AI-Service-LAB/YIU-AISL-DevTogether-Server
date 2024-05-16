@@ -8,20 +8,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
-import yiu.aisl.devTogether.domain.state.NoticeCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
-import yiu.aisl.devTogether.repository.TokenRepository;
-import yiu.aisl.devTogether.repository.UserRepository;
 import yiu.aisl.devTogether.security.TokenProvider;
+import yiu.aisl.devTogether.repository.*;
 import java.io.UnsupportedEncodingException;
 import java.time.Duration;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -35,20 +33,23 @@ public class MainService {
     private final TokenRepository tokenRepository;
     private final TokenProvider tokenProvider;
     private final JavaMailSender javaMailSender;
+    private final FilesService filesService;
 
     private long exp_refreshToken = Duration.ofDays(14).toMillis(); // 만료시간 2주
     private String authNum;
 
 
     //회원가입
-    public Boolean register(RegisterDto request) throws Exception {
+    public Boolean register(RegisterRequestDto request, MultipartFile img) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
-        GenderCategory genderCategory = GenderCategory.fromInt(request.getGenderCategory());
+
+        GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
+        Boolean imgs = filesService.isFile(img);
 
         //400 - 데이터 미입력
         if ( request.getEmail() == null || request.getPwd() == null || request.getName() == null
-                || request.getNickname() == null   || request.getRole() == null   || request.getGenderCategory() == null
-                || request.getImg() == null   || request.getAge() == null   || request.getFee() == null
+                || request.getNickname() == null   || request.getRole() == null   || request.getGender() == null
+                || request.getAge() == null   || request.getFee() == null
                 || request.getMethod() == null   || request.getLocation1() == null   || request.getLocation2() == null   || request.getLocation3() == null
                 || request.getSubject1() == null   || request.getSubject2() == null   || request.getSubject3() == null
                 || request.getSubject4() == null   || request.getSubject5() == null)
@@ -70,16 +71,14 @@ public class MainService {
         // 데이터 저장
         try {
 
-
-
             User user = User.builder()
                     .email(request.getEmail())
                     .pwd(passwordEncoder.encode(request.getPwd()))
                     .name(request.getName())
                     .nickname(request.getNickname())
                     .role(roleCategory)
-                    .genderCategory(genderCategory)
-                    .img(request.getImg())
+                    .gender(genderCategory)
+                    .img(imgs)
                     .age(request.getAge())
                     .fee(request.getFee())
                     .method(request.getMethod())
@@ -93,8 +92,10 @@ public class MainService {
                     .subject5(request.getSubject5())
                     .build();
             userRepository.save(user);
-        }
-        catch (Exception e) {
+            if (imgs) {
+                filesService.saveFileDb(img, 0, user.getId());
+            }
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return true;
@@ -110,14 +111,11 @@ public class MainService {
 
         // 404 - 회원 없음
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
-
-
-
-
         // 401 - 회원정보 불일치
         if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) ||    user.getRole() != roleCategory     ) {
             throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
         }
+
 
         try {
             // 토큰 발급 (추가 정보 확인 하기 위해 이름 포함 시킴)
@@ -133,7 +131,6 @@ public class MainService {
 
             return response;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
         }

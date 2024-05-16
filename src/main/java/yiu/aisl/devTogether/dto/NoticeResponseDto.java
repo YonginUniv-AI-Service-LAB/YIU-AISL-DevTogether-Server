@@ -25,7 +25,7 @@ public class NoticeResponseDto {
     private LocalDateTime updatedAt;
 
 
-    public static NoticeResponseDto getNoticeDTO(Notice notice) {
+    public static NoticeResponseDto GetNoticeDTO(Notice notice) {
         return new NoticeResponseDto(
 
                 notice.getNoticeId(),

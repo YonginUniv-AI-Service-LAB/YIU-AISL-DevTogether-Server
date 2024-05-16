@@ -3,7 +3,10 @@ package yiu.aisl.devTogether.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.dto.NoticeRequestDto;
 import yiu.aisl.devTogether.dto.NoticeResponseDto;
 import yiu.aisl.devTogether.service.NoticeService;
@@ -30,24 +33,27 @@ public class NoticeController {
 
     // 공지사항 등록
     @PostMapping
-    public ResponseEntity<Boolean> create(@ModelAttribute NoticeRequestDto.CreateDTO request) throws Exception {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user,  NoticeRequestDto.CreateDTO request) throws Exception {
         //request 객체를 받아온다
         System.out.println("Notice_create request: " + request);
-        return new ResponseEntity<Boolean>(noticeService.create(request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(noticeService.create(user.getEmail(), request), HttpStatus.OK);
         //new: 생성
     }
 
     // 공지사항 삭제
     @DeleteMapping
-    public ResponseEntity<Boolean> delete(@ModelAttribute NoticeRequestDto.DeleteDTO request) throws Exception {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, NoticeRequestDto.DeleteDTO request) throws Exception {
         System.out.println("Notice_delete request" + request);
-        return new ResponseEntity<Boolean>(noticeService.delete(request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(noticeService.delete(user.getEmail(),request), HttpStatus.OK);
     }
 
     // 공지사항 수정
     @PutMapping
-    public ResponseEntity<Boolean> update(@ModelAttribute NoticeRequestDto.UpdateDTO request) throws Exception {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, NoticeRequestDto.UpdateDTO request) throws Exception {
         System.out.println("Notice_update request" + request);
-        return new ResponseEntity<Boolean>(noticeService.update(request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(noticeService.update(user.getEmail(),request), HttpStatus.OK);
     }
 }

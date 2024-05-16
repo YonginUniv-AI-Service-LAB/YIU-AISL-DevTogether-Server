@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import yiu.aisl.devTogether.domain.Ask;
-
+import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.AskCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 

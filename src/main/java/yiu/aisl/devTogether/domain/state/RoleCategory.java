@@ -7,8 +7,8 @@ import yiu.aisl.devTogether.domain.Faq;
 public enum RoleCategory {
     MANAGER(0), //관리자
     MENTOR(1), //멘토
-    MEMTEE(2), //멘티
-    MEMTORMEMTEE(3); //멘토멘티
+    MENTEE(2), //멘티
+    MEMTORMENTEE(3); //멘토멘티
 
 
     private final int value;

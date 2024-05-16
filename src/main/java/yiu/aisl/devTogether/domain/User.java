@@ -9,7 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 
+import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -32,7 +34,7 @@ public class User {
     private String nickname;
 
     @Column(nullable = false,  length = 255)
-    private String img;
+    private Boolean img;
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
@@ -41,7 +43,7 @@ public class User {
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
-    private GenderCategory genderCategory;
+    private GenderCategory gender;
 
     @Column(nullable = false)
     private Integer fee;
@@ -89,14 +91,14 @@ public class User {
     private LocalDateTime updatedAt;
 
 
-    public User(Long id, String name, String nickname,  String email,String img,  RoleCategory role, GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String name, String nickname,  String email,Boolean img,  RoleCategory role, GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.pwd = pwd;
         this.name = name;
         this.nickname = nickname;
         this.role = role;
-        this.genderCategory = genderCategory;
+        this.gender = genderCategory;
         this.img = img;
         this.age = age;
         this.method = method;
@@ -134,4 +136,10 @@ public class User {
         this.refreshToken = newRefreshToken;
         return this;
     }
+
+    public File getFile() {
+        return null;
+    }
+
+
 }

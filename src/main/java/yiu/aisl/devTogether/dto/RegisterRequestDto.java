@@ -1,24 +1,29 @@
 package yiu.aisl.devTogether.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import yiu.aisl.devTogether.domain.state.RoleCategory;
+import org.springframework.web.multipart.MultipartFile;
 
-@Data
+
+import java.io.File;
+
+
+@Getter
+@Setter
 @NoArgsConstructor // 기본 생성자 추가
 
-public class RegisterDto {
+public class RegisterRequestDto {
 
-
+    @Getter
+    @Setter
     private String  email;
     private String  pwd;
     private String  name;
     private String  nickname;
     private Integer role;
-    private Integer genderCategory;
-    private String  img;
+    private Integer gender;
+    private MultipartFile img;
     private Integer age;
     private String method;
     private Integer  fee;
@@ -30,10 +35,6 @@ public class RegisterDto {
     private String subject3;
     private String subject4;
     private String subject5;
-
-
-
-
 
 
 }
