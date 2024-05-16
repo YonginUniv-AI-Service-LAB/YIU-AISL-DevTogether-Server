@@ -12,4 +12,7 @@ public interface AskRepository extends JpaRepository<Ask, Long> {
 
     List<Ask> findByOrderByCreatedAtDesc();
     Optional<Ask> findByAskId(Long id);
+
 }
+
+// db에 접근 하는데 사용하며 JpaRepository를 확장함으로써 CRUD 기능을 제공받음

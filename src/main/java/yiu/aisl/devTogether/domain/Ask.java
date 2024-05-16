@@ -22,9 +22,10 @@ public class Ask {
     @Column
     private Long askId;
 
+//, referencedColumnName = "email"
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
+    @ManyToOne
     private User user;
 
     @Column(columnDefinition = "TEXT")

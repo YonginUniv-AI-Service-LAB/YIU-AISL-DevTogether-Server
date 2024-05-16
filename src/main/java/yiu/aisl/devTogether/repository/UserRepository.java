@@ -2,11 +2,11 @@ package yiu.aisl.devTogether.repository;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.NonNullApi;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 
-import javax.management.relation.Role;
+import java.util.List;
 import java.util.Optional;
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -16,6 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User>findByNickname(String name);
 
+    Optional<User> findByRefreshToken(String refreshToken);
+
+    List<User> findByRole(RoleCategory role);
 
 
 }
