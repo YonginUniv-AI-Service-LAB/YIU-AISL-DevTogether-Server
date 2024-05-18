@@ -34,7 +34,7 @@ public class AskController {
     }
     // ask 답변
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{askId}/answer")
+    @PostMapping("/answer")
     public ResponseEntity<Boolean> answer(@AuthenticationPrincipal CustomUserDetails user,@ModelAttribute("askId") Long askId,  AskRequestDto.AnswerDTO request) throws Exception {
         System.out.println("ask_answer request: " + request);
         return new ResponseEntity<Boolean>(askService.answer(user.getEmail(),askId, request), HttpStatus.OK);

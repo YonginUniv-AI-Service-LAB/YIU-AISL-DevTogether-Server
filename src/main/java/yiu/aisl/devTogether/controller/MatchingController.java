@@ -17,23 +17,23 @@ public class MatchingController {
 
     private final MatchingService matchingService;
    //멘토 조회
-   /* @GetMapping("/mentor")
-    public ResponseEntity<List> getMentorList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(matchingService.getMentorList(user.getEmail()), HttpStatus.OK);
+    @GetMapping("/mentor")
+    public ResponseEntity<List> mentorList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(matchingService.mentorList(user.getEmail()), HttpStatus.OK);
     }
 
     //멘티 조회
-    @GetMapping("/menetee")
-    public ResponseEntity<List> getMeneteeList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(matchingService.getMeneteeList(user.getEmail()), HttpStatus.OK);
+    @GetMapping("/mentee")
+    public ResponseEntity<List> meneteeList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(matchingService.meneteeList(user.getEmail()), HttpStatus.OK);
     }
-
+/*
 
     //멘토 or 멘티 스크랩
     @PostMapping("/scrap")
-    public ResponseEntity<String> scrap(@AuthenticationPrincipal CustomUserDetails user) {
-
-    }*/
+    public ResponseEntity<List> scrap(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(matchingService.scrap(user.getEmail()), HttpStatus.OK)
+    }
 
 
 
@@ -44,7 +44,7 @@ public class MatchingController {
     }
     //신청 수락
     @PutMapping("/matching/application")
-    public ResponseEntity<Boolean> approve(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.AproveDTO request) throws Exception {
+    public ResponseEntity<Boolean> approve(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ApproveDTO request) throws Exception {
         return new ResponseEntity<Boolean>(matchingService.approve(user.getEmail(),request), HttpStatus.OK);
     }
     //신청 삭제
@@ -68,7 +68,7 @@ public class MatchingController {
         return new ResponseEntity<Boolean>(matchingService.end(user.getEmail(),request), HttpStatus.OK);
     }
 
-
+*/
 
 
 

@@ -33,7 +33,7 @@ public class User {
     @Column(nullable = false,  length = 20)
     private String nickname;
 
-    @Column(nullable = false,  length = 255)
+    @Column( length = 255)
     private Boolean img;
 
     @Column(nullable = false)
