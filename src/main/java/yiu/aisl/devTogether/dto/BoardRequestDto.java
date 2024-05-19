@@ -37,9 +37,7 @@ public class BoardRequestDto {
     @Setter
     public class likeDto {
         private Long boardId;
-        private Long likeId;
         private Boolean count;
-        //private int type;
     }
     @Getter
     @Setter
@@ -70,10 +68,10 @@ public class BoardRequestDto {
     @Getter
     @Setter
     public class likeCommentDto {
-        private Long boardId;
-        private Long likeId;
+        private Long commentId;
+        private int type;
         private Boolean count;
-        //private int type;
+
     }
 
 }

@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,13 +28,13 @@ public class FilesService {
     private String fileDir;
 
     //파일 dir 저장
-    public String saveFileProj(MultipartFile file) throws Exception {
+    public String saveFileProj(MultipartFile files) throws Exception {
         try {
             LocalDateTime currenTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-            String fileName = currenTime.format(formatter) + "_" + file.getOriginalFilename();
-            File files = new File(fileDir, fileName);
-            file.transferTo(files);
+            String fileName = currenTime.format(formatter) + "_" + files.getOriginalFilename();
+            File file = new File(fileDir, fileName);
+            files.transferTo(file);
             return fileName;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -41,10 +43,11 @@ public class FilesService {
 
     //파일 서버 저장
     public Boolean saveFileDb(MultipartFile file, Integer type, Long id) throws Exception {
-        String originName = getFileName(file);
-        String storageName = saveFileProj(file);
-        String filedir = fileDir + storageName;
         try {
+
+            String originName = getFileName(file);
+            String storageName = saveFileProj(file);
+            String filedir = fileDir + storageName;
             Files files = Files.builder()
                     .type(type)
                     .typeId(id)
@@ -59,15 +62,36 @@ public class FilesService {
         }
     }
 
-    //파일 dir, 서버 삭제 --- dir 삭제 규제 필요
+    public Boolean saveFileMDb(List<MultipartFile> file, Integer type, Long id) throws Exception {
+        try {
+            for (MultipartFile multipartFile : file) {
+                String originName = getFileName(multipartFile);
+                String storageName = saveFileProj(multipartFile);
+                String filedir = fileDir + storageName;
+                Files files = Files.builder()
+                        .type(type)
+                        .typeId(id)
+                        .originName(originName)
+                        .storageName(storageName)
+                        .path(filedir)
+                        .build();
+                filesRepository.save(files);
+            }
+            return true;
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+    }
+
+    //파일 dir, 서버 삭제
     public void deleteFile(Integer type, Long id) throws Exception {
         List<Files> filesId = filesRepository.findByTypeAndTypeId(type, id);
         try {
-
-            filesRepository.deleteById(filesId.get(0).getFileId());
-            File dfile =new File(filesId.get(0).getPath());
-            dfile.delete();
-
+            for (Files files : filesId) {
+                filesRepository.deleteById(files.getFileId());
+                File dfile = new File(files.getPath());
+                dfile.delete();
+            }
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -83,19 +107,32 @@ public class FilesService {
 
 
     //파일 다운로드
+    public Boolean downloadFile(Long fileId) throws Exception {
+        Optional<Files> file = filesRepository.findById(fileId);
+        System.out.println(file);
+        try {
 
+
+            return true;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 
     //파일 원본 이름 추출
     public String getFileName(MultipartFile file) {
-        String fileOrignalName = file.getOriginalFilename();
-        return fileOrignalName;
+        return file.getOriginalFilename();
     }
 
     // 파일 유무 탐색
     public Boolean isFile(MultipartFile files) {
-        if (!files.isEmpty()) {
-            return true;
-        }
-        return false;
+        return !files.isEmpty();
     }
+
+    public Boolean isMFile(List<MultipartFile> files) {
+        return !files.isEmpty();
+    }
+
+
 }

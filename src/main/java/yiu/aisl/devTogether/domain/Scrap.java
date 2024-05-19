@@ -1,16 +1,14 @@
 package yiu.aisl.devTogether.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Scrap {
@@ -24,10 +22,12 @@ public class Scrap {
     private Integer type;
 
     @Column
-    private Integer typeId;
+    private Long typeId;
 
-    @Column(columnDefinition = "TEXT")
-    private String path;
+
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
 
     @CreationTimestamp
     @Column
