@@ -1,29 +1,42 @@
 package yiu.aisl.devTogether.service;
 
+import yiu.aisl.devTogether.domain.Board;
+import yiu.aisl.devTogether.domain.Comment;
+import yiu.aisl.devTogether.domain.Scrap;
 import yiu.aisl.devTogether.domain.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
-import yiu.aisl.devTogether.dto.MyProfileRequestDto;
-import yiu.aisl.devTogether.dto.MyProfileResponseDto;
+import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
+import yiu.aisl.devTogether.repository.BoardRepository;
+import yiu.aisl.devTogether.repository.CommentRepository;
+import yiu.aisl.devTogether.repository.ScrapRepository;
 import yiu.aisl.devTogether.repository.UserRepository;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
+    private final ScrapRepository scrapRepository;
+    private final CommentRepository commentRepository;
+
 
     // [API]  내 정보 조회
     public Object getMyProfile(CustomUserDetails userDetails) {
-        Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH)
+        ));
         return MyProfileResponseDto.builder()
                 .email(user.get().getEmail())
                 .name(user.get().getName())
@@ -68,33 +81,55 @@ public class UserService {
         return true;
     }
 
-//    // [API] 내가 작성한 댓글 조회
-//    public Object getMyComment(CustomUserDetails userDetails) {
-//        Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
-//
-//    }
-//
-//    // [API] 내가 작성한 글 조회
-//    public Object getMyBoard(CustomUserDetails userDetails) {
-//        Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
-//
-//    }
-//
-//    // [API] 내가 스크랩한 글 조회
+    // [API] 내가 작성한 댓글 조회
+    public Object getMyComment(CustomUserDetails userDetails) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH)
+        ));
+
+        List<Comment> myComments = commentRepository.findByUser(user.get());
+        return myComments.stream()
+                .map(CommentDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // [API] 내가 작성한 글 조회
+    public Object getMyBoard(CustomUserDetails userDetails) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH)
+        ));
+
+        List<Board> myBoards = boardRepository.findByUser(user.get());
+        return myBoards.stream()
+                .map(BoardDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // [API] 내가 스크랩한 글 조회
 //    public Object getMyScrap(CustomUserDetails userDetails) {
-//        Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
+//        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+//                () -> new CustomException(ErrorCode.NO_AUTH)
+//        ));
 //
+//        List<Scrap> myScraps = scrapRepository.findByUser(user.get());
+//        return myScraps.stream()
+//                .map(ScrapDto::new)
+//                .collect(Collectors.toList());
 //    }
 //
 //    // [API] 내 멘티 관리하기
 //    public Object getMyMentee(CustomUserDetails userDetails) {
-//        Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
+//        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+//                () -> new CustomException(ErrorCode.NO_AUTH)
+//        ));
 //
 //    }
 //
 //    // [API] 내 멘토 관리하기
 //    public Object getMyMentor(CustomUserDetails userDetails) {
-//        Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
+//        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+//                () -> new CustomException(ErrorCode.NO_AUTH)
+//        ));
 //
 //    }
 //

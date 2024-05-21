@@ -20,6 +20,7 @@ public class CommentDto {
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
     private User userId;
+    private Long boardId;
 
     public static CommentDto getCommentDto(Comment comment){
         return new CommentDto(
@@ -27,7 +28,16 @@ public class CommentDto {
                 comment.getContents(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
-                comment.getUser()
+                comment.getUser(),
+                comment.getBoard().getBoardId()
         );
+    }
+
+    public CommentDto(Comment comment) {
+        this.boardId = comment.getBoard().getBoardId();
+        this.contents = comment.getContents();
+        this.createAt = comment.getCreatedAt();
+        this.updatedAt = comment.getUpdatedAt();
+        this.userId = comment.getUser();
     }
 }
