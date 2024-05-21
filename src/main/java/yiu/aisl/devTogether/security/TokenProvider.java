@@ -32,8 +32,6 @@ public class TokenProvider {
 
     private Key secretKey;
 
-    @Value("${admin.email1}")
-    private String MANAGER1;
 
 
 
@@ -65,7 +63,7 @@ public class TokenProvider {
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
 
-        if (user.getEmail().equals(MANAGER1) || user.getRole() == RoleCategory.fromInt(0)  ) {
+        if ( user.getRole() == RoleCategory.fromInt(0)  ) {
             jwtBuilder.claim("role", "ADMIN");
         }
 

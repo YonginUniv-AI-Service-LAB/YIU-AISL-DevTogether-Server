@@ -45,7 +45,7 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private GenderCategory gender;
 
-    @Column(nullable = false)
+    @Column
     private Integer fee;
 
     @Column(nullable = false, length = 255)
@@ -55,30 +55,29 @@ public class User {
     @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = false)
+    @Column
     private String method;
 
-
-
-    @Column(nullable = false)
+    @Column
     private String location1;
 
-    @Column(nullable = false)
+    @Column
     private String location2;
 
-    @Column(nullable = false)
+    @Column
     private String location3;
 
-    @Column(nullable = false)
+    @Column
     private String subject1;
-    @Column(nullable = false)
+    @Column
     private String subject2;
-    @Column(nullable = false)
+    @Column
     private String subject3;
-    @Column(nullable = false)
+    @Column
     private String subject4;
-    @Column(nullable = false)
+    @Column
     private String subject5;
+
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
 
@@ -111,8 +110,6 @@ public class User {
         this.subject3 = subject3;
         this.subject4 = subject4;
         this.subject5 = subject5;
-
-
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

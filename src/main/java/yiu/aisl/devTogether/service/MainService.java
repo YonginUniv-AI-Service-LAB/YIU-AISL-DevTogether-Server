@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
@@ -40,19 +39,15 @@ public class MainService {
 
 
     //회원가입
-    public Boolean register(RegisterRequestDto request, MultipartFile img) throws Exception {
+    public Boolean register(RegisterRequestDto request) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
 
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
-        Boolean imgs = filesService.isFile(img);
 
         //400 - 데이터 미입력
         if ( request.getEmail() == null || request.getPwd() == null || request.getName() == null
                 || request.getNickname() == null   || request.getRole() == null   || request.getGender() == null
-                || request.getAge() == null   || request.getFee() == null
-                || request.getMethod() == null   || request.getLocation1() == null   || request.getLocation2() == null   || request.getLocation3() == null
-                || request.getSubject1() == null   || request.getSubject2() == null   || request.getSubject3() == null
-                || request.getSubject4() == null   || request.getSubject5() == null)
+                || request.getAge() == null)
         {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
@@ -78,23 +73,10 @@ public class MainService {
                     .nickname(request.getNickname())
                     .role(roleCategory)
                     .gender(genderCategory)
-                    .img(imgs)
                     .age(request.getAge())
-                    .fee(request.getFee())
-                    .method(request.getMethod())
-                    .location1(request.getLocation1())
-                    .location2(request.getLocation2())
-                    .location3(request.getLocation3())
-                    .subject1(request.getSubject1())
-                    .subject2(request.getSubject2())
-                    .subject3(request.getSubject3())
-                    .subject4(request.getSubject4())
-                    .subject5(request.getSubject5())
                     .build();
             userRepository.save(user);
-            if (imgs) {
-                filesService.saveFileDb(img, 0, user.getId());
-            }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

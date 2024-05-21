@@ -24,8 +24,8 @@ public class MatchingController {
 
     //멘티 조회
     @GetMapping("/mentee")
-    public ResponseEntity<List> meneteeList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(matchingService.meneteeList(user.getEmail()), HttpStatus.OK);
+    public ResponseEntity<List> menteeList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(matchingService.menteeList(user.getEmail()), HttpStatus.OK);
     }
 /*
 

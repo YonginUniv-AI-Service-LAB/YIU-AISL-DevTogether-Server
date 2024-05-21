@@ -60,7 +60,7 @@ public class AskService {
                     .user(user)
                     .title(request.getTitle())
                     .contents(request.getContents())
-                    .status(StatusCategory.APPLICATION) // 신청
+                    .status(StatusCategory.신청) // 신청
                     .file(request.getFile())
                     .askCategory(AskCategory.fromInt(request.getAskCategory()))
                     .build();
@@ -82,13 +82,13 @@ public class AskService {
         Ask ask = findByAskId(request.getAskId());
         // 403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.MANAGER ){
+        if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
 
-        if (role == RoleCategory.MANAGER) {
+        if (role == RoleCategory.관리자) {
             ask.setAnswer(request.getAnswer());
-            ask.setStatus(StatusCategory.COMPLETION);
+            ask.setStatus(StatusCategory.완료);
             askRepository.save(ask);
         } else {
 
@@ -135,7 +135,7 @@ public class AskService {
 
         }
         //404 - 수정 불가  >> 관리자가 답변을 달아 완료가 된 상태인데 수정하려는 경우
-        if(ask.getStatus() == StatusCategory.COMPLETION){
+        if(ask.getStatus() == StatusCategory.완료){
             throw new CustomException(ErrorCode.NOT_MODIFICATION);
         }
 
@@ -150,7 +150,7 @@ public class AskService {
             Optional<Ask> modifyAsk = askRepository.findByAskId(request.getAskId());
             modifyAsk.get().setTitle(request.getTitle());
             modifyAsk.get().setContents(request.getContents());
-            modifyAsk.get().setStatus(StatusCategory.APPLICATION);
+            modifyAsk.get().setStatus(StatusCategory.신청);
             modifyAsk.get().setFile(request.getFile());
             modifyAsk.get().setAskCategory(askCategory);
             askRepository.save(ask);

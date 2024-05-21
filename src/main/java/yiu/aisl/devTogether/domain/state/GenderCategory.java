@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum GenderCategory {
 
 
-    MAN(0), //남자
-    FEMALE(1); //여자
+    남(0), //남자
+    여(1); //여자
 
 
     private final int value;

@@ -69,7 +69,7 @@ public class NoticeService {
             throw new CustomException(ErrorCode.NO_AUTH);
         }*/
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.MANAGER ){
+        if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
 
@@ -102,7 +102,7 @@ public class NoticeService {
         // 403 - 권한 없음
 
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.MANAGER ){
+        if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{
@@ -131,7 +131,7 @@ public class NoticeService {
         }
         // 403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.MANAGER ){
+        if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try {

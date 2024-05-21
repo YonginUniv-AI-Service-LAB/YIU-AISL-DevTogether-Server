@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum NoticeCategory  {
-    NOTICE(0), //
-    EVENT(1), //
-    UPDATE(2); //업데이트
+    공지(0), //
+    이벤트(1), //
+    업데이트(2); //업데이트
 
     private final int value;
 

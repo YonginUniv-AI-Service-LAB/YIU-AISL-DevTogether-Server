@@ -44,7 +44,7 @@ public class FaqService {
 
         //403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.MANAGER ){
+        if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{
@@ -70,7 +70,7 @@ public class FaqService {
         Faq faq = findByFaqId(request.getFaqId());
         //403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.MANAGER ){
+        if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{
@@ -96,7 +96,7 @@ public class FaqService {
 
         //403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.MANAGER ){
+        if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{

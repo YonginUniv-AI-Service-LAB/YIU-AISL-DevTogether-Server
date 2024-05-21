@@ -30,25 +30,25 @@ public class MatchingService {
     public List<User> mentorList(String email) {
         User user = findByEmail(email);
         //현재 멘티면 멘토 리스트 보여줌
-        if (user.getRole() == RoleCategory.MENTEE) {
-            return userRepository.findByRole(RoleCategory.MENTOR);
+        if (user.getRole() == RoleCategory.멘티) {
+            return userRepository.findByRole(RoleCategory.멘토);
         }
         //현재 멘토멘티면 멘토 리스트 보여줌
-        if(user.getRole() == RoleCategory.MEMTORMENTEE){
-            return userRepository.findByRole(RoleCategory.MENTOR);
+        if(user.getRole() == RoleCategory.멘토멘티){
+            return userRepository.findByRole(RoleCategory.멘토);
         }
         return null;
     }
     //멘티 조회
-    public List<User> meneteeList(String email) {
+    public List<User> menteeList(String email) {
         User user = findByEmail(email);
         //현재 멘토면 멘티 리스트 보여줌
-        if (user.getRole() == RoleCategory.MENTOR) {
-            return userRepository.findByRole(RoleCategory.MENTEE);
+        if (user.getRole() == RoleCategory.멘토) {
+            return userRepository.findByRole(RoleCategory.멘티);
         }
         //현재 멘토멘티면 멘티 리스트 보여줌
-        if(user.getRole() == RoleCategory.MEMTORMENTEE){
-            return userRepository.findByRole(RoleCategory.MENTEE);
+        if(user.getRole() == RoleCategory.멘토멘티){
+            return userRepository.findByRole(RoleCategory.멘티);
         }
         return null;
     }
@@ -60,9 +60,6 @@ public class MatchingService {
     }
 /*
     //멘토 or 멘티 스크랩
-    public List scrap(String email) {
-    }
-
 
 
 
@@ -86,7 +83,10 @@ public class MatchingService {
     public Boolean confirm(String email, MatchingRequestDto.ConfirmDTO request) { return true;
     }
 
-    public Boolean end(String email, MatchingRequestDto.EndDTO request) { return true;
+    public Boolean end(String email, MatchingRequestDto.
+    public List scrap(String email) {
+    }
+EndDTO request) { return true;
     }
     */
 

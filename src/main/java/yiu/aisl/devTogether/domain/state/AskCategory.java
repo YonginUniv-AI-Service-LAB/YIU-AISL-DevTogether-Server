@@ -16,10 +16,10 @@ public enum AskCategory {
 
     //명사 이용
 
-    ETC(0), //기타등등
-    MATCHING(1), //매칭
+    기타(0), //기타등등
+    매칭(1), //매칭
     IDE(2),//IDE
-    SYSTEMERROR(3); //시스템 오류
+    시스템오류(3); //시스템 오류
 
 
 

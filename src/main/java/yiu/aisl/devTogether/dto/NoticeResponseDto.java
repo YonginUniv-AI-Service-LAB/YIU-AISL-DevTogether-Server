@@ -21,7 +21,7 @@ public class NoticeResponseDto {
     private String contents;
     private NoticeCategory noticeCategory;
     private String file;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
 
