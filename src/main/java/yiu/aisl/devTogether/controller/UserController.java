@@ -32,4 +32,28 @@ public class UserController {
     public ResponseEntity<Boolean> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MyProfileRequestDto dto) throws Exception {
         return new ResponseEntity<Boolean>(userService.updateProfile(customUserDetails, dto), HttpStatus.OK);
     }
+
+    // 내가 작성한 댓글 조회
+    @GetMapping(value = "/comment")
+    public ResponseEntity<Object> getMyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyComment(customUserDetails), HttpStatus.OK);
+    }
+
+    // 내가 작성한 글 조회
+    @GetMapping(value = "/board")
+    public ResponseEntity<Object> getMyBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyBoard(customUserDetails), HttpStatus.OK);
+    }
+
+    // 내가 스크랩한 글 조회
+//    @GetMapping(value = "/board/scrap")
+//    public ResponseEntity<Object> getMyScrap(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+//        return new ResponseEntity<>(userService.getMyScrap(customUserDetails), HttpStatus.OK);
+//    }
 }

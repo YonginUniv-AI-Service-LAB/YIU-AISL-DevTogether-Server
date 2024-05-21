@@ -1,9 +1,6 @@
 package yiu.aisl.devTogether.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import yiu.aisl.devTogether.domain.Board;
 import yiu.aisl.devTogether.domain.Comment;
 import yiu.aisl.devTogether.domain.Files;
@@ -14,8 +11,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class BoardDto {
     private Long boardId;
     private String title;
@@ -39,5 +37,17 @@ public class BoardDto {
                 board.getComments(),
                 board.getFilesList()
         );
+    }
+
+    public BoardDto(Board board) {
+        this.boardId = board.getBoardId();
+        this.title = board.getTitle();
+        this.contents = board.getContents();
+        this.createAt = board.getCreatedAt();
+        this.updatedAt = board.getUpdatedAt();
+        this.userId = board.getUser();
+        this.files = board.getFiles();
+        this.comments = board.getComments();
+        this.filesList = board.getFilesList();
     }
 }
