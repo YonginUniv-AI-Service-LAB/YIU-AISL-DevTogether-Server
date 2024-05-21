@@ -59,8 +59,24 @@ public class UserService {
 
     // [API] 내 정보 수정
     public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto) {
+        if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
+            new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
+        }
+
         User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(()->
-                new CustomException(ErrorCode.NO_AUTH)); // 권한 오류
+                new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
+
+        // 데이터 미입력 (400)
+        if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+
+        // 데이터 중복(닉네임) (409)
+        if(dto.getNickname() != user.getNickname()) {
+            if(userRepository.findByEmail(dto.getNickname()).isPresent()) {
+                throw  new CustomException(ErrorCode.DUPLICATE);
+            }
+        }
 
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
