@@ -98,6 +98,8 @@ public class MainService {
             throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
         }
 
+        // 멘토멘티 둘 다로 회원가입 한 경우 즉, role == 3 일 경우에는 request.getRole() 값이 user.getRole() 값과 일치하는 것이 아닌 그냥 request.getRole 값으로 회원가입 해야함
+        // 해당 사항과 관련하여 401 - 회원정보 불일치와 관련하여 수정 필요
 
         try {
             // 토큰 발급 (추가 정보 확인 하기 위해 이름 포함 시킴)

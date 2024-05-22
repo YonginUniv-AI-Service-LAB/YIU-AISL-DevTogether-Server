@@ -65,10 +65,14 @@ public class TokenProvider {
 
         if ( user.getRole() == RoleCategory.fromInt(0)  ) {
             jwtBuilder.claim("role", "ADMIN");
-        }
-
-
-        else jwtBuilder.claim("role", "USER");
+            System.out.println("관리자 권한 부여");
+        } else if (user.getRole() == RoleCategory.fromInt(1)) {
+            jwtBuilder.claim("role", "MENTOR");
+            System.out.println("멘토 권한 부여");
+        } else if(user.getRole() == RoleCategory.fromInt(2)) {
+            jwtBuilder.claim("role", "MENTEE");
+            System.out.println("멘티 권한 부여");
+        } else jwtBuilder.claim("role", "USER");
 
         return jwtBuilder.compact();
     }
