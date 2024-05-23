@@ -5,10 +5,12 @@ import lombok.Getter;
 @Getter
 public enum StatusCategory {
 
-    신청(0), //신청
-    진행(1), //진행
-    완료(2), //완료
-    거절(3);//거절
+    신청(0),
+    진행(1),
+    완료(2),
+    거절(3),
+    성사안됨(4),
+    성사됨(5);
 
 
     private final int value;

@@ -20,12 +20,19 @@ public class Matching {
     private Long matchingId;
 
     @ManyToOne
-    @JoinColumn(name = "to_user_id",nullable = false)
-    private User toUserId;
+    @JoinColumn(name = "user_profile_id",nullable = false)
+    private User_Profile mentor;
 
     @ManyToOne
-    @JoinColumn(name = "from_user_id",nullable = false)
-    private User fromUserId;
+    @JoinColumn(name = "user_profile_id",nullable = false)
+    private User_Profile mentee;
+
+    @Column(nullable = false)
+    private Integer MatchingCategory;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private StatusCategory status;
 
     @CreationTimestamp
     @Column
@@ -35,7 +42,12 @@ public class Matching {
     @Column
     private LocalDateTime updatedAt;
 
+    @UpdateTimestamp
     @Column
-    @Enumerated(EnumType.ORDINAL)
-    private StatusCategory status;
+    private LocalDateTime endedAt;
+
+
+
+
+
 }
