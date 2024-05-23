@@ -20,9 +20,9 @@ public class User_Profile {
     @Column
     private Long userProfileId;
 
-    @ManyToOne
     @JoinColumn
-    private User userId;
+    @ManyToOne
+    private User user_id;
 
     @Column
     private Integer role;

@@ -72,7 +72,7 @@ public class TokenProvider {
         } else if(user.getRole() == RoleCategory.fromInt(2)) {
             jwtBuilder.claim("role", "MENTEE");
             System.out.println("멘티 권한 부여");
-        } else jwtBuilder.claim("role", "USER");
+        }
 
         return jwtBuilder.compact();
     }

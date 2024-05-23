@@ -20,15 +20,15 @@ public class Matching {
     private Long matchingId;
 
     @ManyToOne
-    @JoinColumn(name = "user_profile_id",nullable = false)
+    @JoinColumn(name = "user_mentor_id",nullable = false)
     private User_Profile mentor;
 
     @ManyToOne
-    @JoinColumn(name = "user_profile_id",nullable = false)
+    @JoinColumn(name = "user_mentee_id",nullable = false)
     private User_Profile mentee;
 
     @Column(nullable = false)
-    private Integer MatchingCategory;
+    private Integer matchingCategory;
 
     @Column
     @Enumerated(EnumType.ORDINAL)

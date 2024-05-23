@@ -16,21 +16,25 @@ import java.time.LocalDateTime;
 public class MatchingResponseDto {
 
     private Long matchingId;
-    private Long toUserId;
-    private Long fromUserId;
+    private Long mentor;
+    private Long mentee;
+    private StatusCategory status;
+    private Integer matchingCategory;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
-    private StatusCategory status;
+    private LocalDateTime endedAt;
 
     public static MatchingResponseDto GetMatchingDTO(Matching matching) {
         return new MatchingResponseDto(
 
                 matching.getMatchingId(),
-                matching.getToUserId().getId(),
-                matching.getFromUserId().getId(),
+                matching.getMentor().getUserProfileId(),
+                matching.getMentee().getUserProfileId(),
+                matching.getStatus(),
+                matching.getMatchingCategory(),
                 matching.getCreatedAt(),
                 matching.getUpdatedAt(),
-                matching.getStatus()
+                matching.getEndedAt()
         );
     }
 }
