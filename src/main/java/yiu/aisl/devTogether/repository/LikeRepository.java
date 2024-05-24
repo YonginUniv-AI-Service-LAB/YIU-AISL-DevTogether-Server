@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Transactional
 public interface LikeRepository extends JpaRepository<Likes, Long> {
-    Optional<Likes> findByUseridEmail(User email);
-
+    Optional<Likes> findByuserid(User user);
+    Optional<Likes> findByUseridAndTypeId(User user, Long typeId);
 
 }

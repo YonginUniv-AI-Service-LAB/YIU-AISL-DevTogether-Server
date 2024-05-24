@@ -24,16 +24,10 @@ public class Likes {
     private User userid;
 
     @Column
-    private Integer typeId;
+    private Long typeId;
 
     @Column
     private Integer type;
-
-//    @Column(columnDefinition = "TEXT")
-//    private String contents;
-
-    @Column
-    private Boolean count;
 
     @CreationTimestamp
     @Column

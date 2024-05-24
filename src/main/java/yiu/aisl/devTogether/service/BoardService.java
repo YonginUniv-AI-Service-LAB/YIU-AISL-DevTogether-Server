@@ -29,10 +29,14 @@ public class BoardService {
 
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
-        List<Board> board = boardRepository.findAll();
-        List<BoardDto> getList = new ArrayList<>();
-        board.forEach(s -> getList.add(BoardDto.getboardDto(s)));
-        return getList;
+        try {
+            List<Board> board = boardRepository.findAll();
+            List<BoardDto> getList = new ArrayList<>();
+            board.forEach(s -> getList.add(BoardDto.getboardDto(s)));
+            return getList;
+        }catch (Exception e){
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //게시판 부분 조회
@@ -63,11 +67,11 @@ public class BoardService {
         User user = findByUserEmail(email);
 
         //400 데이터 미입력
-        if (request.getTitle() == null || request.getContents() == null) {
+        if (request.getTitle().isEmpty() || request.getContents().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         Boolean files = filesService.isMFile(file);
-
+//        System.out.println(files);
         try {
             Board board = Board.builder()
                     .title(request.getTitle())
@@ -119,7 +123,7 @@ public class BoardService {
         User user = findByUserEmail(email);
 
         //400: 데이터 미입력
-        if (request.getTitle() == null || request.getContents() == null) {
+        if (request.getTitle().isEmpty() || request.getContents().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
@@ -145,32 +149,32 @@ public class BoardService {
 
     }
 
-    //게시글 좋아요 ---test 안함
+    //게시글 좋아요
     public boolean likes(String email, BoardRequestDto.likeDto request) throws Exception {
         // 403: 권한 없음
-        findByUserEmail(email);
-        // 404: id 없음
-        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
-        if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
         User user = findByUserEmail(email);
-        Optional<Likes> like = likeRepository.findByUseridEmail(user);
+        // 404: id 없음
+        findByBoardId(request.getBoardId());
         try {
-            //좋아요 db 에서 해당 보드/댓글 아이디에 유저가 db에 저장 되어있는지 찾기 ---- 타입 구분 추가 필요
-            if (likeRepository.findByUseridEmail(user).isPresent()) {
-                Boolean count = request.getCount();
-                Likes getlike = like.get();
-                if (getlike.getCount())
-                    getlike.setCount(true);
-                else
-                    getlike.setCount(false);
-            } else {//만약 없으면 좋아요 db 만들기
-                Likes makelike = Likes.builder()
-                        .count(true)
-                        .typeId(Math.toIntExact(request.getBoardId()))
-                        .type(0)
-                        .build();
+            // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
+            if(request.getCount()){
+                if (likeRepository.findByUseridAndTypeId(user, request.getBoardId()).isPresent()) {
+                    throw new CustomException(ErrorCode.DUPLICATE);
+                } else {//만약 없으면 좋아요 db 만들기
+                    Likes makelike = Likes.builder()
+                            .userid(user)
+                            .typeId(request.getBoardId())
+                            .type(0)
+                            .build();
+                    likeRepository.save(makelike);
+                }
+            }else {// 취소 했을때
+                if (likeRepository.findByUseridAndTypeId(user, request.getBoardId()).isPresent()) {
+                    Likes likes = findByLikesId(user, request.getBoardId());
+                    likeRepository.delete(likes);
+                } else {//만약 없으면 오류
+                    throw new Exception();
+                }
             }
             return true;
         } catch (Exception e) {
@@ -294,7 +298,42 @@ public class BoardService {
 
     }
     //댓글 좋아요
-
+    public Boolean likeComment(String email, BoardRequestDto.likeCommentDto request) throws Exception{
+        // 403: 권한 없음
+        User user = findByUserEmail(email);
+        // 404: id 없음
+        Comment comment = commentRepository.findByCommentId(request.getCommentId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
+        try {
+            // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
+            if(request.getCount()){
+                if (likeRepository.findByUseridAndTypeId(user, request.getCommentId()).isPresent()) {
+                    throw new CustomException(ErrorCode.DUPLICATE);
+                } else {//만약 없으면 좋아요 db 만들기
+                    Likes makelike = Likes.builder()
+                            .userid(user)
+                            .typeId(request.getCommentId())
+                            .type(1)
+                            .build();
+                    likeRepository.save(makelike);
+                }
+            }else {// 취소 했을때
+                if (likeRepository.findByUseridAndTypeId(user, request.getCommentId()).isPresent()) {
+                    Likes likes = findByLikesId(user, request.getCommentId());
+                    likeRepository.delete(likes);
+                } else {//만약 없으면 좋아요 db 만들기
+                    throw new CustomException(ErrorCode.DUPLICATE);
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+    public Likes findByLikesId(User user, Long typeId){
+        return likeRepository.findByUseridAndTypeId(user, typeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
+    }
 
     public Board findByBoardId(Long boardId) {
         return boardRepository.findByBoardId(boardId)

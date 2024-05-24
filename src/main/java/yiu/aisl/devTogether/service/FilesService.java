@@ -131,6 +131,7 @@ public class FilesService {
     }
 
     public Boolean isMFile(List<MultipartFile> files) {
+//        System.out.println(files.isEmpty());
         return !files.isEmpty();
     }
 

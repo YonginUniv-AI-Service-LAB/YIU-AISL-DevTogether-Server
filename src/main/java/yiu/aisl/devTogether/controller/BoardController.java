@@ -64,10 +64,10 @@ public class BoardController {
         return new ResponseEntity<Boolean>(boardService.likes(user.getEmail(), request), HttpStatus.OK);
     }
 
-        //게시글 스크렙
+    //게시글 스크렙
     @PostMapping("/scrap")
-    public ResponseEntity<Boolean> scrap(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreatScrapDto request) throws Exception{
-        return new ResponseEntity<Boolean>(boardService.createScrap(user.getEmail() ,request), HttpStatus.OK);
+    public ResponseEntity<Boolean> scrap(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreatScrapDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.createScrap(user.getEmail(), request), HttpStatus.OK);
     }
 
     //댓글 등록
@@ -81,14 +81,16 @@ public class BoardController {
     public ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteCommentDto request) throws Exception {
         return new ResponseEntity<Boolean>(boardService.deleteComment(user.getEmail(), request), HttpStatus.OK);
     }
+
     //댓글 수정
     @PutMapping("/comment")
-    public ResponseEntity<Boolean> updateCommet(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.UpdateCommentDto request) throws Exception{
+    public ResponseEntity<Boolean> updateCommet(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.UpdateCommentDto request) throws Exception {
         return new ResponseEntity<Boolean>(boardService.updateComment(user.getEmail(), request), HttpStatus.OK);
     }
-//    //댓글 좋아요
-//    @PostMapping("/Comment/like")
-//    public ResponseEntity<Boolean> likeCountComment(BoardRequestDto.likeCommentDto request) throws Exception{
-//        return new ResponseEntity<Boolean>(boardService.likeCountComment(request), HttpStatus.OK);
-//    }
+
+    //댓글 좋아요
+    @PostMapping("/Comment/like")
+    public ResponseEntity<Boolean> likeCountComment(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.likeCommentDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.likeComment(user.getEmail(), request), HttpStatus.OK);
+    }
 }
