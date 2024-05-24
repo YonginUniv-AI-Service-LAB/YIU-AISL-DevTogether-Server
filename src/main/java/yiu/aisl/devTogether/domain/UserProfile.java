@@ -14,15 +14,15 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User_Profile {
+public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "userProfile_id")
     private Long userProfileId;
 
     @JoinColumn
     @ManyToOne
-    private User user_id;
+    private User user;
 
     @Column
     private Integer role;

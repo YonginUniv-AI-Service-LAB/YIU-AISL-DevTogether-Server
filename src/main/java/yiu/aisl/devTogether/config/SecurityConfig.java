@@ -71,7 +71,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 //공통
-                                .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change", "token/change", "/token/refresh", "/nickname",
+                                .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change","/scrap/mentee","/scrap/mentor",
+                                        "/email" ,"token/change", "/token/refresh", "/nickname",
                                         "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask/**","/mentor").permitAll()
 
                                // .requestMatchers("/delivery/**").authenticated()  /delivery로 시작하는 url에 대해 인증된 사용자만 접근

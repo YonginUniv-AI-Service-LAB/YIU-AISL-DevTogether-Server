@@ -183,7 +183,7 @@ public class BoardService {
 
     }
 
-    //게시글 스크렙
+    //게시글 스크랩
     public Boolean createScrap(String email, BoardRequestDto.CreatScrapDto request) throws Exception {
         //400: 데이터 미입력
         if (request.getBoardId() == null) {

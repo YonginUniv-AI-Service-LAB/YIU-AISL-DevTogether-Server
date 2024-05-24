@@ -21,11 +21,14 @@ public class Matching {
 
     @ManyToOne
     @JoinColumn(name = "user_mentor_id",nullable = false)
-    private User_Profile mentor;
+    private UserProfile mentor;
 
     @ManyToOne
     @JoinColumn(name = "user_mentee_id",nullable = false)
-    private User_Profile mentee;
+    private UserProfile mentee;
+
+
+
 
     @Column(nullable = false)
     private Integer matchingCategory;

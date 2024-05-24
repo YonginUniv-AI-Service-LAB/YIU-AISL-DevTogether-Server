@@ -4,9 +4,11 @@ package yiu.aisl.devTogether.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.service.MainService;
 
@@ -62,6 +64,12 @@ public class MainController {
     public ResponseEntity<Boolean> nicknameCheck(NicknameCheckRequestDto request) throws  Exception{
         System.out.println("nicknameCheck request" + request);
         return new ResponseEntity<Boolean>(mainService.nicknameCheck(request), HttpStatus.OK);
+    }
+
+    //email 찾기
+    @PostMapping(value = "/email")
+    public ResponseEntity<Boolean>  emailFind(@AuthenticationPrincipal CustomUserDetails user,EmailDto request) throws  Exception{
+        return new ResponseEntity<Boolean>(mainService.emailFind(user.getEmail(),request), HttpStatus.OK);
     }
 
     //refresh토큰

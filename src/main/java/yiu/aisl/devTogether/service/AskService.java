@@ -47,8 +47,8 @@ public class AskService {
         User user = findByEmail(email);
         System.out.println(user);
 
-
-        if (request.getTitle() == null || request.getContents() == null || request.getAskCategory() == null
+        // 400 - 데이터미입력
+        if (request.getTitle().isEmpty()|| request.getContents().isEmpty() || request.getAskCategory() == null
          )
          {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -130,7 +130,7 @@ public class AskService {
         //404 - id없음
         Ask ask = findByAskId(request.getAskId());
         //400 - 데이터 미입력
-        if(request.getAskId() == null || request.getTitle() == null || request.getContents() == null || request.getAskCategory() == null){
+        if(request.getAskId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty() || request.getAskCategory() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         }

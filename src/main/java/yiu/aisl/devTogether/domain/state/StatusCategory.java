@@ -13,6 +13,7 @@ public enum StatusCategory {
     성사됨(5);
 
 
+
     private final int value;
 
     StatusCategory(int value) {

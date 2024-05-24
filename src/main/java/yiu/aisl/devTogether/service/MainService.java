@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
+import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -44,10 +45,11 @@ public class MainService {
 
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
 
+        QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
         //400 - 데이터 미입력
-        if ( request.getEmail() == null || request.getPwd() == null || request.getName() == null
-                || request.getNickname() == null   || request.getRole() == null   || request.getGender() == null
-                || request.getAge() == null)
+        if (  request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getName().isEmpty()
+                || request.getNickname().isEmpty()   || request.getRole() == null   || request.getGender() == null
+                || request.getAge() == null || request.getBirth().isEmpty()  || request.getQuestion()== null    || request.getAnswer().isEmpty()                        )
         {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
@@ -74,6 +76,9 @@ public class MainService {
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
+                    .birth(request.getBirth())
+                    .question(questionCategory)
+                    .answer(request.getAnswer())
                     .build();
             userRepository.save(user);
 
@@ -82,12 +87,34 @@ public class MainService {
         }
         return true;
     }
+    // 이메일 찾기
+    public Boolean emailFind(String email,EmailDto request) throws Exception {
+        User user = findByEmail(email);
+        QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
+        // 404 - 회원없음
+        if (!user.getName().equals(request.getName()) ||
+                !user.getBirth().equals(request.getBirth())) {
+            throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
+        }
+
+        // 400 - 데이터 미입력
+        if (request.getName().isEmpty() || request.getBirth().isEmpty()
+                || request.getQuestion() == null  || request.getAnswer().isEmpty()) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+
+        // 401 - 정보 불일치
+        if(!user.getQuestion().equals(questionCategory) || !user.getAnswer().equals(request.getAnswer())) {
+            throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+        }
+        return true;
+    }
 
     //로그인
     public LoginResponseDto login(LoginRequestDto request) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
         // 400 - 데이터 미입력
-        if (request.getEmail() == null || request.getPwd() == null || request.getRole() == null) {
+        if (request.getEmail().isEmpty()|| request.getPwd().isEmpty() || request.getRole() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
@@ -97,6 +124,7 @@ public class MainService {
         if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) ||    user.getRole() != roleCategory     ) {
             throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
         }
+
 
         // 멘토멘티 둘 다로 회원가입 한 경우 즉, role == 3 일 경우에는 request.getRole() 값이 user.getRole() 값과 일치하는 것이 아닌 그냥 request.getRole 값으로 회원가입 해야함
         // 해당 사항과 관련하여 401 - 회원정보 불일치와 관련하여 수정 필요
@@ -182,7 +210,7 @@ public class MainService {
     //비밀번호 변경
     public Boolean pwdChange(PwdChangeRequestDto request)  throws MessagingException, UnsupportedEncodingException{
         // 400 - 데이터 없음
-        if(request.getEmail() == null || request.getPwd() == null)
+        if(request.getEmail().isEmpty()|| request.getPwd().isEmpty())
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         // 404 - 회원 존재 확인
@@ -274,4 +302,12 @@ public class MainService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+    }
+
+
 }

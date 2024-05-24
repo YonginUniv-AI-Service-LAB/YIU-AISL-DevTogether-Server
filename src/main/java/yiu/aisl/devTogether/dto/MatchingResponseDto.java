@@ -18,6 +18,7 @@ public class MatchingResponseDto {
     private Long matchingId;
     private Long mentor;
     private Long mentee;
+
     private StatusCategory status;
     private Integer matchingCategory;
     private LocalDateTime createAt;
@@ -30,6 +31,7 @@ public class MatchingResponseDto {
                 matching.getMatchingId(),
                 matching.getMentor().getUserProfileId(),
                 matching.getMentee().getUserProfileId(),
+
                 matching.getStatus(),
                 matching.getMatchingCategory(),
                 matching.getCreatedAt(),

@@ -29,14 +29,14 @@ public class MatchingRequestDto {
     @Setter
     public static class DeleteDTO {
         private Long matchingId;
-        private StatusCategory status;
+
     }
 
     @Getter
     @Setter
     public static class RefusalDTO {
         private Long matchingId;
-        private StatusCategory status;
+
 
 
     }
@@ -45,13 +45,18 @@ public class MatchingRequestDto {
     @Setter
     public static class ConfirmDTO {
         private Long matchingId;
-        private StatusCategory status;
+
     }
 
     @Getter
     @Setter
     public static class EndDTO {
         private Long matchingId;
-        private StatusCategory status;
+
+    }
+    @Getter
+    @Setter
+    public class ScrapDto {
+      private Long scrapId;
     }
 }

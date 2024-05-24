@@ -2,6 +2,7 @@ package yiu.aisl.devTogether.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.devTogether.config.CustomUserDetails;
@@ -27,14 +28,18 @@ public class MatchingController {
     public ResponseEntity<List> menteeList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
         return new ResponseEntity<List>(matchingService.menteeList(user.getEmail()), HttpStatus.OK);
     }
-/*
 
-    //멘토 or 멘티 스크랩
-    @PostMapping("/scrap")
-    public ResponseEntity<List> scrap(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(matchingService.scrap(user.getEmail()), HttpStatus.OK)
+
+    //멘토  스크랩
+    @PostMapping("/scrap/mentor")
+    public ResponseEntity<Boolean> mentorScrap(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ScrapDto request) throws Exception {
+        return new ResponseEntity<Boolean>(matchingService.mentorScrap(user.getEmail(), request), HttpStatus.OK);
     }
-
+    //멘티  스크랩
+    @PostMapping("/scrap/mentee")
+    public ResponseEntity<Boolean> menteeScrap(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ScrapDto request) throws Exception {
+        return new ResponseEntity<Boolean>(matchingService.menteeScrap(user.getEmail(), request), HttpStatus.OK);
+    }
 
 
     //신청하기
@@ -42,6 +47,8 @@ public class MatchingController {
     public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ApplyDTO request)throws Exception  {
             return new ResponseEntity<Boolean>(matchingService.apply(user.getEmail(),request), HttpStatus.OK);
     }
+
+
     //신청 수락
     @PutMapping("/matching/application")
     public ResponseEntity<Boolean> approve(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ApproveDTO request) throws Exception {
@@ -62,13 +69,15 @@ public class MatchingController {
     public ResponseEntity<Boolean> confirm(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ConfirmDTO request)throws Exception  {
         return new ResponseEntity<Boolean>(matchingService.confirm(user.getEmail(),request), HttpStatus.OK);
     }
+
+
     //신청 종료
     @PostMapping("/matching/end")
     public ResponseEntity<Boolean> end(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.EndDTO request)throws Exception  {
         return new ResponseEntity<Boolean>(matchingService.end(user.getEmail(),request), HttpStatus.OK);
     }
 
-*/
+
 
 
 

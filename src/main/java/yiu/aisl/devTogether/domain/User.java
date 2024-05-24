@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
+import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.io.File;
@@ -33,8 +34,8 @@ public class User {
     @Column(nullable = false,  length = 20)
     private String nickname;
 
-    @Column( length = 255)
-    private Boolean img;
+    @Column(nullable = false)
+    private String birth;
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
@@ -45,15 +46,27 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private GenderCategory gender;
 
-    @Column
-    private Integer fee;
-
     @Column(nullable = false, length = 255)
     @JsonIgnore
     private String pwd;
 
     @Column(nullable = false)
     private Integer age;
+
+    @Column(nullable = false)
+    private QuestionCategory question;
+
+    @Column(nullable = false)
+    private String answer;
+
+
+
+
+    @Column( length = 255)
+    private Boolean img;
+
+    @Column
+    private Integer fee;
 
     @Column
     private String method;
@@ -77,6 +90,9 @@ public class User {
     private String subject4;
     @Column
     private String subject5;
+
+
+
 
     @Column(columnDefinition = "TEXT")
     private String refreshToken;

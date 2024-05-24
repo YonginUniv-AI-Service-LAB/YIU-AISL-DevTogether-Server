@@ -39,7 +39,7 @@ public class FaqService {
 
         RoleCategory role = RoleCategory.fromInt(request.getRole());
         //400 - 데이터 미입력
-        if(request.getTitle() == null || request.getContents() == null || request.getRole() == null)
+        if(request.getTitle().isEmpty() || request.getContents().isEmpty() || request.getRole() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         //403 - 권한 없음
@@ -90,8 +90,8 @@ public class FaqService {
         RoleCategory role = RoleCategory.fromInt(request.getRole());
 
         //400 - 데이터 미입력
-        if(request.getFaqId() == null || request.getTitle() == null || request.getContents() == null
-                || request.getRole() == null|| request.getFaqId() == null)
+        if(request.getFaqId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty()
+                || request.getRole() == null)
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         //403 - 권한 없음

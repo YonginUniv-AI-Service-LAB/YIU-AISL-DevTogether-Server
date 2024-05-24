@@ -57,7 +57,7 @@ public class NoticeService {
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());    //열거형 상수
         RoleCategory role = RoleCategory.fromInt(request.getRole());
         // 400 - 데이터 미입력
-        if (request.getTitle() == null || request.getContents() == null
+        if (request.getTitle().isEmpty()|| request.getContents().isEmpty()
                 || request.getNoticeCategory() == null || request.getRole() == null)
         {
             System.out.println("test1");
@@ -124,7 +124,7 @@ public class NoticeService {
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());
         RoleCategory role = RoleCategory.fromInt(request.getRole());
         // 400 - 데이터 미입력
-        if (request.getTitle() == null || request.getContents() == null
+        if (request.getTitle().isEmpty()|| request.getContents().isEmpty()
                 || request.getNoticeCategory() == null || request.getRole() == null
                 || request.getNoticeId() == null|| request.getFile() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
