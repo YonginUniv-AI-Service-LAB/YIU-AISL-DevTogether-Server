@@ -25,7 +25,7 @@ public class FaqController {
         return new ResponseEntity<List>(faqService.getList(), HttpStatus.OK);
     }
     // faq 등록
-    @PostMapping("/manager/faq")
+    @PostMapping("/faq")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, FaqRequestDto.CreateDTO request) throws Exception {
         System.out.println("faq_create request: " + request);
@@ -33,7 +33,7 @@ public class FaqController {
     }
 
     // faq 삭제
-    @DeleteMapping("/manager/faq")
+    @DeleteMapping("/faq")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user,  FaqRequestDto.DeleteDTO request) throws Exception {
         System.out.println("faq_delete request" + request);
@@ -41,7 +41,7 @@ public class FaqController {
     }
 
     // faq 수정
-    @PutMapping("/manager/faq")
+    @PutMapping("/faq")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user,  FaqRequestDto.UpdateDTO request) throws Exception {
         System.out.println("faq_update request" + request);
