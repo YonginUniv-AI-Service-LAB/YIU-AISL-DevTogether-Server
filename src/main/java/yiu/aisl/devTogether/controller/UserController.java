@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yiu.aisl.devTogether.dto.MyProfileRequestDto;
 import yiu.aisl.devTogether.config.CustomUserDetails;
+import yiu.aisl.devTogether.dto.UserProfileRequestDto;
 import yiu.aisl.devTogether.service.UserService;
 
 import java.nio.charset.StandardCharsets;
@@ -71,5 +72,17 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
         return new ResponseEntity<>(userService.getMyMentor(customUserDetails), HttpStatus.OK);
+    }
+
+    // 내 멘토 프로필 수정
+    @PutMapping(value = "/mentor")
+    public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request) {
+        return new ResponseEntity<Boolean>(userService.changeMentorProfile(customUserDetails, request), HttpStatus.OK);
+    }
+
+    // 내 멘티 프로필 수정
+    @PutMapping(value = "/mentee")
+    public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request) {
+        return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request), HttpStatus.OK);
     }
 }

@@ -12,6 +12,7 @@ import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.*;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -133,7 +134,7 @@ public class UserService {
     public Object getMyMentee(CustomUserDetails userDetails) {
         User user = userDetails.getUser();
         UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH)
+                () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
 
         List<Matching> myMentee = matchingRepository.findByMentor(userProfile);
@@ -146,7 +147,7 @@ public class UserService {
     public Object getMyMentor(CustomUserDetails userDetails) {
         User user = userDetails.getUser();
         UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH)
+                () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
 
         List<Matching> myMentor = matchingRepository.findByMentee(userProfile);
@@ -154,11 +155,46 @@ public class UserService {
                 .map(MatchingResponseDto::new)
                 .collect(Collectors.toList());
     }
-//
-//    // [API] 내 멘토 프로필 변경하기
-//    public Boolean changeProfile(CustomUserDetails userDetails) {
-//        Optional<User> user = userRepository.findByEmail(userDetails.getUser().getEmail());
-//
-//        return true;
-//    }
+
+    // [API] 내 멘토 프로필 변경하기
+    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) {
+        User user = userDetails.getUser();
+        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 1).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
+        );
+
+        userProfile.setIntroduction(dto.getIntroduction());
+        userProfile.setPr(dto.getPr());
+        userProfile.setLink(dto.getLink());
+        userProfile.setContents(dto.getContents());
+        userProfile.setSchedule(dto.getSchedule());
+        userProfile.setMethod(dto.getMethod());
+        userProfile.setFee(dto.getFee());
+        userProfile.setUpdatedAt(LocalDateTime.now());
+
+        userProfileRepository.save(userProfile);
+
+        return true;
+    }
+
+    // [API] 내 멘티 프로필 변경하기
+    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) {
+        User user = userDetails.getUser();
+        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
+        );
+
+        userProfile.setIntroduction(dto.getIntroduction());
+        userProfile.setPr(dto.getPr());
+        userProfile.setLink(dto.getLink());
+        userProfile.setContents(dto.getContents());
+        userProfile.setSchedule(dto.getSchedule());
+        userProfile.setMethod(dto.getMethod());
+        userProfile.setFee(dto.getFee());
+        userProfile.setUpdatedAt(LocalDateTime.now());
+
+        userProfileRepository.save(userProfile);
+
+        return true;
+    }
 }

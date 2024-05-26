@@ -37,7 +37,7 @@ public class UserProfile {
     private String link;
 
     @Column
-    private String contnets;
+    private String contents;
 
     @Column(columnDefinition = "TEXT")
     private String schedule;
