@@ -56,4 +56,20 @@ public class UserController {
 //        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 //        return new ResponseEntity<>(userService.getMyScrap(customUserDetails), HttpStatus.OK);
 //    }
+
+    // 내 멘티 정보 조회
+    @GetMapping(value = "/matching/mentee")
+    public ResponseEntity<Object> getMyMentee(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyMentee(customUserDetails), HttpStatus.OK);
+    }
+
+    // 내 멘토 정보 조회
+    @GetMapping(value = "/matching/mentor")
+    public ResponseEntity<Object> getMyMentor(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyMentor(customUserDetails), HttpStatus.OK);
+    }
 }
