@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface AskRepository extends JpaRepository<Ask, Long> {
 
     List<Ask> findByOrderByCreatedAtDesc();
-    Optional<Ask> findByAskId(Long id);
+    Optional<Ask> findByAskId(Long askId);
 
 }
 

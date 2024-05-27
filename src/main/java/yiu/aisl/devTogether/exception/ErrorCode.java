@@ -15,6 +15,9 @@ public enum ErrorCode {
     //로그인 필요
     LOGIN_REQUIRED(401),
 
+    INVALID_REFRESH_TOKEN(401),
+
+
     //권한 없음
     NO_AUTH(403),
 
@@ -69,6 +72,9 @@ public enum ErrorCode {
             case NO_AUTH:
                 return "권한 없음";
 
+
+            case INVALID_REFRESH_TOKEN:
+                    return "Invalid refresh token";
             case ACCESS_TOKEN_EXPIRED:
                 return "AccessToken 만료";
 

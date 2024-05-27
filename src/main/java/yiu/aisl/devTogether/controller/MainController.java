@@ -73,9 +73,10 @@ public class MainController {
     }
 
     //refresh토큰
-    @PostMapping(value = "/refresh")
+    @PostMapping(value = "/token/refresh")
     public ResponseEntity<TokenDto>  createNewAccessToken(TokenDto tokenDto) throws  Exception{
         return new ResponseEntity<>(mainService.refreshAccessToken(tokenDto), HttpStatus.OK);
     }
+
 
 }

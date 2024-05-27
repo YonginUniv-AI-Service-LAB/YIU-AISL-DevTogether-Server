@@ -19,12 +19,14 @@ public class MatchingController {
     private final MatchingService matchingService;
    //멘토 조회
     @GetMapping("/mentor")
+    @PreAuthorize("hasRole('MENTEE')")
     public ResponseEntity<List> mentorList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
         return new ResponseEntity<List>(matchingService.mentorList(user.getEmail()), HttpStatus.OK);
     }
 
     //멘티 조회
     @GetMapping("/mentee")
+    @PreAuthorize("hasRole('MENTOR')")
     public ResponseEntity<List> menteeList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
         return new ResponseEntity<List>(matchingService.menteeList(user.getEmail()), HttpStatus.OK);
     }
@@ -32,20 +34,30 @@ public class MatchingController {
 
     //멘토  스크랩
     @PostMapping("/scrap/mentor")
+    @PreAuthorize("hasRole('MENTEE')")
     public ResponseEntity<Boolean> mentorScrap(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ScrapDto request) throws Exception {
         return new ResponseEntity<Boolean>(matchingService.mentorScrap(user.getEmail(), request), HttpStatus.OK);
     }
     //멘티  스크랩
     @PostMapping("/scrap/mentee")
+    @PreAuthorize("hasRole('MENTOR')")
     public ResponseEntity<Boolean> menteeScrap(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ScrapDto request) throws Exception {
         return new ResponseEntity<Boolean>(matchingService.menteeScrap(user.getEmail(), request), HttpStatus.OK);
     }
 
 
-    //신청하기
-    @PostMapping("/matching/application")
-    public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ApplyDTO request)throws Exception  {
-            return new ResponseEntity<Boolean>(matchingService.apply(user.getEmail(),request), HttpStatus.OK);
+    //멘토가 신청하기
+    @PostMapping("/matching/application/mentor")
+    @PreAuthorize("hasRole('MENTOR')")
+    public ResponseEntity<Boolean> mentorApply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.MentorApplyDTO request)throws Exception  {
+        return new ResponseEntity<Boolean>(matchingService.mentorApply(user.getEmail(),request), HttpStatus.OK);
+    }
+
+    //멘티가  신청하기
+    @PostMapping("/matching/application/mentee")
+    @PreAuthorize("hasRole('MENTEE')")
+    public ResponseEntity<Boolean> menteeApply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.MenteeApplyDTO request)throws Exception  {
+        return new ResponseEntity<Boolean>(matchingService.menteeApply(user.getEmail(),request), HttpStatus.OK);
     }
 
 

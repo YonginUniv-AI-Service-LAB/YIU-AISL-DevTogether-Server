@@ -54,10 +54,11 @@ public class FaqService {
                     .contents(request.getContents())
                     .build();
             faqRepository.save(faq);
+            return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        return true;
+
 
     }
 
@@ -106,10 +107,11 @@ public class FaqService {
             modifiedFaq.setTitle(request.getTitle());
             modifiedFaq.setContents(request.getContents());
             faqRepository.save(modifiedFaq);
+            return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        return true;
+
 
     }
 

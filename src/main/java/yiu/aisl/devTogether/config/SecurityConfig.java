@@ -43,20 +43,20 @@ public class SecurityConfig {
 
                 .csrf(CsrfConfigurer::disable)   //CSRF(Cross-Site Request Forgery) 보호를 비활성화  : 한 사이트의 사용자가 의도치 않게 다른 사이트에 요청을 보내는 공격을 의미
 
-                .cors(c -> {
+                .cors(c -> {     //Cross-Origin Resource Sharing  웹 부라우저에서 다른 출처의 리소스(웹 페이지에서 필요한 모든 것 ex: HTML, CSS, JavaScript 파일, 이미지, 동영상 등) 를 요청할 수 있도록 하는 매커니즘
                     CorsConfigurationSource source = request -> {
 
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(
-                                List.of("*")
-                        );
-                        config.setAllowedMethods(
-                                List.of("*")
-                        );
+                        config.setAllowCredentials(true);
+                        config.setAllowedOrigins(List.of("http://localhost:3000"));
+                        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                        config.setAllowedHeaders(List.of("*"));
+                        config.setExposedHeaders(List.of("*"));
                         return config;
                     };
                     c.configurationSource(source);
-                })        //CORS는 다른 출처에서 리소스에 접근할 수 있는 권한을 부여하는 메커니즘
+
+                })        //포트번호 3000만 허용하고 나머지 차단
 
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 관리 설정을 구성하여 세션을 상태를 가지지 않는(Stateless) 방식으로 생성하도록 지정
                 //세션을 상태를 가지지 않는(Stateless) 방식으로 사용하는 이유        공부하기
@@ -71,9 +71,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 //공통
-                                .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change","/scrap/mentee","/scrap/mentor",
+                                .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change",
                                         "/email" ,"token/change", "/token/refresh", "/nickname",
-                                        "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask/**","/mentor").permitAll()
+                                        "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask/**").permitAll()
 
                                // .requestMatchers("/delivery/**").authenticated()  /delivery로 시작하는 url에 대해 인증된 사용자만 접근
                                // 관리자

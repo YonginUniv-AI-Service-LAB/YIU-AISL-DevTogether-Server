@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import yiu.aisl.devTogether.domain.state.MatchingCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 
 import java.time.LocalDateTime;
@@ -20,18 +21,18 @@ public class Matching {
     private Long matchingId;
 
     @ManyToOne
-    @JoinColumn(name = "user_mentor_id",nullable = false)
+    @JoinColumn(name = "user_mentor_id")
     private UserProfile mentor;
 
     @ManyToOne
-    @JoinColumn(name = "user_mentee_id",nullable = false)
+    @JoinColumn(name = "user_mentee_id")
     private UserProfile mentee;
 
 
 
 
     @Column(nullable = false)
-    private Integer matchingCategory;
+    private MatchingCategory matchingCategory;
 
     @Column
     @Enumerated(EnumType.ORDINAL)

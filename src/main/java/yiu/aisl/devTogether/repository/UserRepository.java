@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @Transactional
 
+
+
 public interface UserRepository extends JpaRepository<User, Long> {
 
 
@@ -25,7 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByRefreshToken(String refreshToken);
 
-    List<User> findByRole(RoleCategory role);
-
+   // List<User> findByRole(RoleCategory role);
+    List<UserInformation> findByRole(RoleCategory role);
 
 }

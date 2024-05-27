@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.util.Optional;
 
@@ -16,6 +17,6 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
     Optional<UserProfile> findByUserProfileId(Long userProfileId);
 
-    Optional<UserProfile> findByUserIdAndRole(User userId, Integer role);
+    Optional<UserProfile> findByUserIdAndRole(User userId, RoleCategory role);
 
 }

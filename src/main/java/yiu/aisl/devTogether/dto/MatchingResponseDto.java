@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import yiu.aisl.devTogether.domain.Matching;
+import yiu.aisl.devTogether.domain.state.MatchingCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ public class MatchingResponseDto {
     private Long mentee;
 
     private StatusCategory status;
-    private Integer matchingCategory;
+    private MatchingCategory matchingCategory;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
     private LocalDateTime endedAt;

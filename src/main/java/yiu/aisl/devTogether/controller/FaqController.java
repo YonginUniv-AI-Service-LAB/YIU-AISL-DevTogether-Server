@@ -15,17 +15,17 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping("/faq")
 public class FaqController {
     private final FaqService faqService;
 
     // faq 조회
-    @GetMapping("/faq")
+    @GetMapping
     public ResponseEntity<List> getList() throws Exception {
         return new ResponseEntity<List>(faqService.getList(), HttpStatus.OK);
     }
     // faq 등록
-    @PostMapping("/faq")
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, FaqRequestDto.CreateDTO request) throws Exception {
         System.out.println("faq_create request: " + request);
@@ -33,7 +33,7 @@ public class FaqController {
     }
 
     // faq 삭제
-    @DeleteMapping("/faq")
+    @DeleteMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user,  FaqRequestDto.DeleteDTO request) throws Exception {
         System.out.println("faq_delete request" + request);
@@ -41,7 +41,7 @@ public class FaqController {
     }
 
     // faq 수정
-    @PutMapping("/faq")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user,  FaqRequestDto.UpdateDTO request) throws Exception {
         System.out.println("faq_update request" + request);

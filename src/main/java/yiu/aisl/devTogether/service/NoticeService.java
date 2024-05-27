@@ -84,10 +84,11 @@ public class NoticeService {
                     .file(request.getFile())
                     .build();
             noticeRepository.save(notice);
+            return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        return true;
+
     }
 
 
@@ -96,9 +97,7 @@ public class NoticeService {
         RoleCategory role = RoleCategory.fromInt(request.getRole());
         // 404 - id 없음
         Notice notice = findByNoticeId(request.getNoticeId());
-        if(notice == null){
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
+
         // 403 - 권한 없음
 
         User user = findByEmail(email);
@@ -143,10 +142,11 @@ public class NoticeService {
             modifiedNotice.setNoticeCategory(noticeCategory);
             modifiedNotice.setFile(request.getFile());
             noticeRepository.save(modifiedNotice);
+            return true;
         }    catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        return true;
+
     }
 
     private Notice findByNoticeId(Long noticeId) {

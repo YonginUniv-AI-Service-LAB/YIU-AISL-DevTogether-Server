@@ -65,38 +65,41 @@ public class AskService {
                     .askCategory(AskCategory.fromInt(request.getAskCategory()))
                     .build();
             askRepository.save(ask);
+            return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
-        return true;
+
     }
 
 
 
     //ask 관리자 답변
     public Boolean answer(String email, Long askId, AskRequestDto.AnswerDTO request) {
+        // 404 - ID 없음
+        Ask ask = findByAskId(askId);
 
-        RoleCategory role = RoleCategory.fromInt(request.getRole());
-        //404 - id없음
-        Ask ask = findByAskId(request.getAskId());
         // 403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.관리자 ){
-            throw  new CustomException(ErrorCode.NO_AUTH);
+        if (user.getRole() != RoleCategory.관리자) {
+            throw new CustomException(ErrorCode.NO_AUTH);
         }
+        try {
 
-        if (role == RoleCategory.관리자) {
+
+
             ask.setAnswer(request.getAnswer());
             ask.setStatus(StatusCategory.완료);
             askRepository.save(ask);
-        } else {
 
-            throw new CustomException(ErrorCode.NO_AUTH);
+            return true;
+        } catch (Exception e) {
+            // 기타 예외 처리
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
-        return true;
     }
+
 
 
 
@@ -155,11 +158,11 @@ public class AskService {
             modifyAsk.get().setAskCategory(askCategory);
             askRepository.save(ask);
 
-
+            return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        return true;
+
     }
 
 

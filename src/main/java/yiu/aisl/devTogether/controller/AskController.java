@@ -26,9 +26,7 @@ public class AskController {
     }
     // ask 등록
     @PostMapping
-
     public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, AskRequestDto.CreateDTO request ) throws Exception {
-
         System.out.println("ask_create request: " + request);
         return new ResponseEntity<Boolean>(askService.create( user.getEmail(),request), HttpStatus.OK);
     }

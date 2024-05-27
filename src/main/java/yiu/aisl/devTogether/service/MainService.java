@@ -121,8 +121,13 @@ public class MainService {
         // 404 - 회원 없음
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
         // 401 - 회원정보 불일치
-        if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) ||    user.getRole() != roleCategory     ) {
+        if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) ||    user.getRole() != roleCategory    ) {
             throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+        }
+        if(user.getRole() == RoleCategory.멘토멘티){
+            if(!passwordEncoder.matches(request.getPwd(), user.getPwd()) || !request.getEmail().equals(user.getEmail())){
+                throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+            }
         }
 
 

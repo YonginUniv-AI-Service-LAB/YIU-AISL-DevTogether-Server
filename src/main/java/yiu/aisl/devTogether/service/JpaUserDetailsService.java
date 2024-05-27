@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.repository.UserRepository;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.User;
@@ -40,10 +41,15 @@ public class JpaUserDetailsService implements UserDetailsService {
         CustomUserDetails userDetails = new CustomUserDetails(user);
 
 
-        if (user.getEmail().equals(admin1)) {
-            userDetails.setRole("ADMIN");
-        } else {
-            userDetails.setRole("USER");
+        if ( user.getRole() == RoleCategory.fromInt(0)  ) {
+            userDetails.setRole("관리자");
+
+        } else if (user.getRole() == RoleCategory.fromInt(1)) {
+            userDetails.setRole("멘토");
+
+        } else if(user.getRole() == RoleCategory.fromInt(2)) {
+            userDetails.setRole("멘티");
+
         }
 
 
