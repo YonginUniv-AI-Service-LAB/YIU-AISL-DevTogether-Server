@@ -40,4 +40,15 @@ public class MatchingResponseDto {
                 matching.getEndedAt()
         );
     }
+
+    public MatchingResponseDto(Matching matching) {
+        this.matchingId = matching.getMatchingId();
+        this.mentor = matching.getMentor().getUserProfileId();
+        this.mentee = matching.getMentee().getUserProfileId();
+        this.status = matching.getStatus();
+        this.matchingCategory = matching.getMatchingCategory();
+        this.createAt = matching.getCreatedAt();
+        this.updatedAt = matching.getUpdatedAt();
+        this.endedAt = matching.getEndedAt();
+    }
 }
