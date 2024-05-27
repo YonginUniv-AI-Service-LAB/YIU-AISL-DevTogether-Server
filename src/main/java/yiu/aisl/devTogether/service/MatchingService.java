@@ -229,14 +229,18 @@ public class MatchingService {
 
 
     //신청 종료
-    public Boolean end(String email, MatchingRequestDto.EndDTO request) throws Exception{
-        User user = findByEmail(email);
-        if (user.getRole() == RoleCategory.멘토) {
-            Matching matching = findByMatchingId(request.getMatchingId());
-            matching.setStatus(StatusCategory.완료);
-            matchingRepository.save(matching);
-        }
-        return true;
-    }
+    public Boolean end(String email, MatchingRequestDto.EndDTO request) throws Exception {
+        try {
+            User user = findByEmail(email);
 
+            if (user.getRole() == RoleCategory.멘토) {
+                Matching matching = findByMatchingId(request.getMatchingId());
+                matching.setStatus(StatusCategory.완료);
+                matchingRepository.save(matching);
+            }
+            return true;
+        } catch (CustomException e) {
+           throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

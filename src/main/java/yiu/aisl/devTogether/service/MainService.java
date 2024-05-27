@@ -121,18 +121,18 @@ public class MainService {
         // 404 - 회원 없음
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
         // 401 - 회원정보 불일치
-        if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) ||    user.getRole() != roleCategory    ) {
-            throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+
+        if (user.getRole() == RoleCategory.멘토멘티) {
+            if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
+                throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+            }
         }
-        if(user.getRole() == RoleCategory.멘토멘티){
-            if(!passwordEncoder.matches(request.getPwd(), user.getPwd()) || !request.getEmail().equals(user.getEmail())){
+        if(user.getRole() == RoleCategory.멘토 || user.getRole() == RoleCategory.멘티){
+            if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) || !user.getRole().equals(roleCategory)) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
         }
 
-
-        // 멘토멘티 둘 다로 회원가입 한 경우 즉, role == 3 일 경우에는 request.getRole() 값이 user.getRole() 값과 일치하는 것이 아닌 그냥 request.getRole 값으로 회원가입 해야함
-        // 해당 사항과 관련하여 401 - 회원정보 불일치와 관련하여 수정 필요
 
         try {
             // 토큰 발급 (추가 정보 확인 하기 위해 이름 포함 시킴)
@@ -152,6 +152,9 @@ public class MainService {
 
         }
     }
+
+
+
 
     //회원가입 시 이메일 인증
     public String registerEmail(String email) throws MessagingException, UnsupportedEncodingException {
