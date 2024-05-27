@@ -126,6 +126,9 @@ public class MainService {
             if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
+            if(request.getRole() == 1) {
+                user.setRole(RoleCategory.멘토);
+            } else user.setRole(RoleCategory.멘티);
         }
         if(user.getRole() == RoleCategory.멘토 || user.getRole() == RoleCategory.멘티){
             if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) || !user.getRole().equals(roleCategory)) {
