@@ -3,6 +3,7 @@ package yiu.aisl.devTogether.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -92,6 +93,13 @@ public class User {
     private String subject4;
     @Column
     private String subject5;
+    @Column
+    @ColumnDefault("0")
+    private Integer push;
+
+    @Column
+    @ColumnDefault("0")
+    private Integer checks;
 
 
 
@@ -108,7 +116,7 @@ public class User {
     private LocalDateTime updatedAt;
 
 
-    public User(Long id, String name, String nickname,  String email,Boolean img,  RoleCategory role, GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String name, String nickname,  String email,Boolean img,  RoleCategory role, GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt, Integer check) {
         this.id = id;
         this.email = email;
         this.pwd = pwd;
@@ -130,6 +138,7 @@ public class User {
         this.subject5 = subject5;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.checks = check;
     }
 
     public void encodePwd(PasswordEncoder passwordEncoder){
