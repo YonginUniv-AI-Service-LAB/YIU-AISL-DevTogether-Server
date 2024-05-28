@@ -85,4 +85,10 @@ public class UserController {
     public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request) {
         return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request), HttpStatus.OK);
     }
+
+    // 알림 확인
+    @PutMapping(value = "/push")
+    public ResponseEntity<Boolean> checkAlarm(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return new ResponseEntity<Boolean>(userService.checkAlarm(userDetails), HttpStatus.OK);
+    }
 }
