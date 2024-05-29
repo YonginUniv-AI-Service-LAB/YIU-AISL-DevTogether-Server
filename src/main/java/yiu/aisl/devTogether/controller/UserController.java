@@ -91,4 +91,12 @@ public class UserController {
     public ResponseEntity<Boolean> checkAlarm(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return new ResponseEntity<Boolean>(userService.checkAlarm(userDetails), HttpStatus.OK);
     }
+
+    // 알림 내역 조회
+    @GetMapping(value = "/push")
+    public ResponseEntity<Object> getMyAlarm(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyAlarms(userDetails), HttpStatus.OK);
+    }
 }

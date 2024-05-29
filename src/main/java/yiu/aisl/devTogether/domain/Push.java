@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import yiu.aisl.devTogether.domain.state.PushCategory;
 
 import java.time.LocalDateTime;
 
@@ -20,12 +21,12 @@ public class Push {
     @Column
     private Long pushId;
 
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     @ManyToOne
-    private User userId;
+    private User user;
 
     @Column
-    private Integer type;
+    private PushCategory type;
 
     @Column
     private Long targetId;
