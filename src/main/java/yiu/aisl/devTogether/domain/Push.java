@@ -20,14 +20,15 @@ public class Push {
     @Column
     private Long pushId;
 
-    @Column
-    private String userId;
+    @JoinColumn
+    @ManyToOne
+    private User userId;
 
     @Column
     private Integer type;
 
     @Column
-    private Integer targetId;
+    private Long targetId;
 
     @Column(columnDefinition = "TEXT")
     private String contents;
