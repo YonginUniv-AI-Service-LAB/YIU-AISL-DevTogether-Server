@@ -38,8 +38,8 @@ public class UserService {
                 .email(user.get().getEmail())
                 .name(user.get().getName())
                 .nickname(user.get().getNickname())
-                .role(user.get().getRole().ordinal()) //
-                .gender(user.get().getGender().ordinal()) //
+                .role(user.get().getRole().name())
+                .gender(user.get().getGender().name())
                 .age(user.get().getAge())
                 .location1(user.get().getLocation1())
                 .location2(user.get().getLocation2())
