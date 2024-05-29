@@ -25,7 +25,7 @@ public class BoardService {
     private final LikeRepository likeRepository;
     private final FilesService filesService;
     private final FilesRepository filesRepository;
-    private final ScrapRepository scrapRepository;
+    private final BoardScrapRepository boardScrapRepository;
 
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
@@ -190,20 +190,20 @@ public class BoardService {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         //404: id 없음"
-        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
-        if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
+//        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
+//        if (board.isEmpty()) {
+//            throw new CustomException(ErrorCode.NOT_EXIST_ID);
+//        }
+        Board board = findByBoardId(request.getBoardId());
 
         //403: 권한없음
        User user = findByUserEmail(email);
         try {
-            Scrap scrap = Scrap.builder()
-                    .type(0)
-                    .typeId(request.getBoardId())
+            BoardScrap scrap = BoardScrap.builder()
                     .user(user)
+                    .board(board)
                     .build();
-            scrapRepository.save(scrap);
+            boardScrapRepository.save(scrap);
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
