@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
+import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
 import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
@@ -34,6 +36,7 @@ public class MainService {
     private final TokenProvider tokenProvider;
     private final JavaMailSender javaMailSender;
     private final FilesService filesService;
+    private final UserProfileRepository userProfileRepository;
 
     private long exp_refreshToken = Duration.ofDays(14).toMillis(); // 만료시간 2주
     private String authNum;
@@ -81,6 +84,35 @@ public class MainService {
                     .answer(request.getAnswer())
                     .build();
             userRepository.save(user);
+
+            if(request.getRole() == 1) {
+                UserProfile userProfile = UserProfile.builder()
+                        .role(1)
+                        .user(user)
+                        .build();
+
+                userProfileRepository.save(userProfile);
+            } else if(request.getRole() == 2) {
+                UserProfile userProfile = UserProfile.builder()
+                        .role(2)
+                        .user(user)
+                        .build();
+
+                userProfileRepository.save(userProfile);
+            } else if(request.getRole() == 3) {
+                UserProfile userProfile1 = UserProfile.builder()
+                        .role(1)
+                        .user(user)
+                        .build();
+                userProfileRepository.save(userProfile1);
+
+                UserProfile userProfile2 = UserProfile.builder()
+                        .role(2)
+                        .user(user)
+                        .build();
+
+                userProfileRepository.save(userProfile2);
+            }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -248,6 +280,30 @@ public class MainService {
 
     }
 
+    // [API]  role 추가 (멘토 또는 멘티 값 추가)
+    public Boolean addRole(CustomUserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH));
+
+        if(user.getRole() == RoleCategory.멘토 /*1*/) {
+            UserProfile userProfile = UserProfile.builder()
+                    .role(2)
+                    .user(user)
+                    .build();
+
+            userProfileRepository.save(userProfile);
+        } else if(user.getRole() == RoleCategory.멘티 /*2*/) {
+            UserProfile userProfile = UserProfile.builder()
+                    .role(1)
+                    .user(user)
+                    .build();
+            userProfileRepository.save(userProfile);
+        }
+
+        user.setRole(RoleCategory.fromInt(3));
+
+        return true;
+    }
 
 
 //    public TokenDto refreshAccessToken(TokenDto token) throws Exception {
