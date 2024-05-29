@@ -7,7 +7,9 @@ import yiu.aisl.devTogether.domain.Matching;
 import yiu.aisl.devTogether.domain.Review;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.ReviewRequestDto;
+import yiu.aisl.devTogether.dto.ReviewResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.MatchingRepository;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,16 +33,22 @@ public class ReviewService {
     public final MatchingRepository matchingRepository;
 
     //보낸 리뷰 조회 -- 모든 리뷰 보이게? 내 룰과 리뷰 카테고리가 같은거 가져오기
-    public List<Review> getSend(String email) throws Exception {
-        //403: 권한없음
+    public List<ReviewResponseDto> getSend(String email) throws Exception {
+        //403: 권한없음 -- 로그인 됬는지 확인
         User user = findByUserEmail(email);
-        findByUserProfile(user);
 
 
         try {
-            List<Review> reviews = null;
 
-            return reviews;
+//            // 매칭 아이디에서
+//            List<Review> reviews = ;
+//
+//            // Review를 ReviewResponseDto로 변환
+//            List<ReviewResponseDto> reviewResponseDtos = reviews.stream()
+//                    .map(review -> new ReviewResponseDto(review))
+//                    .collect(Collectors.toList());
+//            return reviewResponseDtos;
+            return null;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -62,8 +71,7 @@ public class ReviewService {
     //리뷰 작성 -- test 미실시
     public Boolean creatreview(String email, ReviewRequestDto.creatDto request) throws Exception {
         //400: 데이터 미입력
-        if (request.hide == null || request.category == null ||
-                request.contents == null || request.matchingId == null) {
+        if (request.category == null || request.contents == null || request.matchingId == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         //404 : 매칭 아이디 없음
@@ -83,7 +91,7 @@ public class ReviewService {
                 Review review = Review.builder()
                         .matchingId(matching)
                         .contents(request.getContents())
-                        .hide(request.getHide())
+                        .hide(false)
                         .category(profileRole)
                         .build();
                 reviewRepository.save(review);
@@ -105,7 +113,7 @@ public class ReviewService {
         //403: 권한없음 --- 리뷰와 리뷰 프로필 값 다름
         User user = findByUserEmail(email);
         UserProfile userProfile = findByUserProfile(user);
-        if(!getReview.getCategory().equals(userProfile.getRole())){
+        if (!getReview.getCategory().equals(userProfile.getRole())) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try {
@@ -120,6 +128,11 @@ public class ReviewService {
     public Matching findByMachingId(Long id) {
         return matchingRepository.findByMatchingId(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
+    }
+
+    public UserProfile findByUserProfileId(User user, Integer id) {
+        return userProfileRepository.findByUserAndRole(user, id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 
     public UserProfile findByUserProfile(User user) {
@@ -137,5 +150,12 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
 
+    //멘토값
+//    public List<Review> findUserProfileByMatchingId(String email) {
+//        User user = findByUserEmail(email);
+//        UserProfile userProfile = findByUserProfile(user);
+//        Matching matching = findByMentor(userProfile);
+//        return reviewRepository.findByMatchingId(matching);
+//    }
 
 }

@@ -14,11 +14,12 @@ import java.util.Optional;
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
 
-
     Optional<UserProfile> findByUserProfileId(Long userProfileId);
 
     Optional<UserProfile> findByUserIdAndRole(User userId, RoleCategory role);
 
     Optional<UserProfile> findByUser(User user);
+
+    Optional<UserProfile> findByUserAndRole(User user, Integer role);
 
 }

@@ -3,6 +3,7 @@ package yiu.aisl.devTogether.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Files;
@@ -26,7 +27,7 @@ public class FilesService {
     private final FilesRepository filesRepository;
     @Value("${file.dir}")
     private String fileDir;
-
+    ClassPathResource resource = new ClassPathResource("file.dir");
     //파일 dir 저장
     public String saveFileProj(MultipartFile files) throws Exception {
         try {

@@ -12,8 +12,8 @@ import yiu.aisl.devTogether.domain.User;
 @AllArgsConstructor
 public class ReportResponseDto {
     private Long reportId;
-    private User fromUserId;
-    private User toUserId;
+    private Long fromUserId;
+    private Long toUserId;
     private Integer type;
     private Long typeId;
     private Integer status;
@@ -23,8 +23,8 @@ public class ReportResponseDto {
     public static ReportResponseDto getReportDto(Report report) {
         return new ReportResponseDto(
                 report.getReportId(),   //리폿 아이디
-                report.getUserId(),     //보낸 사람
-                report.getToUserId(),   //받은 사람
+                report.getUserId().getId(),     //보낸 사람
+                report.getToUserId().getId(),   //받은 사람
                 report.getType(),       //신고 개시물 유형
                 report.getTypeId(),     //신고 개시물 번호
                 report.getStatus(),     //신고 처리 상태
@@ -35,8 +35,8 @@ public class ReportResponseDto {
 
     public ReportResponseDto(Report report) {
         this.reportId = report.getReportId();
-        this.fromUserId = report.getUserId();
-        this.toUserId = report.getToUserId();
+        this.fromUserId = report.getUserId().getId();
+        this.toUserId = report.getToUserId().getId();
         this.contents = report.getContents();
         this.type = report.getType();
         this.typeId = report.getTypeId();

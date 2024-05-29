@@ -19,7 +19,7 @@ public class CommentDto {
     private String contents;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
-    private User userId;
+    private Long userId;
     private Long boardId;
 
     public static CommentDto getCommentDto(Comment comment){
@@ -28,7 +28,7 @@ public class CommentDto {
                 comment.getContents(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
-                comment.getUser(),
+                comment.getUser().getId(),
                 comment.getBoard().getBoardId()
         );
     }
@@ -38,6 +38,6 @@ public class CommentDto {
         this.contents = comment.getContents();
         this.createAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
-        this.userId = comment.getUser();
+        this.userId = comment.getUser().getId();
     }
 }

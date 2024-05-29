@@ -20,7 +20,7 @@ public class BoardDto {
     private String contents;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
-    private User userId;
+    private Long userId;
     private Boolean files;
     private List<Comment> comments;
     private List<Files> filesList;
@@ -32,7 +32,7 @@ public class BoardDto {
                 board.getContents(),
                 board.getCreatedAt(),
                 board.getUpdatedAt(),
-                board.getUser(),
+                board.getUser().getId(),
                 board.getFiles(),
                 board.getComments(),
                 board.getFilesList()
@@ -45,7 +45,7 @@ public class BoardDto {
         this.contents = board.getContents();
         this.createAt = board.getCreatedAt();
         this.updatedAt = board.getUpdatedAt();
-        this.userId = board.getUser();
+        this.userId = board.getUser().getId();
         this.files = board.getFiles();
         this.comments = board.getComments();
         this.filesList = board.getFilesList();
