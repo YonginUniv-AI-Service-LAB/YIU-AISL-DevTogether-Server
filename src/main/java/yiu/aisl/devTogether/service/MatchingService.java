@@ -11,6 +11,8 @@ import yiu.aisl.devTogether.dto.MatchingRequestDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -24,7 +26,7 @@ public class MatchingService {
     private final UserRepository userRepository;
     private final MatchingRepository matchingRepository;
     private final UserProfileRepository userProfileRepository;
-    private final ScrapRepository scrapRepository;
+    private final MatchingScrapRepository matchingScrapRepository;
 
     //멘토 조회
     public List<UserInformation> mentorList(String email) {
@@ -50,25 +52,22 @@ public class MatchingService {
     // 멘토 스크랩( 현재 멘티일 때)
     public Boolean mentorScrap(String email, MatchingRequestDto.ScrapDto request) throws Exception{
         User user = findByEmail(email);
-        //403 - 권한 없음
-        if (user.getRole() == RoleCategory.멘티) {
-            throw new CustomException(ErrorCode.NO_AUTH); // 멘티만 스크랩할 수 있음
-        }
+
         //400 데이터 미입력
         if(request.getScrapId() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         //404: id 없음
-        Integer userProfile  = findByUserProfileId(request.getScrapId()).getRole();
-        System.out.println("dsfsdfsdfsdfsdfsdf"+  userProfile);
+        UserProfile userProfile  = findByUserProfileId(request.getScrapId());
 
             try{
-                Scrap scrap = Scrap.builder()
-                        .type(1)          //유저프로필 스크랩
-                        .typeId(request.getScrapId())
+                MatchingScrap mentorScrap = MatchingScrap.builder()
+                        .status(1)
                         .user(user)
+                        .userProfileId(userProfile)
+                        .createdAt(LocalDateTime.now())
                         .build();
-                scrapRepository.save(scrap);
+                matchingScrapRepository.save(mentorScrap);
                 return true;
             } catch (Exception e) {
                 throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -79,23 +78,21 @@ public class MatchingService {
     // 멘티 스크랩( 현재 멘토일 때)
     public Boolean menteeScrap(String email, MatchingRequestDto.ScrapDto request) throws Exception{
         User user = findByEmail(email);
-        //403 - 권한 없음
-        if (user.getRole() == RoleCategory.멘토) {
-            throw new CustomException(ErrorCode.NO_AUTH); // 멘토만 스크랩할 수 있음
-        }
+
         //400 데이터 미입력
         if(request.getScrapId() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         // 404: id 없음
-        Integer userProfile  = findByUserProfileId(request.getScrapId()).getRole();
+        UserProfile userProfile  = findByUserProfileId(request.getScrapId());
         try{
-            Scrap scrap = Scrap.builder()
-                    .type(1)
-                    .typeId(request.getScrapId())
+            MatchingScrap menteeScrap = MatchingScrap.builder()
+                    .status(2)
                     .user(user)
+                    .userProfileId(userProfile)
+                    .createdAt(LocalDateTime.now())
                     .build();
-            scrapRepository.save(scrap);
+            matchingScrapRepository.save(menteeScrap);
             return true;
         }catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

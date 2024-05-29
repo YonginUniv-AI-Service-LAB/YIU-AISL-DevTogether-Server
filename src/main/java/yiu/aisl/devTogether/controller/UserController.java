@@ -99,4 +99,20 @@ public class UserController {
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
         return new ResponseEntity<>(userService.getMyAlarms(userDetails), HttpStatus.OK);
     }
+
+    // 내가 스크랩한 게시글 조회
+    @GetMapping(value = "/scrap/board")
+    public ResponseEntity<Object> getMyBoardScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyScrap(userDetails), HttpStatus.OK);
+    }
+
+    // 내가 스크랩한 매칭 조회
+    @GetMapping(value = "/scrap/matching")
+    public ResponseEntity<Object> getMyMatchingScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getProfileScrap(userDetails), HttpStatus.OK);
+    }
 }
