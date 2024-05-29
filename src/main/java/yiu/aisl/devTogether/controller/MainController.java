@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import yiu.aisl.devTogether.config.CustomUserDetails;
@@ -77,6 +78,12 @@ public class MainController {
 //    public ResponseEntity<TokenDto>  createNewAccessToken(TokenDto tokenDto) throws  Exception{
 //        return new ResponseEntity<>(mainService.refreshAccessToken(tokenDto), HttpStatus.OK);
 //    }
+
+    // role 추가 (멘토 또는 멘티 값 추가)
+    @PutMapping(value = "/role")
+    public ResponseEntity<Boolean> addRole(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return new ResponseEntity<Boolean>(mainService.addRole(userDetails), HttpStatus.OK);
+    }
 
 
 }
