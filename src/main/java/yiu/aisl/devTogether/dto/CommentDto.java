@@ -15,29 +15,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
-    private Board board;
     private String contents;
+    private String title;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
-    private User userId;
+    private Long userId;
     private Long boardId;
-
-    public static CommentDto getCommentDto(Comment comment){
-        return new CommentDto(
-                comment.getBoard(),
-                comment.getContents(),
-                comment.getCreatedAt(),
-                comment.getUpdatedAt(),
-                comment.getUser(),
-                comment.getBoard().getBoardId()
-        );
-    }
 
     public CommentDto(Comment comment) {
         this.boardId = comment.getBoard().getBoardId();
-        this.contents = comment.getContents();
+        this.contents = comment.getBoard().getContents();
+        this.title = comment.getBoard().getTitle();
         this.createAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
-        this.userId = comment.getUser();
+        this.userId = comment.getUser().getId();
     }
 }
