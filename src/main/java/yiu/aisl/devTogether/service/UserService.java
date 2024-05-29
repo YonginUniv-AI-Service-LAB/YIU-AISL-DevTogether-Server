@@ -95,7 +95,7 @@ public class UserService {
         return true;
     }
 
-    // [API] 내가 작성한 댓글 조회
+    // [API] 내가 댓글을 달았던 글 조회
     public Object getMyComment(CustomUserDetails userDetails) {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)

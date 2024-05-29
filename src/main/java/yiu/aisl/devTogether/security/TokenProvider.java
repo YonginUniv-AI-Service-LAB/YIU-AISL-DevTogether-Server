@@ -49,7 +49,7 @@ public class TokenProvider {
     }
 
 
-    public String createToken(User user) {
+    public String createToken(User user, Integer role) {
         Date now = new Date();
 
         JwtBuilder jwtBuilder = Jwts.builder()
@@ -63,13 +63,13 @@ public class TokenProvider {
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
 
-        if ( user.getRole() == RoleCategory.fromInt(0)  ) {
+        if (role == 0) {
             jwtBuilder.claim("role", "관리자");
             System.out.println("관리자 권한 부여");
-        } else if (user.getRole() == RoleCategory.fromInt(1)) {
+        } else if (role == 1) {
             jwtBuilder.claim("role", "멘토");
             System.out.println("멘토 권한 부여");
-        } else if(user.getRole() == RoleCategory.fromInt(2)) {
+        } else if(role == 2) {
             jwtBuilder.claim("role", "멘티");
             System.out.println("멘티 권한 부여");
         }
