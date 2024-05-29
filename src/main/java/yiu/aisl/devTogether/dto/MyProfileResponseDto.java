@@ -14,8 +14,8 @@ public class MyProfileResponseDto {
     private String email;
     private String name;
     private String nickname;
-    private Integer role;
-    private Integer gender;
+    private String role;
+    private String gender;
     private Integer age;
     private String location1;
     private String location2;
