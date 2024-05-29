@@ -27,6 +27,7 @@ public class UserService {
     private final CommentRepository commentRepository;
     private final MatchingRepository matchingRepository;
     private final UserProfileRepository userProfileRepository;
+    private final PushRepository pushRepository;
 
 
     // [API]  내 정보 조회
@@ -212,7 +213,17 @@ public class UserService {
     }
 
     // [API] 알림 내역 조회
-//    public Object getMyAlarms(CustomUserDetails userDetails) {
-//
-//    }
+    public Object getMyAlarms(CustomUserDetails userDetails) {
+        if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
+            new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
+        }
+
+        User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(() ->
+                new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
+
+        List<Push> myPush = pushRepository.findByUser(user);
+        return myPush.stream()
+                .map(PushResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }
