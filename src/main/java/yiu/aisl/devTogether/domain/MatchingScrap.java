@@ -25,7 +25,7 @@ public class MatchingScrap {
 
     @JoinColumn(name = "user_profile_id")
     @ManyToOne
-    private UserProfile userProfileId;
+    private UserProfile userProfile;
 
     @Column(nullable = false)
     private Integer status;

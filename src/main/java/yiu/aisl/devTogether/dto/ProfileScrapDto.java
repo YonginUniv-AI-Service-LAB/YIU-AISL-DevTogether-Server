@@ -28,15 +28,15 @@ public class ProfileScrapDto {
 
     public ProfileScrapDto(MatchingScrap scrap) {
         this.id = scrap.getId();
-        this.userProfile = scrap.getUserProfileId().getUserProfileId();
+        this.userProfile = scrap.getUserProfile().getUserProfileId();
         this.status = scrap.getStatus();
         this.createdAt = scrap.getCreatedAt();
-        this.introduction = scrap.getUserProfileId().getIntroduction();
-        this.pr = scrap.getUserProfileId().getPr();
-        this.link = scrap.getUserProfileId().getLink();
-        this.contents = scrap.getUserProfileId().getContents();
-        this.schedule = scrap.getUserProfileId().getSchedule();
-        this.method = scrap.getUserProfileId().getMethod();
-        this.fee = scrap.getUserProfileId().getFee();
+        this.introduction = scrap.getUserProfile().getIntroduction();
+        this.pr = scrap.getUserProfile().getPr();
+        this.link = scrap.getUserProfile().getLink();
+        this.contents = scrap.getUserProfile().getContents();
+        this.schedule = scrap.getUserProfile().getSchedule();
+        this.method = scrap.getUserProfile().getMethod();
+        this.fee = scrap.getUserProfile().getFee();
     }
 }
