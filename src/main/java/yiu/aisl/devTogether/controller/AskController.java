@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.dto.AskRequestDto;
 import yiu.aisl.devTogether.service.AskService;
@@ -26,9 +27,9 @@ public class AskController {
     }
     // ask 등록
     @PostMapping
-    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, AskRequestDto.CreateDTO request ) throws Exception {
+    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, AskRequestDto.CreateDTO request, List<MultipartFile> file ) throws Exception {
         System.out.println("ask_create request: " + request);
-        return new ResponseEntity<Boolean>(askService.create( user.getEmail(),request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(askService.create( user.getEmail(),request,file), HttpStatus.OK);
     }
     // ask 답변
     @PreAuthorize("hasRole('ADMIN')")

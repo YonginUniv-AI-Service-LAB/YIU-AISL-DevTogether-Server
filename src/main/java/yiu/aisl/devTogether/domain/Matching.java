@@ -17,22 +17,16 @@ import java.time.LocalDateTime;
 public class Matching {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "matching_id")
     private Long matchingId;
 
     @ManyToOne
-    @JoinColumn(name = "user_mentor_id")
+    @JoinColumn(referencedColumnName = "user_id",name = "mentor_userProfile_id")
     private UserProfile mentor;
 
     @ManyToOne
-    @JoinColumn(name = "user_mentee_id")
+    @JoinColumn(referencedColumnName = "user_id",name = "mentee_userProfile_id")
     private UserProfile mentee;
-
-
-
-
-    @Column(nullable = false)
-    private MatchingCategory matchingCategory;
 
     @Column
     @Enumerated(EnumType.ORDINAL)

@@ -11,7 +11,7 @@ public class AskRequestDto {
     public class CreateDTO {
         private String title;
         private String contents;
-        private String file;
+        private Boolean files;
         private Integer askCategory;
 
 
@@ -21,7 +21,7 @@ public class AskRequestDto {
             return "CreateDTO{" +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
-                    ", file='" + file + '\'' +
+                    ", files='" + files + '\'' +
                     ", ask_category=" + askCategory +
                     '}';
         }
@@ -75,7 +75,7 @@ public class AskRequestDto {
         private String contents;
         private Integer status;
         private String  answer;
-        private String file;
+
         private Integer askCategory;
         private Integer role;
 
@@ -88,7 +88,7 @@ public class AskRequestDto {
                     ", contents='" + contents + '\'' +
                     ", status=" + status +
                     ", answer='" + answer + '\'' +
-                    ", file='" + file + '\'' +
+
                     ", askCategory=" + askCategory +
                     ", role=" + role +
                     '}';

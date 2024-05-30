@@ -12,7 +12,7 @@ public class MatchingRequestDto {
     @Getter
     @Setter
     public static class MentorApplyDTO {
-        private Integer matchingCategory;
+        //private Integer matchingCategory;
         private Long mentee;
 
 
@@ -20,7 +20,7 @@ public class MatchingRequestDto {
     @Getter
     @Setter
     public static class MenteeApplyDTO {
-        private Integer matchingCategory;
+       // private Integer matchingCategory;
         private Long mentor;
 
     }

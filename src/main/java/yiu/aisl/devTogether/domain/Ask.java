@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import yiu.aisl.devTogether.domain.state.AskCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
+import yiu.aisl.devTogether.service.FilesService;
 
 import java.time.LocalDateTime;
 
@@ -43,7 +44,7 @@ public class Ask {
     private String answer;
 
     @Column
-    private String file;
+    private Boolean files;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
@@ -61,5 +62,6 @@ public class Ask {
     @UpdateTimestamp
     @Column
     private LocalDateTime updatedAt;
+
 
 }

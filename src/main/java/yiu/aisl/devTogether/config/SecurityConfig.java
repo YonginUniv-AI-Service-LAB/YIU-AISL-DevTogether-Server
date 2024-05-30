@@ -75,9 +75,9 @@ public class SecurityConfig {
                                         "/email" ,"token/change", "/token/refresh", "/nickname",
                                         "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask/**").permitAll()
 
-                               // .requestMatchers("/delivery/**").authenticated()  /delivery로 시작하는 url에 대해 인증된 사용자만 접근
-                               // 관리자
-                               //requestMatchers( "/notice","/ask").hasRole("ADMIN")
+
+//                                .requestMatchers("/scrap/mentee").hasRole("MENTOR")
+//                                .requestMatchers("/scrap/mentor").hasRole("MENTEE")
 
                                 .anyRequest().authenticated()
                 )

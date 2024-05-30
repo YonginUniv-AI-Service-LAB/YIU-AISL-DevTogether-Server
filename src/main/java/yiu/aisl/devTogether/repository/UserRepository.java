@@ -28,6 +28,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByRefreshToken(String refreshToken);
 
    // List<User> findByRole(RoleCategory role);
-    List<UserInformation> findByRole(RoleCategory role);
+    //List<UserInformation> findByRole(RoleCategory role);
 
 }

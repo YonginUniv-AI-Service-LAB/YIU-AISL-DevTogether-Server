@@ -6,6 +6,7 @@ import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -21,5 +22,9 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     Optional<UserProfile> findByUser(User user);
 
     Optional<UserProfile> findByUserAndRole(User user, Integer role);
+
+    List<UserProfile> findUserProfileByRole(RoleCategory role);
+
+
 
 }

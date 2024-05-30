@@ -32,8 +32,8 @@ public class Notice {
     @Column(nullable = false,length = 255)
     private String title;
 
-    @Column(length = 255)
-    private String file;
+    @Column
+    private Boolean files;
 
 
 

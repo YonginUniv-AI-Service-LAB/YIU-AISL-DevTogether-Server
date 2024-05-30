@@ -3,6 +3,8 @@ package yiu.aisl.devTogether.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import yiu.aisl.devTogether.domain.Board;
 import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private  final UserRepository userRepository;
+    private final FilesService filesService;
 
 
     //공지사항 전체조회
@@ -53,9 +56,11 @@ public class NoticeService {
 
 
     //공지사항 등록
-    public Boolean create(String email, NoticeRequestDto.CreateDTO request) {
+    public Boolean create(String email, NoticeRequestDto.CreateDTO request, List<MultipartFile> file) {
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());    //열거형 상수
         RoleCategory role = RoleCategory.fromInt(request.getRole());
+        //Boolean files = filesService.isMFile(file);
+
         // 400 - 데이터 미입력
         if (request.getTitle().isEmpty()|| request.getContents().isEmpty()
                 || request.getNoticeCategory() == null || request.getRole() == null)
@@ -81,9 +86,12 @@ public class NoticeService {
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .noticeCategory(noticeCategory)
-                    .file(request.getFile())
+                   // .files(files)
                     .build();
             noticeRepository.save(notice);
+         /*   if (files) {
+                filesService.saveFileMDb(file, 4, notice.getNoticeId());
+            }*/
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -94,19 +102,26 @@ public class NoticeService {
 
     //공지사항 삭제
     public Boolean delete(String email, NoticeRequestDto.DeleteDTO request) {
+        User user = findByEmail(email);
         RoleCategory role = RoleCategory.fromInt(request.getRole());
         // 404 - id 없음
-        Notice notice = findByNoticeId(request.getNoticeId());
+        //Notice notice = findByNoticeId(request.getNoticeId());
 
+        Optional<Notice> notice = noticeRepository.findByNoticeId(request.getNoticeId());
+        if (notice.isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
+        }
         // 403 - 권한 없음
-
-        User user = findByEmail(email);
         if(user.getRole() !=RoleCategory.관리자 ){
             throw  new CustomException(ErrorCode.NO_AUTH);
         }
         try{
             //deleteByNoticeId로 하면 SQL에서 NoticeId 프로퍼티를 인식하지못함
             noticeRepository.deleteById(request.getNoticeId());
+           /* if (notice.get().getFiles()) {
+                filesService.deleteFile(4, notice.get().getNoticeId());
+            }
+*/
             return true;
         }
         catch (Exception e){
@@ -125,7 +140,7 @@ public class NoticeService {
         // 400 - 데이터 미입력
         if (request.getTitle().isEmpty()|| request.getContents().isEmpty()
                 || request.getNoticeCategory() == null || request.getRole() == null
-                || request.getNoticeId() == null|| request.getFile() == null) {
+                || request.getNoticeId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         // 403 - 권한 없음
@@ -140,7 +155,7 @@ public class NoticeService {
             modifiedNotice.setTitle(request.getTitle());
             modifiedNotice.setContents(request.getContents());
             modifiedNotice.setNoticeCategory(noticeCategory);
-            modifiedNotice.setFile(request.getFile());
+            //modifiedNotice.setFile(request.getFile());
             noticeRepository.save(modifiedNotice);
             return true;
         }    catch (Exception e){

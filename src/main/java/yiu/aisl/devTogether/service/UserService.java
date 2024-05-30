@@ -23,7 +23,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-    private final ScrapRepository scrapRepository;
+    private final BoardScrapRepository boardScrapRepository;
+    private final MatchingScrapRepository matchingScrapRepository;
     private final CommentRepository commentRepository;
     private final MatchingRepository matchingRepository;
     private final UserProfileRepository userProfileRepository;
@@ -103,7 +104,7 @@ public class UserService {
 
         List<Comment> myComments = commentRepository.findByUser(user.get());
         return myComments.stream()
-                .map(CommentDto::new)
+                .map(CommentRequestDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -119,18 +120,42 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    // [API] 내가 스크랩한 글 조회
-//    public Object getMyScrap(CustomUserDetails userDetails) {
-//        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
-//                () -> new CustomException(ErrorCode.NO_AUTH)
-//        ));
-//
-//        List<Scrap> myScraps = scrapRepository.findByUser(user.get());
-//        return myScraps.stream()
-//                .map(ScrapDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
+    // [API] 내가 스크랩한 게시글 조회
+    public Object getMyScrap(CustomUserDetails userDetails) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH)
+        ));
+
+        List<BoardScrap> myBoardScrap = boardScrapRepository.findByUser(user.get());
+        return myBoardScrap.stream()
+                .map(BoardScrapDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // [API] 내가 스크랩 멘토 프로필 조회
+    public Object getMentorProfileScrap(CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+        System.out.println(user);
+
+        List<MatchingScrap> myProfileScraps = matchingScrapRepository.findByUser(user);
+        return myProfileScraps.stream()
+                .filter(myProfileScrap -> myProfileScrap.getStatus() == 1)
+                .map(ProfileScrapDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // [API] 내가 스크랩 멘티 프로필 조회
+    public Object getMenteeProfileScrap(CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+        System.out.println(user);
+
+        List<MatchingScrap> myProfileScraps = matchingScrapRepository.findByUser(user);
+        return myProfileScraps.stream()
+                .filter(myProfileScrap -> myProfileScrap.getStatus() == 2)
+                .map(ProfileScrapDto::new)
+                .collect(Collectors.toList());
+    }
+
     // [API] 내 멘티 관리하기
     public Object getMyMentee(CustomUserDetails userDetails) {
         User user = userDetails.getUser();

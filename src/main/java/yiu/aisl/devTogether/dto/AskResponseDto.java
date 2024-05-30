@@ -21,7 +21,7 @@ public class AskResponseDto {
     private String contents;
     private StatusCategory status;
     private String answer;
-    private String file;
+   // private Boolean files;
     private AskCategory askCategory;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
@@ -36,7 +36,7 @@ public class AskResponseDto {
                 ask.getContents(),
                 ask.getStatus(),
                 ask.getAnswer(),
-                ask.getFile(),
+               /* ask.getFiles(),*/
                 ask.getAskCategory(),
                 ask.getCreatedAt(),
                 ask.getUpdatedAt()

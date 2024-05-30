@@ -4,7 +4,7 @@ import yiu.aisl.devTogether.domain.state.GenderCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 public interface UserInformation {
-    Long getId();
+
     String getEmail();
     String getNickname();
     RoleCategory getRole();

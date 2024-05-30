@@ -14,7 +14,7 @@ public class NoticeRequestDto {
         private String title;
         private String contents;
         private Integer noticeCategory;
-        private String file;
+        private Boolean files;
         @Override
         public String toString() {
             return "CreateDTO{" +
@@ -23,7 +23,7 @@ public class NoticeRequestDto {
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     ", noticeCategory=" + noticeCategory +
-                    ", file='" + file + '\'' +
+                    ", files='" + files + '\'' +
                     '}';
         }
 
@@ -66,7 +66,7 @@ public class NoticeRequestDto {
         private String title;
         private String contents;
         private Integer noticeCategory;
-        private String file;
+
         @Override
         public String toString() {
             return "UpdateDTO{" +
@@ -75,7 +75,7 @@ public class NoticeRequestDto {
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     ", noticeCategory=" + noticeCategory +
-                    ", file='" + file + '\'' +
+
                     '}';
         }
     }

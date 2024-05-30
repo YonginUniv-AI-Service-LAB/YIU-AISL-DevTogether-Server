@@ -38,6 +38,7 @@ public class MainService {
     private final FilesService filesService;
     private final UserProfileRepository userProfileRepository;
 
+
     private long exp_refreshToken = Duration.ofDays(14).toMillis(); // 만료시간 2주
     private String authNum;
 
