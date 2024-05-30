@@ -80,8 +80,8 @@ public class UserController {
 
     // 알림 확인
     @PutMapping(value = "/push")
-    public ResponseEntity<Boolean> checkAlarm(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return new ResponseEntity<Boolean>(userService.checkAlarm(userDetails), HttpStatus.OK);
+    public ResponseEntity<Boolean> checkAlarm(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam(value = "id") Long id) {
+        return new ResponseEntity<Boolean>(userService.checkAlarm(userDetails, id), HttpStatus.OK);
     }
 
     // 알림 내역 조회

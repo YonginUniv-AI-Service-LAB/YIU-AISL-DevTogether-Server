@@ -1,5 +1,6 @@
 package yiu.aisl.devTogether.service;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import yiu.aisl.devTogether.domain.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -225,7 +226,7 @@ public class UserService {
     }
 
     // [API] 알림 확인
-    public Boolean checkAlarm(CustomUserDetails userDetails) {
+    public Boolean checkAlarm(CustomUserDetails userDetails, Long pushId) {
         if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
@@ -233,7 +234,8 @@ public class UserService {
         User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(()->
                 new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
 
-        user.setChecks(0);
+        Push push = pushRepository.getReferenceById(pushId);
+        push.setChecks(0);
         return true;
     }
 
@@ -246,6 +248,7 @@ public class UserService {
         User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
 
+        user.setChecks(0);
         List<Push> myPush = pushRepository.findByUser(user);
         return myPush.stream()
                 .map(PushResponseDto::new)

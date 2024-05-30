@@ -22,7 +22,7 @@ public class PushResponseDto {
     private LocalDateTime updatedAt;
 
     public PushResponseDto(Push push) {
-        this.pushId = push.getPushId();
+        this.pushId = push.getId();
         this.type = push.getType();
         this.targetId = push.getTargetId();
         this.contents = push.getContents();
