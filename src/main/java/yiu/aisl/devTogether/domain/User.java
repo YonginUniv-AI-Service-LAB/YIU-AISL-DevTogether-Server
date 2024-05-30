@@ -93,12 +93,9 @@ public class User {
     private String subject4;
     @Column
     private String subject5;
-    @Column
-    @ColumnDefault("0")
-    private Integer push;
 
     @Column
-    @ColumnDefault("0")
+    @ColumnDefault("1")
     private Integer checks;
 
 

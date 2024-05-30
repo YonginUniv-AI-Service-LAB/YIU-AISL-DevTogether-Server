@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PushRepository extends JpaRepository<Push, Long> {
     List<Push> findByUser(User userid);
+    List<Push> findById(Push id);
 }
