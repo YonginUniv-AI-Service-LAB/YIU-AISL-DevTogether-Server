@@ -76,8 +76,8 @@ public class SecurityConfig {
                                         "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask/**").permitAll()
 
 
-                                .requestMatchers("/scrap/mentee").hasRole("멘토")
-                                .requestMatchers("/scrap/mentor").hasRole("멘티")
+//                                .requestMatchers("/scrap/mentee").hasRole("MENTOR")
+//                                .requestMatchers("/scrap/mentor").hasRole("MENTEE")
 
                                 .anyRequest().authenticated()
                 )

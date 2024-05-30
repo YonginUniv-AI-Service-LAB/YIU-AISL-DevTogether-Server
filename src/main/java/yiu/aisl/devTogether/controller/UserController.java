@@ -50,14 +50,6 @@ public class UserController {
         return new ResponseEntity<>(userService.getMyBoard(customUserDetails), HttpStatus.OK);
     }
 
-    // 내가 스크랩한 글 조회
-//    @GetMapping(value = "/board/scrap")
-//    public ResponseEntity<Object> getMyScrap(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-//        return new ResponseEntity<>(userService.getMyScrap(customUserDetails), HttpStatus.OK);
-//    }
-
     // 내 멘티 정보 조회
     @GetMapping(value = "/matching/mentee")
     public ResponseEntity<Object> getMyMentee(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -108,11 +100,19 @@ public class UserController {
         return new ResponseEntity<>(userService.getMyScrap(userDetails), HttpStatus.OK);
     }
 
-    // 내가 스크랩한 매칭 조회
-    @GetMapping(value = "/scrap/matching")
-    public ResponseEntity<Object> getMyMatchingScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    // 내가 스크랩한 멘토 매칭 조회
+    @GetMapping(value = "/scrap/mentor")
+    public ResponseEntity<Object> getMyMentorMatchingScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(userService.getProfileScrap(userDetails), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getMentorProfileScrap(userDetails), HttpStatus.OK);
+    }
+
+    // 내가 스크랩한 멘티 매칭 조회
+    @GetMapping(value = "/scrap/mentee")
+    public ResponseEntity<Object> getMyMenteeMatchingScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMenteeProfileScrap(userDetails), HttpStatus.OK);
     }
 }

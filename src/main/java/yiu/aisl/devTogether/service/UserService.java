@@ -132,27 +132,28 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-
-    // [API] 내가 스크랩한 프로필 조회
-    public Object getProfileScrap(CustomUserDetails userDetails) {
+    // [API] 내가 스크랩 멘토 프로필 조회
+    public Object getMentorProfileScrap(CustomUserDetails userDetails) {
         User user = userDetails.getUser();
-        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘토).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
-        );
-        int role = userProfile.getRole();
+        System.out.println(user);
 
         List<MatchingScrap> myProfileScraps = matchingScrapRepository.findByUser(user);
-        if(role == 1) {
-            return myProfileScraps.stream()
-                    .filter(myProfileScrap -> myProfileScrap.getStatus() == 2)
-                    .map(ProfileScrapDto::new)
-                    .collect(Collectors.toList());
-        } else {
-            return myProfileScraps.stream()
-                    .filter(myProfileScrap -> myProfileScrap.getStatus() == 1)
-                    .map(ProfileScrapDto::new)
-                    .collect(Collectors.toList());
-        }
+        return myProfileScraps.stream()
+                .filter(myProfileScrap -> myProfileScrap.getStatus() == 1)
+                .map(ProfileScrapDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // [API] 내가 스크랩 멘티 프로필 조회
+    public Object getMenteeProfileScrap(CustomUserDetails userDetails) {
+        User user = userDetails.getUser();
+        System.out.println(user);
+
+        List<MatchingScrap> myProfileScraps = matchingScrapRepository.findByUser(user);
+        return myProfileScraps.stream()
+                .filter(myProfileScrap -> myProfileScrap.getStatus() == 2)
+                .map(ProfileScrapDto::new)
+                .collect(Collectors.toList());
     }
 
     // [API] 내 멘티 관리하기

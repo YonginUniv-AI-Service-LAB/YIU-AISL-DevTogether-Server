@@ -64,13 +64,13 @@ public class TokenProvider {
 
 
         if (role == 0) {
-            jwtBuilder.claim("role", "관리자");
+            jwtBuilder.claim("role", "ADMIN");
             System.out.println("관리자 권한 부여");
         } else if (role == 1) {
-            jwtBuilder.claim("role", "멘토");
+            jwtBuilder.claim("role", "MENTOR");
             System.out.println("멘토 권한 부여");
         } else if(role == 2) {
-            jwtBuilder.claim("role", "멘티");
+            jwtBuilder.claim("role", "MENTEE");
             System.out.println("멘티 권한 부여");
         }
 
