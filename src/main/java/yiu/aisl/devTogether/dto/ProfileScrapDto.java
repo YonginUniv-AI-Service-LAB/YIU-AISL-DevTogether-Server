@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ProfileScrapDto {
     private Integer id;
-    private UserProfile userProfile;
+    private Long userProfile;
     private Integer status;
     private LocalDateTime createdAt;
     private String introduction;
@@ -28,7 +28,7 @@ public class ProfileScrapDto {
 
     public ProfileScrapDto(MatchingScrap scrap) {
         this.id = scrap.getId();
-        this.userProfile = scrap.getUserProfileId();
+        this.userProfile = scrap.getUserProfileId().getUserProfileId();
         this.status = scrap.getStatus();
         this.createdAt = scrap.getCreatedAt();
         this.introduction = scrap.getUserProfileId().getIntroduction();
