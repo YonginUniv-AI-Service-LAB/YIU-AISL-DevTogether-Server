@@ -16,11 +16,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class NoticeResponseDto {
     private Long noticeId;
-    private RoleCategory role;
     private String title;
     private String contents;
     private NoticeCategory noticeCategory;
-    private Boolean files;
+   // private Boolean files;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -29,11 +28,10 @@ public class NoticeResponseDto {
         return new NoticeResponseDto(
 
                 notice.getNoticeId(),
-                notice.getRole(),
                 notice.getTitle(),
                 notice.getContents(),
                 notice.getNoticeCategory(),
-                notice.getFiles(),
+             //   notice.getFiles(),
                 notice.getCreatedAt(),
                 notice.getUpdatedAt()
         );

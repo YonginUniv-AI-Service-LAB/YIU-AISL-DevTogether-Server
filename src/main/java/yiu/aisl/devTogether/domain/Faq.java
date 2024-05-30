@@ -20,9 +20,6 @@ public class Faq {
     @Column(unique = true)
     private Long faqId;
 
-    @Column
-    @Enumerated(EnumType.ORDINAL)
-    private RoleCategory role;
 
     @Column(length = 50)
     private String title;

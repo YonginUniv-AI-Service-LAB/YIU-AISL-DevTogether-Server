@@ -21,12 +21,12 @@ public class Matching {
     private Long matchingId;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "user_id",name = "mentor_userProfile_id")
-    private UserProfile mentor;
+    @JoinColumn(name = "mentor_user_id")
+    private User mentor;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "user_id",name = "mentee_userProfile_id")
-    private UserProfile mentee;
+    @JoinColumn(name = "mentee_user_id")
+    private User mentee;
 
     @Column
     @Enumerated(EnumType.ORDINAL)

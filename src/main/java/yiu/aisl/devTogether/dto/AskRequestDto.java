@@ -8,7 +8,7 @@ import lombok.Setter;
 public class AskRequestDto {
     @Getter
     @Setter
-    public class CreateDTO {
+    public static class CreateDTO {
         private String title;
         private String contents;
         private Boolean files;
@@ -17,7 +17,7 @@ public class AskRequestDto {
 
 
         @Override
-        public String toString() {
+        public  String toString() {
             return "CreateDTO{" +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
@@ -30,10 +30,9 @@ public class AskRequestDto {
     }
     @Getter
     @Setter
-    public class AnswerDTO {
+    public static class AnswerDTO {
         private Long askId;
         private String  answer;
-        private Integer role;
 
 
         @Override
@@ -41,7 +40,6 @@ public class AskRequestDto {
             return "CreateDTO{" +
                     ", askId='" + askId + '\'' +
                     ", answer='" + answer + '\'' +
-                    ", role=" + role +
                     '}';
         }
 
@@ -52,14 +50,13 @@ public class AskRequestDto {
 
     @Getter
     @Setter
-    public class DeleteDTO {
+    public static class DeleteDTO {
         private Long askId;
-        private Integer role;
+
         @Override
         public String toString() {
             return "CreateDTO{" +
                     ", askId='" + askId + '\'' +
-                    ", role=" + role +
                     '}';
 
         }
@@ -69,15 +66,13 @@ public class AskRequestDto {
     }
     @Getter
     @Setter
-    public class UpdateDTO {
+    public static class UpdateDTO {
         private Long askId;
         private String title;
         private String contents;
         private Integer status;
         private String  answer;
-
         private Integer askCategory;
-        private Integer role;
 
 
         @Override
@@ -88,9 +83,7 @@ public class AskRequestDto {
                     ", contents='" + contents + '\'' +
                     ", status=" + status +
                     ", answer='" + answer + '\'' +
-
                     ", askCategory=" + askCategory +
-                    ", role=" + role +
                     '}';
         }
     }

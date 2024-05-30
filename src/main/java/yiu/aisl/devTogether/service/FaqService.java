@@ -8,7 +8,8 @@ import yiu.aisl.devTogether.domain.Faq;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.FaqRequestDto;
-import yiu.aisl.devTogether.dto.FaqResponsetDto;
+import yiu.aisl.devTogether.dto.FaqResponseDto;
+
 
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
@@ -26,36 +27,32 @@ public class FaqService {
     private final FaqRepository faqRepository;
     private  final UserRepository userRepository;
     //faq 조회
-    public List <FaqResponsetDto> getList() throws Exception{
+    public List <FaqResponseDto> getList() throws Exception{
         List<Faq> faq = faqRepository.findByOrderByCreatedAtDesc();  //생성 일자를 기준으로 내림차순으로 정렬
-        List<FaqResponsetDto> getListDto = new ArrayList<>();
-        faq.forEach(s->getListDto.add(FaqResponsetDto.GetFaqDTO(s)));
+        List<FaqResponseDto> getListDto = new ArrayList<>();
+        faq.forEach(s->getListDto.add(FaqResponseDto.GetFaqDTO(s)));
         return getListDto;
 
     }
 
     //faq 등록
     public Boolean create(String email,FaqRequestDto.CreateDTO request) {
+        User user = findByEmail(email);
 
-        RoleCategory role = RoleCategory.fromInt(request.getRole());
         //400 - 데이터 미입력
-        if(request.getTitle().isEmpty() || request.getContents().isEmpty() || request.getRole() == null)
+        if(request.getTitle().isEmpty() || request.getContents().isEmpty() )
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
-        //403 - 권한 없음
-        User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.관리자 ){
-            throw  new CustomException(ErrorCode.NO_AUTH);
-        }
         try{
             Faq faq = Faq.builder()
-                    .role(role)
+
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .build();
             faqRepository.save(faq);
             return true;
         }catch (Exception e){
+            e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
@@ -65,7 +62,7 @@ public class FaqService {
 
     //faq 삭제
     public Boolean delete(String email,FaqRequestDto.DeleteDTO request) {
-        RoleCategory role = RoleCategory.fromInt(request.getRole());
+
 
         //404 - id없음
         Faq faq = findByFaqId(request.getFaqId());
@@ -88,11 +85,11 @@ public class FaqService {
     //faq 수정
     public Boolean update(String email,FaqRequestDto.UpdateDTO request) {
 
-        RoleCategory role = RoleCategory.fromInt(request.getRole());
+
 
         //400 - 데이터 미입력
         if(request.getFaqId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty()
-                || request.getRole() == null)
+                )
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
         //403 - 권한 없음
@@ -103,7 +100,7 @@ public class FaqService {
         try{
             Optional<Faq> modifyFaq = faqRepository.findByFaqId(request.getFaqId());
             Faq modifiedFaq = modifyFaq.get();
-            modifiedFaq.setRole(role);
+
             modifiedFaq.setTitle(request.getTitle());
             modifiedFaq.setContents(request.getContents());
             faqRepository.save(modifiedFaq);

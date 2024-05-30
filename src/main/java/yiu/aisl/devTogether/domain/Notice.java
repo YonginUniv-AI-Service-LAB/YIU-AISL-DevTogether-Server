@@ -21,10 +21,6 @@ public class Notice {
     @Column(unique = true)
     private Long noticeId;
 
-    @Column
-    @Enumerated(EnumType.ORDINAL)
-    private RoleCategory role;
-
     @Column(columnDefinition = "TEXT")
     private String contents;
 
@@ -32,9 +28,9 @@ public class Notice {
     @Column(nullable = false,length = 255)
     private String title;
 
-    @Column
+   /* @Column
     private Boolean files;
-
+*/
 
 
     @CreationTimestamp

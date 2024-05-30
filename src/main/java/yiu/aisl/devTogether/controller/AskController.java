@@ -27,12 +27,12 @@ public class AskController {
     }
     // ask 등록
     @PostMapping
-    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, AskRequestDto.CreateDTO request, List<MultipartFile> file ) throws Exception {
+    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, AskRequestDto.CreateDTO request ) throws Exception {
         System.out.println("ask_create request: " + request);
-        return new ResponseEntity<Boolean>(askService.create( user.getEmail(),request,file), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(askService.create( user.getEmail(),request), HttpStatus.OK);
     }
     // ask 답변
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PostMapping("/answer")
     public ResponseEntity<Boolean> answer(@AuthenticationPrincipal CustomUserDetails user,@ModelAttribute("askId") Long askId,  AskRequestDto.AnswerDTO request) throws Exception {
         System.out.println("ask_answer request: " + request);

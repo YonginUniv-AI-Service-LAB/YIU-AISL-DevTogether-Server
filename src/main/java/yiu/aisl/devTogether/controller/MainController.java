@@ -14,6 +14,8 @@ import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.service.MainService;
 
+import java.util.List;
+
 @RestController  //controller + responsebody > json형태로 객체 반환
 @RequiredArgsConstructor // final이 선언된 모든 필드를 인자값으로 하는 생성자
 
@@ -86,9 +88,10 @@ public class MainController {
         return new ResponseEntity<Boolean>(mainService.addRole(userDetails), HttpStatus.OK);
     }
     // 과목 프론트로 넘겨주기
-   /* @GetMapping(value = "/subject")
-    public ResponseEntity<Boolean> subject(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return new ResponseEntity<Boolean>(mainService.subject, HttpStatus.OK);
-    }*/
+    @GetMapping(value = "/subject")
+    public ResponseEntity<List<String>> subject(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<String> subjects = mainService.getSubjects();
+        return new ResponseEntity<>(subjects, HttpStatus.OK);
+    }
 
 }

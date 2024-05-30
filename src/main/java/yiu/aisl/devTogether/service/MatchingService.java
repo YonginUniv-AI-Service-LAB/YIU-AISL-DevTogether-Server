@@ -39,7 +39,7 @@ public class MatchingService {
         );
         //현재 멘티면 멘토 리스트 보여줌
         if (userProfile.getRole().equals(RoleCategory.멘티)  ) {
-            return userProfileRepository.findUserProfileByRole(RoleCategory.멘토);    //멘토 정보 일부만 보여줌
+            return userProfileRepository.findUserProfileByRole(RoleCategory.멘토); //현재 정보 ㄷ 보여쥼 > 수정해야함
         }
         return null;
     }
@@ -210,14 +210,16 @@ public class MatchingService {
     //신청 수락
     public Boolean approve( CustomUserDetails userDetails,  MatchingRequestDto.ApproveDTO request) throws Exception{
         User user = userDetails.getUser();
-
+        Matching matching = findByMatchingId(request.getMatchingId());
         // 400: 데이터 미입력
         if(request.getMatchingId() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         try {
-           // Mathcing mathcing = Matching.builder()
-                //    .build()
+            if(matching.getStatus().equals(StatusCategory.신청)){
+                matching.setStatus(StatusCategory.성사됨);
+            }
+
             return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -229,11 +231,13 @@ public class MatchingService {
         User user = userDetails.getUser();
         Matching matching = findByMatchingId(request.getMatchingId());
         // 400: 데이터 미입력
-        if(request.getMatchingId() == null || matching.getStatus() !=StatusCategory.진행){
+        if(request.getMatchingId() == null ){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         try {
-            matchingRepository.deleteById(request.getMatchingId());
+            if(matching.getStatus().equals(StatusCategory.신청)){
+                matchingRepository.deleteById(request.getMatchingId());
+            }
             return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -244,12 +248,23 @@ public class MatchingService {
     public Boolean refusal(CustomUserDetails userDetails, MatchingRequestDto.RefusalDTO request)throws Exception {
 
         User user = userDetails.getUser();
+
+        Matching matching = findByMatchingId(request.getMatchingId());
+
+
         // 400: 데이터 미입력
         if(request.getMatchingId() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         try {
+            if(matching.getStatus().equals(StatusCategory.신청)){
+                matching.setStatus(StatusCategory.거절);
+                matching.setStatus(StatusCategory.성사안됨);
+
+            }
             return true;
+
+
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -258,11 +273,20 @@ public class MatchingService {
     //신청 확정
     public Boolean confirm(CustomUserDetails userDetails,MatchingRequestDto.ConfirmDTO request)throws Exception {
         User user = userDetails.getUser();
+
+        Matching matching = findByMatchingId(request.getMatchingId());
+
         // 400: 데이터 미입력
         if(request.getMatchingId() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         try {
+            if(matching.getStatus().equals(StatusCategory.신청) &&matching.getStatus().equals(StatusCategory.성사됨) ){
+                matching.setStatus(StatusCategory.진행);
+
+
+            }
+
             return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -273,14 +297,17 @@ public class MatchingService {
     //신청 종료
     public Boolean end(CustomUserDetails userDetails,MatchingRequestDto.EndDTO request) throws Exception {
         User user = userDetails.getUser();
+        Matching matching = findByMatchingId(request.getMatchingId());
+
+        //403 권한 없음
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘티).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         );
         try {
 
 
-            if (userProfile.getRole().equals(RoleCategory.멘토)) {
-                Matching matching = findByMatchingId(request.getMatchingId());
+            if (userProfile.getRole().equals(RoleCategory.멘토) && matching.equals(StatusCategory.진행)) {
+
                 matching.setStatus(StatusCategory.완료);
                 matchingRepository.save(matching);
             }

@@ -22,6 +22,7 @@ import yiu.aisl.devTogether.security.TokenProvider;
 import yiu.aisl.devTogether.repository.*;
 import java.io.UnsupportedEncodingException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -388,4 +389,14 @@ public class MainService {
     }
 
 
+    public List<String> getSubjects() {
+        return List.of(
+                "C", "C++", "Java", "JavaScript", "Python", "Ruby", "Go", "C#", "Swift", "Rust",
+                "Kotlin", "PHP", "TypeScript", "HTML", "CSS", "Scala", "Haskell", "Objective-C",
+                "Perl", "Lua", "Shell", "R", "Dart", "Assembly", "Visual Basic", "F#", "Clojure",
+                "Erlang", "Fortran", "Julia", "MATLAB", "Groovy", "PL/SQL", "SQL", "Prolog", "Ada",
+                "COBOL", "Pascal", "Lisp", "Scheme", "Tcl", "ActionScript", "Delphi", "PowerShell",
+                "Batch", "Arduino", "VHDL", "Verilog", "Java Spring"
+        );
+    }
 }

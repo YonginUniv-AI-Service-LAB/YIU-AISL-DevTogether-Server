@@ -31,8 +31,8 @@ public class MatchingResponseDto {
         return new MatchingResponseDto(
 
                 matching.getMatchingId(),
-                matching.getMentor().getUser().getId(),
-                matching.getMentee().getUser().getId(),
+                matching.getMentor().getId(),
+                matching.getMentee().getId(),
                 matching.getStatus(),
                 matching.getCreatedAt(),
                 matching.getUpdatedAt(),
@@ -42,8 +42,8 @@ public class MatchingResponseDto {
 
     public MatchingResponseDto(Matching matching) {
         this.matchingId = matching.getMatchingId();
-        this.mentor = matching.getMentor().getUser().getId();
-        this.mentee = matching.getMentee().getUser().getId();
+        this.mentor = matching.getMentor().getId();
+        this.mentee = matching.getMentee().getId();
         this.status = matching.getStatus();
         this.createAt = matching.getCreatedAt();
         this.updatedAt = matching.getUpdatedAt();

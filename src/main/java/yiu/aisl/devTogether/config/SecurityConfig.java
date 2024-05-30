@@ -1,5 +1,6 @@
 package yiu.aisl.devTogether.config;
 
+import com.google.cloud.storage.HttpMethod;
 import com.google.firebase.database.annotations.NotNull;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,12 +74,16 @@ public class SecurityConfig {
                                 //공통
                                 .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change",
                                         "/email" ,"token/change", "/token/refresh", "/nickname",
-                                        "/faq", "/board", "/board/post", "/board/like", "/board/scrap","/message", "/notice","/notice/detail", "/ask/**").permitAll()
+                                        "/board", "/board/post", "/board/like", "/board/scrap",
+                                        "/faq/","/notice/detail","/notice/","/subject",
+                                        "/mentor","/mentee",
+                                        "/message", "/ask/**").permitAll()
 
 
 //                                .requestMatchers("/scrap/mentee").hasRole("MENTOR")
-//                                .requestMatchers("/scrap/mentor").hasRole("MENTEE")
-
+                               .requestMatchers("/faq/**").hasRole("관리자")
+                                .requestMatchers("/notice/**").hasRole("관리자")
+                                .requestMatchers("/ask/answer").hasRole("관리자")
                                 .anyRequest().authenticated()
                 )
 

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import yiu.aisl.devTogether.domain.Faq;
-import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.time.LocalDateTime;
 
@@ -14,19 +13,18 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FaqResponsetDto {
+public class FaqResponseDto {
     private Long faqId;
-    private RoleCategory role;
     private String title;
     private String contents;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
 
-    public static FaqResponsetDto GetFaqDTO(Faq faq) {
-        return new FaqResponsetDto(
+    public static FaqResponseDto GetFaqDTO(Faq faq) {
+        return new FaqResponseDto(
 
                 faq.getFaqId(),
-                faq.getRole(),
+
                 faq.getTitle(),
                 faq.getContents(),
                 faq.getCreatedAt(),

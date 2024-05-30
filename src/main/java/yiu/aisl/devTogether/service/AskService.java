@@ -46,7 +46,7 @@ public class AskService {
 
 
     //ask 사용자 등록
-    public Boolean create(String email, AskRequestDto.CreateDTO request, List<MultipartFile> file) {
+    public Boolean create(String email, AskRequestDto.CreateDTO request) {
         User user = findByEmail(email);
         //Boolean files = filesService.isMFile(file);
 

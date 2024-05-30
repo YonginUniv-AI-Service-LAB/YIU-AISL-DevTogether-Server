@@ -64,7 +64,7 @@ public class TokenProvider {
 
 
         if (role == 0) {
-            jwtBuilder.claim("role", "ADMIN");
+            jwtBuilder.claim("role", "관리자");
             System.out.println("관리자 권한 부여");
         } else if (role == 1) {
             jwtBuilder.claim("role", "MENTOR");

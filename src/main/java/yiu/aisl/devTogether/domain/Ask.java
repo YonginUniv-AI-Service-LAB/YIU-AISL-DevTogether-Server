@@ -50,10 +50,6 @@ public class Ask {
     @Enumerated(EnumType.ORDINAL)
     private AskCategory askCategory;
 
-    @Column
-    @Enumerated(EnumType.ORDINAL)
-    private RoleCategory role;
-
 
     @CreationTimestamp
     @Column

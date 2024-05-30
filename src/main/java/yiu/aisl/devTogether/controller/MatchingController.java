@@ -19,14 +19,12 @@ public class MatchingController {
     private final MatchingService matchingService;
    //멘토 조회(멘티가 멘토 조회)
     @GetMapping("/mentor")
-
     public ResponseEntity<List> mentorList(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
         return new ResponseEntity<List>(matchingService.mentorList(customUserDetails), HttpStatus.OK);
     }
 
     //멘티 조회(멘토가 멘티 조회)
     @GetMapping("/mentee")
-
     public ResponseEntity<List> menteeList(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
         return new ResponseEntity<List>(matchingService.menteeList(customUserDetails), HttpStatus.OK);
     }
@@ -34,13 +32,11 @@ public class MatchingController {
 
     //멘토  스크랩
     @PostMapping("/scrap/mentor")
-
     public ResponseEntity<Boolean> mentorScrap(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ScrapDto request) throws Exception {
         return new ResponseEntity<Boolean>(matchingService.mentorScrap(user.getEmail(), request), HttpStatus.OK);
     }
     //멘티  스크랩
     @PostMapping("/scrap/mentee")
-
     public ResponseEntity<Boolean> menteeScrap(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ScrapDto request) throws Exception {
         return new ResponseEntity<Boolean>(matchingService.menteeScrap(user.getEmail(), request), HttpStatus.OK);
     }
@@ -48,7 +44,6 @@ public class MatchingController {
 
     // 신청하기
     @PostMapping("/matching/application")
-
     public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails customUserDetails, MatchingRequestDto.MentorApplyDTO request)throws Exception  {
         return new ResponseEntity<Boolean>(matchingService.apply(customUserDetails,request), HttpStatus.OK);
     }

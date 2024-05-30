@@ -56,14 +56,14 @@ public class NoticeService {
 
 
     //공지사항 등록
-    public Boolean create(String email, NoticeRequestDto.CreateDTO request, List<MultipartFile> file) {
+    public Boolean create(String email, NoticeRequestDto.CreateDTO request) {
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());    //열거형 상수
-        RoleCategory role = RoleCategory.fromInt(request.getRole());
+
         //Boolean files = filesService.isMFile(file);
 
         // 400 - 데이터 미입력
         if (request.getTitle().isEmpty()|| request.getContents().isEmpty()
-                || request.getNoticeCategory() == null || request.getRole() == null)
+                || request.getNoticeCategory() == null )
         {
             System.out.println("test1");
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -82,7 +82,6 @@ public class NoticeService {
 
         try {
             Notice notice = Notice.builder()
-                    .role(role)
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .noticeCategory(noticeCategory)
@@ -103,7 +102,7 @@ public class NoticeService {
     //공지사항 삭제
     public Boolean delete(String email, NoticeRequestDto.DeleteDTO request) {
         User user = findByEmail(email);
-        RoleCategory role = RoleCategory.fromInt(request.getRole());
+
         // 404 - id 없음
         //Notice notice = findByNoticeId(request.getNoticeId());
 
@@ -136,11 +135,10 @@ public class NoticeService {
     // 공지사항 수정
     public Boolean update(String email, NoticeRequestDto.UpdateDTO request) {
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());
-        RoleCategory role = RoleCategory.fromInt(request.getRole());
+
         // 400 - 데이터 미입력
         if (request.getTitle().isEmpty()|| request.getContents().isEmpty()
-                || request.getNoticeCategory() == null || request.getRole() == null
-                || request.getNoticeId() == null) {
+                || request.getNoticeCategory() == null || request.getNoticeId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         // 403 - 권한 없음
@@ -151,7 +149,6 @@ public class NoticeService {
         try {
             Optional<Notice> modifyNotice = noticeRepository.findByNoticeId(request.getNoticeId());
             Notice modifiedNotice = modifyNotice.get();
-            modifiedNotice.setRole(role);
             modifiedNotice.setTitle(request.getTitle());
             modifiedNotice.setContents(request.getContents());
             modifiedNotice.setNoticeCategory(noticeCategory);
