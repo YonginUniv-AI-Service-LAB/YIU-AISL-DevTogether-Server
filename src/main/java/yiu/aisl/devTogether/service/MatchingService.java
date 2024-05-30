@@ -59,7 +59,7 @@ public class MatchingService {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         //404: id 없음
-        Integer userProfile  = findByUserProfileId(request.getScrapId()).getRole();
+        Integer userProfile  = findByUserProfileId(request.getScrapId()).getRole();  //스크랩 id를 가져와서 role 값 확인
         System.out.println("dsfsdfsdfsdfsdfsdf"+  userProfile);
 
             try{
