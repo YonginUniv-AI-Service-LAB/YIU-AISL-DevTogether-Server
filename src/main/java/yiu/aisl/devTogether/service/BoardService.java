@@ -196,17 +196,25 @@ public class BoardService {
 //        }
         Board board = findByBoardId(request.getBoardId());
 
+
+
         //403: 권한없음
        User user = findByUserEmail(email);
-        try {
-            BoardScrap scrap = BoardScrap.builder()
-                    .user(user)
-                    .board(board)
-                    .build();
-            boardScrapRepository.save(scrap);
+
+        if(boardScrapRepository.findByUserAndBoard(user, board).isPresent()) {
+            boardScrapRepository.deleteByUserAndBoard(user, board);
             return true;
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } else {
+            try {
+                BoardScrap scrap = BoardScrap.builder()
+                        .user(user)
+                        .board(board)
+                        .build();
+                boardScrapRepository.save(scrap);
+                return true;
+            } catch (Exception e) {
+                throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

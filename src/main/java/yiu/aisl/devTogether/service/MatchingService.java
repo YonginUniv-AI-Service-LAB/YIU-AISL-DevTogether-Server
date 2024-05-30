@@ -60,11 +60,15 @@ public class MatchingService {
         //404: id 없음
         UserProfile userProfile  = findByUserProfileId(request.getScrapId());
 
+        if(matchingScrapRepository.findByUserAndUserProfileAndStatus(user, userProfile, 1).isPresent()) {
+            matchingScrapRepository.deleteByUserAndUserProfileAndStatus(user, userProfile,1);
+            return true;
+        } else {
             try{
                 MatchingScrap mentorScrap = MatchingScrap.builder()
                         .status(1)
                         .user(user)
-                        .userProfileId(userProfile)
+                        .userProfile(userProfile)
                         .createdAt(LocalDateTime.now())
                         .build();
                 matchingScrapRepository.save(mentorScrap);
@@ -72,6 +76,7 @@ public class MatchingService {
             } catch (Exception e) {
                 throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
             }
+        }
     }
 
 
@@ -85,17 +90,23 @@ public class MatchingService {
         }
         // 404: id 없음
         UserProfile userProfile  = findByUserProfileId(request.getScrapId());
-        try{
-            MatchingScrap menteeScrap = MatchingScrap.builder()
-                    .status(2)
-                    .user(user)
-                    .userProfileId(userProfile)
-                    .createdAt(LocalDateTime.now())
-                    .build();
-            matchingScrapRepository.save(menteeScrap);
+
+        if(matchingScrapRepository.findByUserAndUserProfileAndStatus(user, userProfile, 2).isPresent()) {
+            matchingScrapRepository.deleteByUserAndUserProfileAndStatus(user, userProfile, 2);
             return true;
-        }catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } else {
+            try{
+                MatchingScrap menteeScrap = MatchingScrap.builder()
+                        .status(2)
+                        .user(user)
+                        .userProfile(userProfile)
+                        .createdAt(LocalDateTime.now())
+                        .build();
+                matchingScrapRepository.save(menteeScrap);
+                return true;
+            }catch (Exception e) {
+                throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
