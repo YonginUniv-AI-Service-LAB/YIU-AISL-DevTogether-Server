@@ -25,6 +25,7 @@ public class BoardRequestDto {
         private Long boardId;
         private String title;
         private String contents;
+        private List<Long> deleteId;
     }
     @Getter
     @Setter

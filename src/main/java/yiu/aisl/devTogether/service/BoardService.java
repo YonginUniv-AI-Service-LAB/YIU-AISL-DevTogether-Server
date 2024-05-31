@@ -148,7 +148,7 @@ public class BoardService {
             //파일 관련 코드
             //파일이 있으면
             if (files) {
-                filesService.filesMUpdate(2, board.get().getBoardId(), file);
+                filesService.filesMUpdate(2, board.get().getBoardId(), file, request.getDeleteId());
                 //보드에 있는 파일 전부 삭제
 //                filesService.deleteAllFile(2, board.get().getBoardId());
 //

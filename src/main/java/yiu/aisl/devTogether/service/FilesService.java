@@ -14,13 +14,9 @@ import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.FilesRepository;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -108,21 +104,19 @@ public class FilesService {
     }
 
     //test 안 해봄
-//    public void deleteFile(Integer type, Long typeId) throws Exception {
-//        List<Files> filesId = filesRepository.findByTypeAndTypeId(type, typeId);
-////        Files filesId = filesRepository.findByFileId(fileId).get();
-//
-//        try {
-//            for (Files files : filesId) {
-//                filesRepository.deleteById(files.getFileId());
-//                File dfile = new File(files.getPath());
-//                dfile.delete();
-//            }
-//
-//        } catch (Exception e) {
-//            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    public void deleteFile(Long fileId) throws Exception {
+        Files filesId = filesRepository.findByFileId(fileId).get();
+
+        try {
+
+                filesRepository.deleteById(fileId);
+                File dfile = new File(filesId.getPath());
+                dfile.delete();
+
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     //파일 보기
     public List<FilesResponseDto> getFiles(Integer type, Long typeId) {
@@ -137,9 +131,11 @@ public class FilesService {
     }
 
     //파일 수정
-    public Boolean filesUpdate(Integer type, Long typeId, MultipartFile file) throws Exception {
-        //보드에 있는 파일 전부 삭제
-        deleteAllFile(type, typeId);
+    public Boolean filesUpdate(Integer type, Long typeId, MultipartFile file, List<Long> fileId) throws Exception {
+        //리스트에 있는 파일 삭제
+        for (Long files : fileId) {
+            deleteFile(files);
+        }
 
         //파일 생성
         saveFileDb(file, type, typeId);
@@ -147,9 +143,11 @@ public class FilesService {
         return true;
     }
 
-    public Boolean filesMUpdate(Integer type, Long typeId, List<MultipartFile> file) throws Exception {
-        //보드에 있는 파일 전부 삭제
-        deleteAllFile(type, typeId);
+    public Boolean filesMUpdate(Integer type, Long typeId, List<MultipartFile> file, List<Long> deleteId) throws Exception {
+        //리스트에 있는 파일 삭제
+        for (Long files : deleteId) {
+            deleteFile(files);
+        }
 
         //파일 일괄 생성
         saveFileMDb(file, type, typeId);
