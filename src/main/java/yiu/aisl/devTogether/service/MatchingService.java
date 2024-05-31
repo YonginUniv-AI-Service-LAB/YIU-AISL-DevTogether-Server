@@ -9,13 +9,16 @@ import yiu.aisl.devTogether.domain.state.MatchingCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 import yiu.aisl.devTogether.dto.MatchingRequestDto;
+import yiu.aisl.devTogether.dto.MatchingResponseDto;
+import yiu.aisl.devTogether.dto.ProfileResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,26 +33,22 @@ public class MatchingService {
     private final MatchingScrapRepository matchingScrapRepository;
 
     //멘토 조회(멘티가 멘토 조회)
-    public List<UserProfile> mentorList(CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
+    public Object mentorList(CustomUserDetails userDetails) {
+        Long user = userDetails.getUser().getId();
 
-        // 403 권한 오류
-        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘토).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH)
-        );
-        //현재 멘티면 멘토 리스트 보여줌
-        if (userProfile.getRole().equals(RoleCategory.멘티)  ) {
-            return userProfileRepository.findUserProfileByRole(RoleCategory.멘토); //현재 정보 ㄷ 보여쥼 > 수정해야함
-        }
-        return null;
+        List<UserProfile> userProfiles = userProfileRepository.findByRole(1);
+
+        return userProfiles.stream()
+                .map(ProfileResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     //멘티 조회(멘토가 멘티 조회)
     public List<UserProfile> menteeList(CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
+        Long user = userDetails.getUser().getId();
 
         // 403 권한 오류
-        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘티).orElseThrow(
+        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         );
         //현재 멘토면 멘티 리스트 보여줌
@@ -154,10 +153,10 @@ public class MatchingService {
     }*/
     // 신청하기
     public Boolean apply(CustomUserDetails userDetails, MatchingRequestDto.MentorApplyDTO request) throws Exception  {
-        User user = userDetails.getUser();
+        Long user = userDetails.getUser().getId();
        // MatchingCategory matchingCategory = MatchingCategory.fromInt(request.getMatchingCategory());
 
-        UserProfile userProfileMentor = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘티).orElseThrow(
+        UserProfile userProfileMentor = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         );
        /* UserProfile userProfileMentee = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘티).orElseThrow(
@@ -199,7 +198,7 @@ public class MatchingService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 
-    public UserProfile findByUserIdAndRole(User userId, RoleCategory role) {
+    public UserProfile findByUserIdAndRole(Long userId, Integer role) {
         return userProfileRepository.findByUserIdAndRole(userId, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
@@ -296,11 +295,11 @@ public class MatchingService {
 
     //신청 종료
     public Boolean end(CustomUserDetails userDetails,MatchingRequestDto.EndDTO request) throws Exception {
-        User user = userDetails.getUser();
+        Long user = userDetails.getUser().getId();
         Matching matching = findByMatchingId(request.getMatchingId());
 
         //403 권한 없음
-        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘티).orElseThrow(
+        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         );
         try {
