@@ -70,17 +70,22 @@ public class UserService {
         if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+        String nickname = dto.getNickname();
+        System.out.println(user.getNickname());
+        System.out.println(nickname);
 
         // 데이터 중복(닉네임) (409)
-        if(dto.getNickname() != user.getNickname()) {
-            if(userRepository.findByEmail(dto.getNickname()).isPresent()) {
-                throw  new CustomException(ErrorCode.DUPLICATE);
+        if(nickname != user.getNickname()) {
+            if(!userRepository.findByNickname(dto.getNickname()).isPresent()) {
+                user.setNickname(nickname);
+            } else {
+                System.out.println("데이터 중복 오류 발생");
+                throw new CustomException(ErrorCode.DUPLICATE);
             }
-        }
+        } else user.setNickname(nickname);
 
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
-        user.setNickname(dto.getNickname());
         user.setRole(RoleCategory.values()[dto.getRole()]);
         user.setGender(GenderCategory.values()[dto.getGender()]);
         user.setAge(dto.getAge());
@@ -117,7 +122,7 @@ public class UserService {
 
         List<Board> myBoards = boardRepository.findByUser(user.get());
         return myBoards.stream()
-                .map(BoardDto::new)
+                .map(MyBoardDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -160,11 +165,8 @@ public class UserService {
     // [API] 내 멘티 관리하기
     public Object getMyMentee(CustomUserDetails userDetails) {
         User user = userDetails.getUser();
-        UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
-        );
 
-        List<Matching> myMentee = matchingRepository.findByMentor(userProfile);
+        List<Matching> myMentee = matchingRepository.findByMentor(user);
         return myMentee.stream()
                 .map(MatchingResponseDto::new)
                 .collect(Collectors.toList());
@@ -173,11 +175,8 @@ public class UserService {
     // [API] 내 멘토 관리하기
     public Object getMyMentor(CustomUserDetails userDetails) {
         User user = userDetails.getUser();
-        UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
-        );
 
-        List<Matching> myMentor = matchingRepository.findByMentee(userProfile);
+        List<Matching> myMentor = matchingRepository.findByMentee(user);
         return myMentor.stream()
                 .map(MatchingResponseDto::new)
                 .collect(Collectors.toList());
