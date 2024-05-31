@@ -8,6 +8,8 @@ import yiu.aisl.devTogether.domain.User;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 //UserDetails란?
@@ -24,7 +26,16 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {   //계정의 권한 목록 리턴
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        // 사용자의 역할(role)에 따라 권한을 설정합니다.
+        if (user.getRole().equals(0)) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else if (user.getRole().equals(1)) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_MENTOR"));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("ROLE_MENTEE"));
+        }
+        return authorities;
     }
 
 

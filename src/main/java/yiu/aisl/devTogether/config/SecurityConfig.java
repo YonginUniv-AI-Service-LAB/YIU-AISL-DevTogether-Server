@@ -78,12 +78,9 @@ public class SecurityConfig {
                                         "/faq/","/notice/detail","/notice/","/subject",
                                         "/mentor","/mentee",
                                         "/message", "/ask/**").permitAll()
-
-
-//                                .requestMatchers("/scrap/mentee").hasRole("MENTOR")
-                               .requestMatchers("/faq/**").hasRole("관리자")
-                                .requestMatchers("/notice/**").hasRole("관리자")
-                                .requestMatchers("/ask/answer").hasRole("관리자")
+                                .requestMatchers("/faq/**", "/notice/**", "/ask/answer").hasRole("ADMIN")
+                                .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee").hasRole("MENTOR")
+                                .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor").hasRole("MENTEE")
                                 .anyRequest().authenticated()
                 )
 
