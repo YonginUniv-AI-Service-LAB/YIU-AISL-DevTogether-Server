@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface MatchingRepository extends JpaRepository<Matching, Long> {
     Optional<Matching> findByMatchingId(Long matchingId);
 
-    List<Matching> findByMentor(UserProfile user);
-    List<Matching> findByMentee(UserProfile user);
+    List<Matching> findByMentor(User user);
+    List<Matching> findByMentee(User user);
 }
