@@ -17,7 +17,9 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
     Optional<UserProfile> findByUserProfileId(Long userProfileId);
 
-    Optional<UserProfile> findByUserIdAndRole(User userId, RoleCategory role);
+    Optional<UserProfile> findByUserIdAndRole(Long userId, Integer role);
+
+    List<UserProfile> findByRole(Integer role);
 
     Optional<UserProfile> findByUser(User user);
 

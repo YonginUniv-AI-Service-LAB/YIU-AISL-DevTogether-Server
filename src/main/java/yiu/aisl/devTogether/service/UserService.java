@@ -185,10 +185,17 @@ public class UserService {
 
     // [API] 내 멘토 프로필 변경하기
     public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) {
-        User user = userDetails.getUser();
-        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘토).orElseThrow(
+        Long user = userDetails.getUser().getId();
+        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 1).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
+
+        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getLink().isEmpty() ||
+                dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee()==null) {
+            userProfile.setChecks(0);
+        } else {
+            userProfile.setChecks(1);
+        }
 
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
@@ -206,10 +213,17 @@ public class UserService {
 
     // [API] 내 멘티 프로필 변경하기
     public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) {
-        User user = userDetails.getUser();
-        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, RoleCategory.멘티).orElseThrow(
+        Long user = userDetails.getUser().getId();
+        UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
+
+        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getLink().isEmpty() ||
+        dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee()==null) {
+            userProfile.setChecks(0);
+        } else {
+            userProfile.setChecks(1);
+        }
 
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());

@@ -19,8 +19,8 @@ public class MatchingController {
     private final MatchingService matchingService;
    //멘토 조회(멘티가 멘토 조회)
     @GetMapping("/mentor")
-    public ResponseEntity<List> mentorList(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
-        return new ResponseEntity<List>(matchingService.mentorList(customUserDetails), HttpStatus.OK);
+    public ResponseEntity<Object> mentorList(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
+        return new ResponseEntity<Object>(matchingService.mentorList(customUserDetails), HttpStatus.OK);
     }
 
     //멘티 조회(멘토가 멘티 조회)

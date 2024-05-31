@@ -2,6 +2,7 @@ package yiu.aisl.devTogether.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -45,6 +46,10 @@ public class UserProfile {
 
     @Column
     private Integer fee;
+
+    @Column
+    @ColumnDefault("0")
+    private Integer checks;
 
     @CreationTimestamp
     @Column
