@@ -18,19 +18,20 @@ import java.util.Set;
 public class CustomUserDetails implements UserDetails {
     private final User user;
 
-    private String role;
+    private int role;
 
-    public String getRole() {
-        return role;
+    public CustomUserDetails(User user, int role) {
+        this.user = user;
+        this.role = role;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {   //계정의 권한 목록 리턴
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
         // 사용자의 역할(role)에 따라 권한을 설정합니다.
-        if (user.getRole().equals(0)) {
+        if (role == 0) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        } else if (user.getRole().equals(1)) {
+        } else if (role == 1) {
             authorities.add(new SimpleGrantedAuthority("ROLE_MENTOR"));
         } else {
             authorities.add(new SimpleGrantedAuthority("ROLE_MENTEE"));
