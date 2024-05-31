@@ -148,12 +148,12 @@ public class BoardService {
             //파일 관련 코드
             //파일이 있으면
             if (files) {
-                //저장된 파일이 현재 파일에 없는 경우 삭제
+                filesService.filesMUpdate(2, board.get().getBoardId(), file);
                 //보드에 있는 파일 전부 삭제
-                filesService.deleteFile(2, board.get().getBoardId());
-
-                //파일 일괄 생성
-                filesService.saveFileMDb(file, 2, request.getBoardId());
+//                filesService.deleteAllFile(2, board.get().getBoardId());
+//
+//                //파일 일괄 생성
+//                filesService.saveFileMDb(file, 2, request.getBoardId());
             }
             return true;
         } catch (Exception e) {

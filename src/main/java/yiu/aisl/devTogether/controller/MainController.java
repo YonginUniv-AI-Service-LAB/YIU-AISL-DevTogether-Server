@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.dto.*;
+import yiu.aisl.devTogether.service.FilesService;
 import yiu.aisl.devTogether.service.MainService;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 public class MainController {
 
     private final MainService mainService;
+    private final FilesService filesService;
 
     //ResponseEntity는 HTTP 응답을 나타내는 Spring 클래스
 
@@ -92,6 +94,12 @@ public class MainController {
     public ResponseEntity<List<String>> subject(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<String> subjects = mainService.getSubjects();
         return new ResponseEntity<>(subjects, HttpStatus.OK);
+    }
+
+    //파일 다운로드
+    @GetMapping("/download")
+    public ResponseEntity<FilesResponseDto> downloadFile(Long fileId) throws Exception {
+        return new ResponseEntity<FilesResponseDto>(filesService.downloadFile(fileId), HttpStatus.OK);
     }
 
 }

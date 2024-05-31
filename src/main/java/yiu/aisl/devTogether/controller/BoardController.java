@@ -21,13 +21,6 @@ import java.util.List;
 @RequestMapping(value = "/board")
 public class BoardController {
     private final BoardService boardService;
-    private final FilesService filesService;
-
-    //파일 다운로드
-    @GetMapping("/download")
-    public ResponseEntity<FilesResponseDto> downloadFile(Long fileId) throws Exception {
-        return new ResponseEntity<FilesResponseDto>(filesService.downloadFile(fileId), HttpStatus.OK);
-    }
 
     //게시판 전체조회
     @GetMapping

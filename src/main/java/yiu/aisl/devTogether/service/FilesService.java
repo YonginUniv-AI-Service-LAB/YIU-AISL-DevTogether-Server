@@ -50,6 +50,9 @@ public class FilesService {
 
     //파일 서버 저장
     public Boolean saveFileDb(MultipartFile file, Integer type, Long id) throws Exception {
+//        if (file.getContentType().startsWith("image") == false) {
+//            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+//        }
         try {
 
             String originName = getFileName(file);
@@ -103,22 +106,23 @@ public class FilesService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
     //test 안 해봄
-    public void deleteFile(Integer type, Long typeId) throws Exception {
-        List<Files> filesId = filesRepository.findByTypeAndTypeId(type, typeId);
-//        Files filesId = filesRepository.findByFileId(fileId).get();
-
-        try {
-            for (Files files : filesId) {
-                filesRepository.deleteById(files.getFileId());
-                File dfile = new File(files.getPath());
-                dfile.delete();
-            }
-
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public void deleteFile(Integer type, Long typeId) throws Exception {
+//        List<Files> filesId = filesRepository.findByTypeAndTypeId(type, typeId);
+////        Files filesId = filesRepository.findByFileId(fileId).get();
+//
+//        try {
+//            for (Files files : filesId) {
+//                filesRepository.deleteById(files.getFileId());
+//                File dfile = new File(files.getPath());
+//                dfile.delete();
+//            }
+//
+//        } catch (Exception e) {
+//            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     //파일 보기
     public List<FilesResponseDto> getFiles(Integer type, Long typeId) {
@@ -133,11 +137,22 @@ public class FilesService {
     }
 
     //파일 수정
-    public Boolean filesUpdate(List<Long> fileId){
+    public Boolean filesUpdate(Integer type, Long typeId, MultipartFile file) throws Exception {
+        //보드에 있는 파일 전부 삭제
+        deleteAllFile(type, typeId);
 
-        List<MultipartFile> newFiles = new ArrayList<>();
+        //파일 생성
+        saveFileDb(file, type, typeId);
 
+        return true;
+    }
 
+    public Boolean filesMUpdate(Integer type, Long typeId, List<MultipartFile> file) throws Exception {
+        //보드에 있는 파일 전부 삭제
+        deleteAllFile(type, typeId);
+
+        //파일 일괄 생성
+        saveFileMDb(file, type, typeId);
 
         return true;
     }
@@ -153,7 +168,7 @@ public class FilesService {
             File downloadFile = new File(files.getPath());
 
             byte fileByte[] = FileUtil.readAsByteArray(downloadFile);
-            Long bytes = java.nio.file.Files.size(Path.of(files.getPath()))/1024;
+            Long bytes = java.nio.file.Files.size(Path.of(files.getPath())) / 1024;
 
             return FilesResponseDto.builder()
                     .fileId(fileId)
