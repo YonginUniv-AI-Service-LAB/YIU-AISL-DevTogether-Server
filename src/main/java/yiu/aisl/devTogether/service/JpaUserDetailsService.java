@@ -42,13 +42,13 @@ public class JpaUserDetailsService implements UserDetailsService {
 
 
         if ( user.getRole() == RoleCategory.fromInt(0)  ) {
-            userDetails.setRole("관리자");
+            userDetails.setRole(0);
 
         } else if (user.getRole() == RoleCategory.fromInt(1)) {
-            userDetails.setRole("멘토");
+            userDetails.setRole(1);
 
         } else if(user.getRole() == RoleCategory.fromInt(2)) {
-            userDetails.setRole("멘티");
+            userDetails.setRole(2);
 
         }
 

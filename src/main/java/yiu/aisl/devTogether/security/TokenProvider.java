@@ -58,7 +58,7 @@ public class TokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidTime))
                 .setSubject(user.getNickname())
                 .claim("email", user.getEmail())
-                .claim("role", user.getRole())
+                .claim("role", role)
                 .claim("nickname", user.getNickname())
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
