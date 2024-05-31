@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.*;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.*;
@@ -34,7 +35,7 @@ public class BoardService {
             List<BoardDto> getList = new ArrayList<>();
             board.forEach(s -> getList.add(BoardDto.getboardDto(s)));
             return getList;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
@@ -50,8 +51,8 @@ public class BoardService {
             BoardDto response = BoardDto.getboardDto(board);
 
             if (board.getFiles()) {
-                List<Files> filesList = filesService.getFiles(2, board.getBoardId());
-                System.out.println(filesList);
+                List<FilesResponseDto> filesList = filesService.getFiles(2, board.getBoardId());
+//                System.out.println(filesList);
                 response.setFilesList(filesList);
             }
 
@@ -65,7 +66,7 @@ public class BoardService {
     public Boolean create(String email, BoardRequestDto.CreateDto request, List<MultipartFile> file) {
         //403 권한 없음 - db 유무만 탐색
         User user = findByUserEmail(email);
-
+        System.out.println();
         //400 데이터 미입력
         if (request.getTitle().isEmpty() || request.getContents().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -109,7 +110,7 @@ public class BoardService {
         try {
             boardRepository.deleteById(request.getBoardId());
             if (board.get().getFiles()) {
-                filesService.deleteFile(2, board.get().getBoardId());
+                filesService.deleteAllFile(2, board.get().getBoardId());
             }
             return true;
         } catch (Exception e) {
@@ -119,14 +120,13 @@ public class BoardService {
     }
 
     //게시판 수정 -- 이미지 코드 확인 필요
-    public Boolean update(String email, BoardRequestDto.UpdateDto request) throws Exception {
+    public Boolean update(String email, BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
         User user = findByUserEmail(email);
 
         //400: 데이터 미입력
         if (request.getTitle().isEmpty() || request.getContents().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-
         //404: id 없음
         Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
         if (board.isEmpty()) {
@@ -134,14 +134,27 @@ public class BoardService {
         }
         //403: 권한없음
         Board existingboard = board.get();
+
         if (!existingboard.getUser().equals(user)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
+
+        Boolean files = filesService.isMFile(file);
         try {
             existingboard.setTitle(request.getTitle());
             existingboard.setContents(request.getContents());
-
+            existingboard.setFiles(files);
             boardRepository.save(existingboard);
+            //파일 관련 코드
+            //파일이 있으면
+            if (files) {
+                //저장된 파일이 현재 파일에 없는 경우 삭제
+                //보드에 있는 파일 전부 삭제
+                filesService.deleteFile(2, board.get().getBoardId());
+
+                //파일 일괄 생성
+                filesService.saveFileMDb(file, 2, request.getBoardId());
+            }
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -157,7 +170,7 @@ public class BoardService {
         findByBoardId(request.getBoardId());
         try {
             // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
-            if(request.getCount()){
+            if (request.getCount()) {
                 if (likeRepository.findByUseridAndTypeId(user, request.getBoardId()).isPresent()) {
                     throw new CustomException(ErrorCode.DUPLICATE);
                 } else {//만약 없으면 좋아요 db 만들기
@@ -168,7 +181,7 @@ public class BoardService {
                             .build();
                     likeRepository.save(makelike);
                 }
-            }else {// 취소 했을때
+            } else {// 취소 했을때
                 if (likeRepository.findByUseridAndTypeId(user, request.getBoardId()).isPresent()) {
                     Likes likes = findByLikesId(user, request.getBoardId());
                     likeRepository.delete(likes);
@@ -197,11 +210,10 @@ public class BoardService {
         Board board = findByBoardId(request.getBoardId());
 
 
-
         //403: 권한없음
-       User user = findByUserEmail(email);
+        User user = findByUserEmail(email);
 
-        if(boardScrapRepository.findByUserAndBoard(user, board).isPresent()) {
+        if (boardScrapRepository.findByUserAndBoard(user, board).isPresent()) {
             boardScrapRepository.deleteByUserAndBoard(user, board);
             return true;
         } else {
@@ -305,8 +317,9 @@ public class BoardService {
         }
 
     }
+
     //댓글 좋아요
-    public Boolean likeComment(String email, BoardRequestDto.likeCommentDto request) throws Exception{
+    public Boolean likeComment(String email, BoardRequestDto.likeCommentDto request) throws Exception {
         // 403: 권한 없음
         User user = findByUserEmail(email);
         // 404: id 없음
@@ -314,7 +327,7 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
         try {
             // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
-            if(request.getCount()){
+            if (request.getCount()) {
                 if (likeRepository.findByUseridAndTypeId(user, request.getCommentId()).isPresent()) {
                     throw new CustomException(ErrorCode.DUPLICATE);
                 } else {//만약 없으면 좋아요 db 만들기
@@ -325,7 +338,7 @@ public class BoardService {
                             .build();
                     likeRepository.save(makelike);
                 }
-            }else {// 취소 했을때
+            } else {// 취소 했을때
                 if (likeRepository.findByUseridAndTypeId(user, request.getCommentId()).isPresent()) {
                     Likes likes = findByLikesId(user, request.getCommentId());
                     likeRepository.delete(likes);
@@ -338,7 +351,8 @@ public class BoardService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-    public Likes findByLikesId(User user, Long typeId){
+
+    public Likes findByLikesId(User user, Long typeId) {
         return likeRepository.findByUseridAndTypeId(user, typeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }

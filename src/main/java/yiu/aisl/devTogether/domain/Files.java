@@ -16,7 +16,7 @@ public class Files {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long FileId;
+    private Long fileId;
 
     @Column
     private Integer type;

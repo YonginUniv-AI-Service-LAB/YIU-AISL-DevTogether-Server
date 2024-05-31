@@ -18,24 +18,24 @@ public class BoardDto {
     private Long boardId;
     private String title;
     private String contents;
+    private Long userId;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
-    private Long userId;
     private Boolean files;
+    private List<FilesResponseDto> filesList;
     private List<Comment> comments;
-    private List<Files> filesList;
 
     public static BoardDto getboardDto(Board board) {
         return new BoardDto(
                 board.getBoardId(),
                 board.getTitle(),
                 board.getContents(),
+                board.getUser().getId(),
                 board.getCreatedAt(),
                 board.getUpdatedAt(),
-                board.getUser().getId(),
                 board.getFiles(),
-                board.getComments(),
-                board.getFilesList()
+                board.getFilesList(),
+                board.getComments()
         );
     }
 

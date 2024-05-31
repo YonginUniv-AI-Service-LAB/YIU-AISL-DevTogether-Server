@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 import yiu.aisl.devTogether.service.BoardService;
 import yiu.aisl.devTogether.service.FilesService;
 
@@ -24,8 +25,8 @@ public class BoardController {
 
     //파일 다운로드
     @GetMapping("/download")
-    public ResponseEntity<Boolean> downloadFile(Long fileId) throws Exception {
-        return new ResponseEntity<Boolean>(filesService.downloadFile(fileId), HttpStatus.OK);
+    public ResponseEntity<FilesResponseDto> downloadFile(Long fileId) throws Exception {
+        return new ResponseEntity<FilesResponseDto>(filesService.downloadFile(fileId), HttpStatus.OK);
     }
 
     //게시판 전체조회
@@ -54,8 +55,8 @@ public class BoardController {
 
     //게시판 수정 ~~~~~~~~~~~  file 확인 필요
     @PutMapping
-    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request) throws Exception {
-        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), request), HttpStatus.OK);
+    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), request, file), HttpStatus.OK);
     }
 
     //게시판 좋아요

@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class Board {
     @OneToMany(mappedBy = "typeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Likes> likes;
 
-    public List<Files> getFilesList() {
+    public List<FilesResponseDto> getFilesList() {
         return null;
     }
 }

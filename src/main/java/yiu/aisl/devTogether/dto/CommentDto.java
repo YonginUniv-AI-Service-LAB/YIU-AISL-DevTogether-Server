@@ -17,19 +17,19 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Board board;
     private String contents;
-    private LocalDateTime createAt;
-    private LocalDateTime updatedAt;
     private Long userId;
     private Long boardId;
+    private LocalDateTime createAt;
+    private LocalDateTime updatedAt;
 
     public static CommentDto getCommentDto(Comment comment){
         return new CommentDto(
                 comment.getBoard(),
                 comment.getContents(),
-                comment.getCreatedAt(),
-                comment.getUpdatedAt(),
                 comment.getUser().getId(),
-                comment.getBoard().getBoardId()
+                comment.getBoard().getBoardId(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
         );
     }
 
