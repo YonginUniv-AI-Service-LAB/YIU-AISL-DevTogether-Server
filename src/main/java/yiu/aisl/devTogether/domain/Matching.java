@@ -22,15 +22,14 @@ public class Matching {
 
     @ManyToOne
     @JoinColumn(name = "mentor_user_id")
-    private User mentor;
+    private UserProfile mentor;
 
     @ManyToOne
     @JoinColumn(name = "mentee_user_id")
-    private User mentee;
+    private UserProfile mentee;
 
     @Column
-    @Enumerated(EnumType.ORDINAL)
-    private StatusCategory status;
+    private String status;
 
     @CreationTimestamp
     @Column

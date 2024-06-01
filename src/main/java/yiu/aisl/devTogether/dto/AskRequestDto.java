@@ -3,6 +3,7 @@ package yiu.aisl.devTogether.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 
 
 public class AskRequestDto {
@@ -11,7 +12,6 @@ public class AskRequestDto {
     public static class CreateDTO {
         private String title;
         private String contents;
-        private Boolean files;
         private Integer askCategory;
 
 
@@ -21,7 +21,6 @@ public class AskRequestDto {
             return "CreateDTO{" +
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
-                    ", files='" + files + '\'' +
                     ", ask_category=" + askCategory +
                     '}';
         }
@@ -73,7 +72,7 @@ public class AskRequestDto {
         private Integer status;
         private String  answer;
         private Integer askCategory;
-
+        private List<Long> deleteId;
 
         @Override
         public String toString() {
@@ -84,6 +83,7 @@ public class AskRequestDto {
                     ", status=" + status +
                     ", answer='" + answer + '\'' +
                     ", askCategory=" + askCategory +
+                    ", deleteId=" + deleteId +
                     '}';
         }
     }

@@ -1,36 +1,42 @@
 package yiu.aisl.devTogether.dto;
 
 import lombok.*;
+import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 
 import java.time.LocalDateTime;
 
 public class MatchingRequestDto {
 
+    @Getter
+    @Setter
+    public static class applyDTO {
+        private UserProfile mentee;
+        private UserProfile mentor;
 
+
+    }
 
     @Getter
     @Setter
     public static class MentorApplyDTO {
-        //private Integer matchingCategory;
-        private Long mentee;
+        private UserProfile mentee;
+        private UserProfile mentor;
 
 
     }
     @Getter
     @Setter
     public static class MenteeApplyDTO {
-       // private Integer matchingCategory;
-        private Long mentor;
-
+        private UserProfile mentor;
+        private UserProfile mentee;
     }
 
     @Getter
     @Setter
     public static class ApproveDTO {
         private Long matchingId;
-        private Long mentor;
-        private Long mentee;
+
     }
 
     @Getter
@@ -65,6 +71,6 @@ public class MatchingRequestDto {
     @Getter
     @Setter
     public class ScrapDto {
-      private Long scrapId;
+        private Long scrapId;
     }
 }

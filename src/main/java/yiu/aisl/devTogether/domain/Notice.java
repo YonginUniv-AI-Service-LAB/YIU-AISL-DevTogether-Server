@@ -28,9 +28,9 @@ public class Notice {
     @Column(nullable = false,length = 255)
     private String title;
 
-   /* @Column
+    @Column
     private Boolean files;
-*/
+
 
 
     @CreationTimestamp

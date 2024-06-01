@@ -17,7 +17,7 @@ import java.util.List;
 public class MatchingController {
 
     private final MatchingService matchingService;
-   //멘토 조회(멘티가 멘토 조회)
+    //멘토 조회(멘티가 멘토 조회)
     @GetMapping("/mentor")
     public ResponseEntity<Object> mentorList(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
         return new ResponseEntity<Object>(matchingService.mentorList(customUserDetails), HttpStatus.OK);
@@ -25,8 +25,8 @@ public class MatchingController {
 
     //멘티 조회(멘토가 멘티 조회)
     @GetMapping("/mentee")
-    public ResponseEntity<List> menteeList(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
-        return new ResponseEntity<List>(matchingService.menteeList(customUserDetails), HttpStatus.OK);
+    public ResponseEntity<Object> menteeList(@AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
+        return new ResponseEntity<Object>(matchingService.menteeList(customUserDetails), HttpStatus.OK);
     }
 
 
@@ -44,40 +44,35 @@ public class MatchingController {
 
     // 신청하기
     @PostMapping("/matching/application")
-    public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails customUserDetails, MatchingRequestDto.MentorApplyDTO request)throws Exception  {
-        return new ResponseEntity<Boolean>(matchingService.apply(customUserDetails,request), HttpStatus.OK);
+    public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.MenteeApplyDTO request)throws Exception  {
+        return new ResponseEntity<Boolean>(matchingService.apply(user.getEmail(),request), HttpStatus.OK);
     }
-
-
-
-
 
     //신청 수락
     @PutMapping("/matching/application")
-    public ResponseEntity<Boolean> approve(@AuthenticationPrincipal CustomUserDetails customUserDetails, MatchingRequestDto.ApproveDTO request) throws Exception {
-        return new ResponseEntity<Boolean>(matchingService.approve(customUserDetails,request), HttpStatus.OK);
+    public ResponseEntity<Boolean> approve(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ApproveDTO request) throws Exception {
+        return new ResponseEntity<Boolean>(matchingService.approve(user.getEmail(),request), HttpStatus.OK);
     }
     //신청 삭제
     @DeleteMapping("/matching/application")
-    public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, MatchingRequestDto.DeleteDTO request) throws Exception {
-        return new ResponseEntity<Boolean>(matchingService.delete(customUserDetails,request), HttpStatus.OK);
+    public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.DeleteDTO request) throws Exception {
+        return new ResponseEntity<Boolean>(matchingService.delete(user.getEmail(),request), HttpStatus.OK);
     }
     //신청 거절
     @PutMapping("/matching/refusal")
-    public ResponseEntity<Boolean> refusal(@AuthenticationPrincipal CustomUserDetails customUserDetails, MatchingRequestDto.RefusalDTO request) throws Exception {
-        return new ResponseEntity<Boolean>(matchingService.refusal(customUserDetails,request), HttpStatus.OK);
+    public ResponseEntity<Boolean> refusal(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.RefusalDTO request) throws Exception {
+        return new ResponseEntity<Boolean>(matchingService.refusal(user.getEmail(),request), HttpStatus.OK);
     }
     //신청 확정
     @PostMapping("/matching/confirmation")
-    public ResponseEntity<Boolean> confirm(@AuthenticationPrincipal CustomUserDetails customUserDetails, MatchingRequestDto.ConfirmDTO request)throws Exception  {
-        return new ResponseEntity<Boolean>(matchingService.confirm(customUserDetails,request), HttpStatus.OK);
+    public ResponseEntity<Boolean> confirm(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.ConfirmDTO request)throws Exception  {
+        return new ResponseEntity<Boolean>(matchingService.confirm(user.getEmail(),request), HttpStatus.OK);
     }
-
 
     //신청 종료
     @PostMapping("/matching/end")
-    public ResponseEntity<Boolean> end(@AuthenticationPrincipal CustomUserDetails customUserDetails, MatchingRequestDto.EndDTO request)throws Exception  {
-        return new ResponseEntity<Boolean>(matchingService.end(customUserDetails,request), HttpStatus.OK);
+    public ResponseEntity<Boolean> end(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.EndDTO request)throws Exception  {
+        return new ResponseEntity<Boolean>(matchingService.end(user.getEmail(),request), HttpStatus.OK);
     }
 
 

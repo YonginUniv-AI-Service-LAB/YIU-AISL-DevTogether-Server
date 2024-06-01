@@ -76,8 +76,8 @@ public class SecurityConfig {
                                         "/email" ,"token/change", "/token/refresh", "/nickname",
                                         "/board", "/board/post", "/board/like", "/board/scrap",
                                         "/faq/","/notice/detail","/notice/","/subject",
-                                        "/mentor","/mentee",
-                                        "/message", "/ask/**").permitAll()
+                                        "/mentor","/mentee","/ask",
+                                        "/message").permitAll()
                                 .requestMatchers("/faq/**", "/notice/**", "/ask/answer").hasRole("ADMIN")
                                 .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee").hasRole("MENTOR")
                                 .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor").hasRole("MENTEE")

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import yiu.aisl.devTogether.domain.Matching;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.MatchingCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class MatchingResponseDto {
     private Long mentor;
     private Long mentee;
 
-    private StatusCategory status;
+    private String status;
 
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
@@ -31,8 +32,8 @@ public class MatchingResponseDto {
         return new MatchingResponseDto(
 
                 matching.getMatchingId(),
-                matching.getMentor().getId(),
-                matching.getMentee().getId(),
+                matching.getMentor().getUserProfileId(),
+                matching.getMentee().getUserProfileId(),
                 matching.getStatus(),
                 matching.getCreatedAt(),
                 matching.getUpdatedAt(),
@@ -42,8 +43,9 @@ public class MatchingResponseDto {
 
     public MatchingResponseDto(Matching matching) {
         this.matchingId = matching.getMatchingId();
-        this.mentor = matching.getMentor().getId();
-        this.mentee = matching.getMentee().getId();
+        this.mentor = matching.getMentor().getUserProfileId();
+        this.mentee = matching.getMentee().getUserProfileId();
+
         this.status = matching.getStatus();
         this.createAt = matching.getCreatedAt();
         this.updatedAt = matching.getUpdatedAt();

@@ -34,10 +34,10 @@ public class NoticeController {
 
     // 공지사항 등록
     @PostMapping
-    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user,  NoticeRequestDto.CreateDTO request) throws Exception {
+    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user,  NoticeRequestDto.CreateDTO request, List<MultipartFile> file) throws Exception {
         //request 객체를 받아온다
         System.out.println("Notice_create request: " + request);
-        return new ResponseEntity<Boolean>(noticeService.create(user.getEmail(), request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(noticeService.create(user.getEmail(), request,file), HttpStatus.OK);
         //new: 생성
     }
 
@@ -50,8 +50,8 @@ public class NoticeController {
 
     // 공지사항 수정
     @PutMapping
-    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, NoticeRequestDto.UpdateDTO request) throws Exception {
+    public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, NoticeRequestDto.UpdateDTO request, List<MultipartFile> file) throws Exception {
         System.out.println("Notice_update request" + request);
-        return new ResponseEntity<Boolean>(noticeService.update(user.getEmail(),request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(noticeService.update(user.getEmail(),request,file), HttpStatus.OK);
     }
 }

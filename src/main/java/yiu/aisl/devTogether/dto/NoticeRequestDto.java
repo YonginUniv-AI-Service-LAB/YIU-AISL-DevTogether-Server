@@ -3,6 +3,8 @@ package yiu.aisl.devTogether.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 
 public class NoticeRequestDto {
 
@@ -19,7 +21,7 @@ public class NoticeRequestDto {
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     ", noticeCategory=" + noticeCategory +
-                   // ", files='" + files + '\'' +
+                    // ", files='" + files + '\'' +
                     '}';
         }
 
@@ -59,6 +61,7 @@ public class NoticeRequestDto {
         private String title;
         private String contents;
         private Integer noticeCategory;
+        private List<Long> deleteId;
 
         @Override
         public String toString() {
@@ -67,6 +70,7 @@ public class NoticeRequestDto {
                     ", title='" + title + '\'' +
                     ", contents='" + contents + '\'' +
                     ", noticeCategory=" + noticeCategory +
+                    ", deleteId=" + deleteId +
                     '}';
         }
     }

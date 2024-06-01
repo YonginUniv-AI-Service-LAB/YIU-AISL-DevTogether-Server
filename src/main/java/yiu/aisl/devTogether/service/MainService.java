@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
@@ -47,7 +48,7 @@ public class MainService {
     //회원가입
     public Boolean register(RegisterRequestDto request) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
-
+//Boolean imgs = filesService.isFile(img);
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
 
         QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
@@ -81,12 +82,15 @@ public class MainService {
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
+                    //  .img(imgs)
                     .birth(request.getBirth())
                     .question(questionCategory)
                     .answer(request.getAnswer())
                     .build();
             userRepository.save(user);
-
+          /*  if (imgs) {
+                filesService.saveFileDb(img, 0, user.getId());
+            }*/
             if(request.getRole() == 1) {
                 UserProfile userProfile = UserProfile.builder()
                         .role(1)
@@ -308,7 +312,7 @@ public class MainService {
     }
 
 
-//    public TokenDto refreshAccessToken(TokenDto token) throws Exception {
+    //    public TokenDto refreshAccessToken(TokenDto token) throws Exception {
 //        String email = null;
 //        try {
 //            email = tokenProvider.getEmail(token.getAccessToken());

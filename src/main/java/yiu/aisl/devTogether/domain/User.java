@@ -113,7 +113,7 @@ public class User {
     private LocalDateTime updatedAt;
 
 
-    public User(Long id, String name, String nickname,  String email,Boolean img,  RoleCategory role, GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt, Integer check) {
+    public User(Long id, String name, String nickname,  String email,Boolean img,  RoleCategory role,  GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt, Integer check) {
         this.id = id;
         this.email = email;
         this.pwd = pwd;
@@ -145,7 +145,6 @@ public class User {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
-
 
 
     public User(String email, String refreshToken) {

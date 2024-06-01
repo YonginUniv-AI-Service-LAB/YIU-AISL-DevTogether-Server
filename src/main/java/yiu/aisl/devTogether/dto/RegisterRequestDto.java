@@ -28,8 +28,7 @@ public class RegisterRequestDto {
     private String birth;
     private Integer question;
     private String answer;
-
-
+    private MultipartFile img;
 
 
 

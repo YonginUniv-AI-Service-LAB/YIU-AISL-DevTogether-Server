@@ -19,7 +19,7 @@ public class NoticeResponseDto {
     private String title;
     private String contents;
     private NoticeCategory noticeCategory;
-   // private Boolean files;
+    private Boolean files;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -31,7 +31,7 @@ public class NoticeResponseDto {
                 notice.getTitle(),
                 notice.getContents(),
                 notice.getNoticeCategory(),
-             //   notice.getFiles(),
+                notice.getFiles(),
                 notice.getCreatedAt(),
                 notice.getUpdatedAt()
         );

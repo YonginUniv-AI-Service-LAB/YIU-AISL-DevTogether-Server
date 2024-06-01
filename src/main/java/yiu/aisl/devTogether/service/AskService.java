@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Ask;
-import yiu.aisl.devTogether.domain.Board;
-import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.AskCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
@@ -46,20 +44,14 @@ public class AskService {
 
 
     //ask 사용자 등록
-    public Boolean create(String email, AskRequestDto.CreateDTO request) {
+    public Boolean create(String email, AskRequestDto.CreateDTO request, List<MultipartFile> file) {
         User user = findByEmail(email);
-        //Boolean files = filesService.isMFile(file);
-
-        System.out.println(user);
-
-
+        Boolean files = filesService.isMFile(file);
         // 400 - 데이터미입력
-        if (request.getTitle().isEmpty()|| request.getContents().isEmpty() || request.getAskCategory() == null
-         )
-         {
+        if (request.getTitle().isEmpty()|| request.getContents().isEmpty() || request.getAskCategory() == null)
+        {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-
         try {
 
             Ask ask = Ask.builder()
@@ -67,13 +59,13 @@ public class AskService {
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .status(StatusCategory.신청) // 신청
-                    //.files(files)
+                    .files(files)
                     .askCategory(AskCategory.fromInt(request.getAskCategory()))
                     .build();
             askRepository.save(ask);
-           /* if (files) {
+            if (files) {
                 filesService.saveFileMDb(file, 5, ask.getAskId());
-            }*/
+            }
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -88,20 +80,10 @@ public class AskService {
     public Boolean answer(String email, Long askId, AskRequestDto.AnswerDTO request) {
         // 404 - ID 없음
         Ask ask = findByAskId(askId);
-
-        // 403 - 권한 없음
-        User user = findByEmail(email);
-        if (user.getRole() != RoleCategory.관리자) {
-            throw new CustomException(ErrorCode.NO_AUTH);
-        }
         try {
-
-
-
             ask.setAnswer(request.getAnswer());
             ask.setStatus(StatusCategory.완료);
             askRepository.save(ask);
-
             return true;
         } catch (Exception e) {
             // 기타 예외 처리
@@ -123,7 +105,7 @@ public class AskService {
         if (ask.isEmpty()) {
             throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
-            //403 - 권한 없음  >> 자기가 쓴 글이 아닌경우
+        //403 - 권한 없음  >> 자기가 쓴 글이 아닌경우
         Ask existingAsk = ask.get();
         if (!existingAsk.getUser().getEmail().equals(email)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
@@ -131,9 +113,9 @@ public class AskService {
 
         try{
             askRepository.deleteById(request.getAskId());
-          /*  if (ask.get().getFiles()) {
-                filesService.deleteFile(5, ask.get().getAskId());
-            }*/
+            if (ask.get().getFiles()) {
+                filesService.deleteAllFile(5, ask.get().getAskId());
+            }
             return true;
         }
         catch (Exception e){
@@ -145,15 +127,12 @@ public class AskService {
 
 
     //ask 수정
-    public Boolean update( String email, AskRequestDto.UpdateDTO request) {
+    public Boolean update(String email, AskRequestDto.UpdateDTO request, List<MultipartFile> file) {
         AskCategory askCategory = AskCategory.fromInt(request.getAskCategory());
         User user = findByEmail(email);
-
-
-
+        Boolean files = filesService.isMFile(file);
         //404 - id없음
         Ask ask = findByAskId(request.getAskId());
-
 
         //400 - 데이터 미입력
         if(request.getAskId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty() || request.getAskCategory() == null){
@@ -169,18 +148,19 @@ public class AskService {
         if (!ask.getUser().getEmail().equals(email)) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
-
-
         try{
 
             Optional<Ask> modifyAsk = askRepository.findByAskId(request.getAskId());
             modifyAsk.get().setTitle(request.getTitle());
             modifyAsk.get().setContents(request.getContents());
             modifyAsk.get().setStatus(StatusCategory.신청);
-            //modifyAsk.get().setFile(request.getFile());
+            modifyAsk.get().setFiles(files);
             modifyAsk.get().setAskCategory(askCategory);
             askRepository.save(ask);
+            if (files) {
+                filesService.filesMUpdate(4, modifyAsk.get().getAskId(), file, request.getDeleteId());
 
+            }
             return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

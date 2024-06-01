@@ -66,11 +66,6 @@ public class FaqService {
 
         //404 - id없음
         Faq faq = findByFaqId(request.getFaqId());
-        //403 - 권한 없음
-        User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.관리자 ){
-            throw  new CustomException(ErrorCode.NO_AUTH);
-        }
         try{
             faqRepository.deleteById(request.getFaqId());
             return true;
@@ -84,19 +79,12 @@ public class FaqService {
 
     //faq 수정
     public Boolean update(String email,FaqRequestDto.UpdateDTO request) {
-
-
-
         //400 - 데이터 미입력
         if(request.getFaqId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty()
-                )
+        )
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
 
-        //403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.관리자 ){
-            throw  new CustomException(ErrorCode.NO_AUTH);
-        }
         try{
             Optional<Faq> modifyFaq = faqRepository.findByFaqId(request.getFaqId());
             Faq modifiedFaq = modifyFaq.get();

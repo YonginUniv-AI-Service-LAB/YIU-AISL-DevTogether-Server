@@ -44,8 +44,14 @@ public class UserProfile {
     @Column
     private String method;
 
+    @Column( length = 255)
+    private Boolean img;
+
     @Column
     private Integer fee;
+
+    @Column
+    private Boolean files;
 
     @Column
     @ColumnDefault("0")
