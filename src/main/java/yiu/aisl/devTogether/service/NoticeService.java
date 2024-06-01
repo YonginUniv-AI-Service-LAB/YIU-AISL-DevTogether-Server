@@ -1,14 +1,11 @@
 package yiu.aisl.devTogether.service;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import yiu.aisl.devTogether.domain.Board;
 import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
-import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.NoticeRequestDto;
 import yiu.aisl.devTogether.dto.NoticeResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -119,9 +116,6 @@ public class NoticeService {
         }
         // 403 - 권한 없음
         User user = findByEmail(email);
-        if(user.getRole() !=RoleCategory.관리자 ){
-            throw  new CustomException(ErrorCode.NO_AUTH);
-        }
         try {
             Optional<Notice> modifyNotice = noticeRepository.findByNoticeId(request.getNoticeId());
             Notice modifiedNotice = modifyNotice.get();

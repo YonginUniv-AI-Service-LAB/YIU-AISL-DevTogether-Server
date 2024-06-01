@@ -1,24 +1,16 @@
 package yiu.aisl.devTogether.service;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.*;
-import yiu.aisl.devTogether.domain.state.MatchingCategory;
-import yiu.aisl.devTogether.domain.state.NoticeCategory;
-import yiu.aisl.devTogether.domain.state.RoleCategory;
-import yiu.aisl.devTogether.domain.state.StatusCategory;
 import yiu.aisl.devTogether.dto.MatchingRequestDto;
-import yiu.aisl.devTogether.dto.MatchingResponseDto;
 import yiu.aisl.devTogether.dto.ProfileResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -36,10 +28,9 @@ public class MatchingService {
     //멘토 조회(멘티가 멘토 조회)
     public Object mentorList(CustomUserDetails userDetails) {
         Long user = userDetails.getUser().getId();
-
         List<UserProfile> userProfiles = userProfileRepository.findByRole(1);
-
         return userProfiles.stream()
+                .filter(userProfile -> userProfile.getChecks() == 1)
                 .map(ProfileResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -47,10 +38,10 @@ public class MatchingService {
     //멘티 조회(멘토가 멘티 조회)
     public Object menteeList(CustomUserDetails userDetails) {
         Long user = userDetails.getUser().getId();
-
         List<UserProfile> userProfiles = userProfileRepository.findByRole(2);
 
         return userProfiles.stream()
+                .filter(userProfile -> userProfile.getChecks() == 1)
                 .map(ProfileResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -156,30 +147,36 @@ public class MatchingService {
 
 
     //신청 수락
-    public Boolean approve( String email, MatchingRequestDto.ApproveDTO request) throws Exception{
+    public Boolean approve(String email, MatchingRequestDto.ApproveDTO request) throws Exception {
         User user = findByEmail(email);
         UserProfile userProfile = findByUserProfile(user);
         Matching matching = findByMatchingId(request.getMatchingId());
+
         // 400: 데이터 미입력
-        if(request.getMatchingId() == null){
+        if (request.getMatchingId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+
+        // 매칭 ID가 자기랑 관련 있는지 확인
+        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
+                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
+
         // 403 - 권한 없음
-        if (!matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) &&
-                !matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId())) {
+        if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
 
         try {
-            if(matching.getStatus().equals("신청")){
+            if ("신청".equals(matching.getStatus())) {
                 matching.setStatus("성사됨");
             }
 
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-    }    //자기랑 관련된 matchingId가 아닌 경우 예외처리 해야함
+    }
+
 
     //신청 삭제
     public Boolean delete( String email, MatchingRequestDto.DeleteDTO request) throws Exception{
@@ -190,11 +187,17 @@ public class MatchingService {
         if(request.getMatchingId() == null ){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+
+
+        // 매칭 ID가 자기랑 관련 있는지 확인
+        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
+                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
+
         // 403 - 권한 없음
-        if (!matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) &&
-                !matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId())) {
+        if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
+
 
         try {
             if(matching.getStatus().equals("신청")){
@@ -218,11 +221,15 @@ public class MatchingService {
         if(request.getMatchingId() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+        // 매칭 ID가 자기랑 관련 있는지 확인
+        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
+                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
+
         // 403 - 권한 없음
-        if (!matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) &&
-                !matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId())) {
+        if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
+
         try {
             if(matching.getStatus().equals("신청")){
                 matching.setStatus("거절");
@@ -244,18 +251,19 @@ public class MatchingService {
         if(request.getMatchingId() == null){
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+
+        // 매칭 ID가 자기랑 관련 있는지 확인
+        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
+                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
+
         // 403 - 권한 없음
-        if (!matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) &&
-                !matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId())) {
+        if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try {
             if(matching.getStatus().equals("성사됨") ){
                 matching.setStatus("진행");
-
-
             }
-
             return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -270,23 +278,23 @@ public class MatchingService {
         Matching matching = findByMatchingId(request.getMatchingId());
         Integer profileRole = userProfile.getRole();
 
+
+        // 매칭 ID가 자기랑 관련 있는지 확인
+        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
+                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
         // 403 - 권한 없음
-        if (!matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) &&
-                !matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId())) {
+        if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
-
         //403 - 권한 없음
         if(profileRole.equals(2)){
             throw new CustomException(ErrorCode.NO_AUTH);
         }
-
         try {
                 if(matching.getStatus().equals("진행") ){
                      matching.setStatus("완료");;
                      matchingRepository.save(matching);
                 }
-
             return true;
         } catch (CustomException e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -297,14 +305,10 @@ public class MatchingService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
 
-
-
     private UserProfile findByUserProfile(User user) {
         return userProfileRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
-
-
 
     private Matching findByMatchingId(Long matchingId) {
         return matchingRepository.findByMatchingId(matchingId)

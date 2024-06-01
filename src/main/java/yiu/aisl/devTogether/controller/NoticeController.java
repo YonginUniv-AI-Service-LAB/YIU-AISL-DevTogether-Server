@@ -33,7 +33,7 @@ public class NoticeController {
 
 
     // 공지사항 등록
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user,  NoticeRequestDto.CreateDTO request, List<MultipartFile> file) throws Exception {
         //request 객체를 받아온다
         System.out.println("Notice_create request: " + request);
@@ -42,14 +42,14 @@ public class NoticeController {
     }
 
     // 공지사항 삭제
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, NoticeRequestDto.DeleteDTO request) throws Exception {
         System.out.println("Notice_delete request" + request);
         return new ResponseEntity<Boolean>(noticeService.delete(user.getEmail(),request), HttpStatus.OK);
     }
 
     // 공지사항 수정
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, NoticeRequestDto.UpdateDTO request, List<MultipartFile> file) throws Exception {
         System.out.println("Notice_update request" + request);
         return new ResponseEntity<Boolean>(noticeService.update(user.getEmail(),request,file), HttpStatus.OK);

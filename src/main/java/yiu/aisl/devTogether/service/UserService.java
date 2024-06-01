@@ -34,7 +34,7 @@ public class UserService {
     private final FilesService filesService;
 
     // [API]  내 정보 조회
-    public Object getMyProfile(CustomUserDetails userDetails) {
+    public Object getMyProfile(CustomUserDetails userDetails, MultipartFile img) {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
@@ -56,12 +56,13 @@ public class UserService {
                 .subject5(user.get().getSubject5())
                 .method(user.get().getMethod())
                 .fee(user.get().getFee())
+                .img(img)
                 .build();
 
     }
 
     // [API] 내 정보 수정
-    public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto, MultipartFile img) {
+    public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto, MultipartFile img) throws Exception {
         if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
@@ -83,7 +84,7 @@ public class UserService {
                 throw new CustomException(ErrorCode.DUPLICATE);
             } else user.setNickname(nickname);
         }
-
+        Boolean imgs = filesService.isFile(img);
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
         user.setRole(RoleCategory.values()[dto.getRole()]);
@@ -99,7 +100,10 @@ public class UserService {
         user.setSubject5(dto.getSubject5());
         user.setMethod(dto.getMethod());
         user.setFee(dto.getFee());
-
+        user.setImg(imgs);
+        if (imgs) {
+            filesService.saveFileDb(img, 0, user.getId());
+        }
         return true;
     }
 
@@ -184,8 +188,9 @@ public class UserService {
     }
 
     // [API] 내 멘토 프로필 변경하기
-    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) {
+    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
         Long user = userDetails.getUser().getId();
+        Boolean imgs = filesService.isFile(img);
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 1).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
@@ -204,16 +209,19 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
+        userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
-
         userProfileRepository.save(userProfile);
-
+        if (imgs) {
+            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
+        }
         return true;
     }
 
     // [API] 내 멘티 프로필 변경하기
-    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) {
+    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
         Long user = userDetails.getUser().getId();
+        Boolean imgs = filesService.isFile(img);
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
@@ -232,10 +240,13 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
+        userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
 
         userProfileRepository.save(userProfile);
-
+        if (imgs) {
+            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
+        }
         return true;
     }
 

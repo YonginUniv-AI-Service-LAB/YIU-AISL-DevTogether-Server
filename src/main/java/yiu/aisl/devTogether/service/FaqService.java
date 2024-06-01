@@ -4,18 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.domain.Faq;
-
 import yiu.aisl.devTogether.domain.User;
-import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.FaqRequestDto;
 import yiu.aisl.devTogether.dto.FaqResponseDto;
-
-
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.FaqRepository;
 import yiu.aisl.devTogether.repository.UserRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,14 +33,11 @@ public class FaqService {
     //faq 등록
     public Boolean create(String email,FaqRequestDto.CreateDTO request) {
         User user = findByEmail(email);
-
         //400 - 데이터 미입력
         if(request.getTitle().isEmpty() || request.getContents().isEmpty() )
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-
         try{
             Faq faq = Faq.builder()
-
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .build();
@@ -62,8 +54,6 @@ public class FaqService {
 
     //faq 삭제
     public Boolean delete(String email,FaqRequestDto.DeleteDTO request) {
-
-
         //404 - id없음
         Faq faq = findByFaqId(request.getFaqId());
         try{
@@ -83,12 +73,10 @@ public class FaqService {
         if(request.getFaqId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty()
         )
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-
         User user = findByEmail(email);
         try{
             Optional<Faq> modifyFaq = faqRepository.findByFaqId(request.getFaqId());
             Faq modifiedFaq = modifyFaq.get();
-
             modifiedFaq.setTitle(request.getTitle());
             modifiedFaq.setContents(request.getContents());
             faqRepository.save(modifiedFaq);
@@ -96,8 +84,6 @@ public class FaqService {
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
 

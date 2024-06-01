@@ -5,15 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Ask;
+import yiu.aisl.devTogether.domain.Push;
 import yiu.aisl.devTogether.domain.User;
-import yiu.aisl.devTogether.domain.state.AskCategory;
-import yiu.aisl.devTogether.domain.state.RoleCategory;
-import yiu.aisl.devTogether.domain.state.StatusCategory;
+import yiu.aisl.devTogether.domain.state.*;
 import yiu.aisl.devTogether.dto.AskRequestDto;
 import yiu.aisl.devTogether.dto.AskResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.AskRepository;
+import yiu.aisl.devTogether.repository.PushRepository;
 import yiu.aisl.devTogether.repository.UserRepository;
 
 
@@ -30,6 +30,7 @@ public class AskService {
     private final AskRepository askRepository;
     private final UserRepository userRepository;
     private final FilesService filesService;
+    private final PushRepository pushRepository;
 
     //ask 조회
     public List <AskResponseDto >getList() throws  Exception {
@@ -46,6 +47,8 @@ public class AskService {
     //ask 사용자 등록
     public Boolean create(String email, AskRequestDto.CreateDTO request, List<MultipartFile> file) {
         User user = findByEmail(email);
+        AskCategory askCategory = AskCategory.fromInt(request.getAskCategory());
+        StatusCategory status = StatusCategory.신청;
         Boolean files = filesService.isMFile(file);
         // 400 - 데이터미입력
         if (request.getTitle().isEmpty()|| request.getContents().isEmpty() || request.getAskCategory() == null)
@@ -58,9 +61,9 @@ public class AskService {
                     .user(user)
                     .title(request.getTitle())
                     .contents(request.getContents())
-                    .status(StatusCategory.신청) // 신청
+                    .status(status) // 신청
                     .files(files)
-                    .askCategory(AskCategory.fromInt(request.getAskCategory()))
+                    .askCategory(askCategory)
                     .build();
             askRepository.save(ask);
             if (files) {
@@ -80,10 +83,19 @@ public class AskService {
     public Boolean answer(String email, Long askId, AskRequestDto.AnswerDTO request) {
         // 404 - ID 없음
         Ask ask = findByAskId(askId);
+        StatusCategory status = StatusCategory.완료;
         try {
             ask.setAnswer(request.getAnswer());
-            ask.setStatus(StatusCategory.완료);
+            ask.setStatus(status);
+            Push push = Push.builder()
+                    .type(PushCategory.문의)
+                    .contents("관리자님이 답변을 남겼습니다.")
+                    .user(ask.getUser())
+                    .targetId(ask.getAskId())
+                    .checks(1)
+                    .build();
             askRepository.save(ask);
+            pushRepository.save(push);
             return true;
         } catch (Exception e) {
             // 기타 예외 처리
@@ -130,6 +142,7 @@ public class AskService {
     public Boolean update(String email, AskRequestDto.UpdateDTO request, List<MultipartFile> file) {
         AskCategory askCategory = AskCategory.fromInt(request.getAskCategory());
         User user = findByEmail(email);
+        StatusCategory status = StatusCategory.신청;
         Boolean files = filesService.isMFile(file);
         //404 - id없음
         Ask ask = findByAskId(request.getAskId());
@@ -153,7 +166,7 @@ public class AskService {
             Optional<Ask> modifyAsk = askRepository.findByAskId(request.getAskId());
             modifyAsk.get().setTitle(request.getTitle());
             modifyAsk.get().setContents(request.getContents());
-            modifyAsk.get().setStatus(StatusCategory.신청);
+            modifyAsk.get().setStatus(status);
             modifyAsk.get().setFiles(files);
             modifyAsk.get().setAskCategory(askCategory);
             askRepository.save(ask);
