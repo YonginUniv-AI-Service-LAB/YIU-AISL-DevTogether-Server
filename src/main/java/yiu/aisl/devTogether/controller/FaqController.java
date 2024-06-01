@@ -20,27 +20,27 @@ public class FaqController {
     private final FaqService faqService;
 
     // faq 조회
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List> getList() throws Exception {
         return new ResponseEntity<List>(faqService.getList(), HttpStatus.OK);
     }
 
     // faq 등록
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, FaqRequestDto.CreateDTO request) throws Exception {
         System.out.println("faq_create request: " + request);
         return new ResponseEntity<Boolean>(faqService.create(user.getEmail(), request), HttpStatus.OK);
     }
 
     // faq 삭제
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user,  FaqRequestDto.DeleteDTO request) throws Exception {
         System.out.println("faq_delete request" + request);
         return new ResponseEntity<Boolean>(faqService.delete(user.getEmail(), request), HttpStatus.OK);
     }
 
     // faq 수정
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user,  FaqRequestDto.UpdateDTO request) throws Exception {
         System.out.println("faq_update request" + request);
         return new ResponseEntity<Boolean>(faqService.update(user.getEmail(), request), HttpStatus.OK);

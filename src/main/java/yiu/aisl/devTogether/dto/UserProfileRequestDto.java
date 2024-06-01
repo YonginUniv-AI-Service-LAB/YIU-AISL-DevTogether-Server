@@ -3,6 +3,7 @@ package yiu.aisl.devTogether.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -17,5 +18,6 @@ public class UserProfileRequestDto {
     private String schedule;
     private String method;
     private Integer fee;
+    private MultipartFile img;
     private LocalDateTime updatedAt;
 }

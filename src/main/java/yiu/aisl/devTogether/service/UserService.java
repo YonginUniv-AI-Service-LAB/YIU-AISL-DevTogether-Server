@@ -1,6 +1,7 @@
 package yiu.aisl.devTogether.service;
 
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,14 @@ public class UserService {
     private final MatchingRepository matchingRepository;
     private final UserProfileRepository userProfileRepository;
     private final PushRepository pushRepository;
-
+    private final FilesService filesService;
 
     // [API]  내 정보 조회
     public Object getMyProfile(CustomUserDetails userDetails) {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
+
         return MyProfileResponseDto.builder()
                 .email(user.get().getEmail())
                 .name(user.get().getName())
@@ -55,10 +57,11 @@ public class UserService {
                 .method(user.get().getMethod())
                 .fee(user.get().getFee())
                 .build();
+
     }
 
     // [API] 내 정보 수정
-    public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto) {
+    public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto, MultipartFile img) {
         if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
@@ -96,6 +99,7 @@ public class UserService {
         user.setSubject5(dto.getSubject5());
         user.setMethod(dto.getMethod());
         user.setFee(dto.getFee());
+
         return true;
     }
 

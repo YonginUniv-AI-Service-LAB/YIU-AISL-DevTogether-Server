@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.dto.MyProfileRequestDto;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.dto.UserProfileRequestDto;
@@ -30,8 +31,8 @@ public class UserController {
 
     // 내 정보 수정 = 수정 필요
     @PutMapping(value = "")
-    public ResponseEntity<Boolean> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MyProfileRequestDto dto) throws Exception {
-        return new ResponseEntity<Boolean>(userService.updateProfile(customUserDetails, dto), HttpStatus.OK);
+    public ResponseEntity<Boolean> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MyProfileRequestDto dto,MultipartFile img) throws Exception {
+        return new ResponseEntity<Boolean>(userService.updateProfile(customUserDetails, dto,img), HttpStatus.OK);
     }
 
     // 내가 작성한 댓글 조회 = test 완료

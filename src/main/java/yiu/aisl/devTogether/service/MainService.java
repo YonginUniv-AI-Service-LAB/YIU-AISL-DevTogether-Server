@@ -46,9 +46,9 @@ public class MainService {
 
 
     //회원가입
-    public Boolean register(RegisterRequestDto request) throws Exception {
+    public Boolean register(RegisterRequestDto request, MultipartFile img) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
-//Boolean imgs = filesService.isFile(img);
+        Boolean imgs = filesService.isFile(img);
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
 
         QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
@@ -82,15 +82,15 @@ public class MainService {
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
-                    //  .img(imgs)
+                    .img(imgs)
                     .birth(request.getBirth())
                     .question(questionCategory)
                     .answer(request.getAnswer())
                     .build();
             userRepository.save(user);
-          /*  if (imgs) {
+            if (imgs) {
                 filesService.saveFileDb(img, 0, user.getId());
-            }*/
+            }
             if(request.getRole() == 1) {
                 UserProfile userProfile = UserProfile.builder()
                         .role(1)
