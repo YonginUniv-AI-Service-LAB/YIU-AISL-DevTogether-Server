@@ -75,14 +75,11 @@ public class UserService {
         System.out.println(nickname);
 
         // 데이터 중복(닉네임) (409)
-        if(nickname != user.getNickname()) {
-            if(!userRepository.findByNickname(dto.getNickname()).isPresent()) {
-                user.setNickname(nickname);
-            } else {
-                System.out.println("데이터 중복 오류 발생");
+        if(!nickname.equals(user.getNickname())) {
+            if(userRepository.findByNickname(nickname).isPresent()) {
                 throw new CustomException(ErrorCode.DUPLICATE);
-            }
-        } else user.setNickname(nickname);
+            } else user.setNickname(nickname);
+        }
 
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
