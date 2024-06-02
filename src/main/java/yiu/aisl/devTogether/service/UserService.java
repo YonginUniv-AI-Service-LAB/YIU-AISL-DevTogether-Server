@@ -34,7 +34,7 @@ public class UserService {
     private final FilesService filesService;
 
     // [API]  내 정보 조회
-    public Object getMyProfile(CustomUserDetails userDetails, MultipartFile img) {
+    public Object getMyProfile(CustomUserDetails userDetails) {
 
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
@@ -57,7 +57,8 @@ public class UserService {
                 .subject5(user.get().getSubject5())
                 .method(user.get().getMethod())
                 .fee(user.get().getFee())
-                .img(img)
+                .img(user.get().getImg())
+
                 .build();
 
     }
@@ -189,9 +190,8 @@ public class UserService {
     }
 
     // [API] 내 멘토 프로필 변경하기
-    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
+    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) throws Exception {
         Long user = userDetails.getUser().getId();
-        Boolean imgs = filesService.isFile(img);
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 1).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
@@ -210,19 +210,14 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
-        userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
-        if (imgs) {
-            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
-        }
         return true;
     }
 
     // [API] 내 멘티 프로필 변경하기
-    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
+    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) throws Exception {
         Long user = userDetails.getUser().getId();
-        Boolean imgs = filesService.isFile(img);
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
@@ -241,13 +236,9 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
-        userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
-
         userProfileRepository.save(userProfile);
-        if (imgs) {
-            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
-        }
+
         return true;
     }
 

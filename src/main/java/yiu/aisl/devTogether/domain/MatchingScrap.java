@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MatchingScrap {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,4 +34,6 @@ public class MatchingScrap {
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt;
+
+
 }

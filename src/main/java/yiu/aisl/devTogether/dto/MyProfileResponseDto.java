@@ -27,5 +27,5 @@ public class MyProfileResponseDto {
     private String subject5;
     private String method;
     private Integer fee;
-    private MultipartFile img;
+    private Boolean img;
 }

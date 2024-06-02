@@ -23,10 +23,10 @@ public class UserController {
 
     // 내 정보 조회 = test 완료
     @GetMapping(value = "")
-    public ResponseEntity<Object> getMyProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, MultipartFile img) {
+    public ResponseEntity<Object> getMyProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(userService.getMyProfile(customUserDetails,img), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getMyProfile(customUserDetails), HttpStatus.OK);
     }
 
     // 내 정보 수정 = 수정 필요
@@ -69,14 +69,14 @@ public class UserController {
 
     // 내 멘토 프로필 수정 = test 완료
     @PutMapping(value = "/mentor")
-    public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request,MultipartFile img) throws Exception {
-        return new ResponseEntity<Boolean>(userService.changeMentorProfile(customUserDetails, request,img), HttpStatus.OK);
+    public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request) throws Exception {
+        return new ResponseEntity<Boolean>(userService.changeMentorProfile(customUserDetails, request), HttpStatus.OK);
     }
 
     // 내 멘티 프로필 수정 = test 완료
     @PutMapping(value = "/mentee")
-    public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request,MultipartFile img) throws Exception {
-        return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request,img), HttpStatus.OK);
+    public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request) throws Exception {
+        return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request), HttpStatus.OK);
     }
 
     // 알림 확인 = test 완료

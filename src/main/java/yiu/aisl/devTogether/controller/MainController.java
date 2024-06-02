@@ -51,8 +51,6 @@ public class MainController {
     //메인
     @GetMapping("/main")
     public ResponseEntity<Object> getList() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
         return new ResponseEntity<>(mainService.getList(), HttpStatus.OK);
     }
 

@@ -131,6 +131,7 @@ public class MatchingService {
                         .type(PushCategory.매칭)
                         .contents(userProfile.getUser().getNickname()+"님이 신청하였습니다.")
                         .user(mentee.getUser())
+                        .targetId(matching.getMatchingId())
                         .checks(1)
                         .build();
                 pushRepository.save(push);
@@ -147,6 +148,7 @@ public class MatchingService {
                         .type(PushCategory.매칭)
                         .contents(userProfile.getUser().getNickname()+"님이 신청하였습니다.")
                         .user(mentor.getUser())
+                        .targetId(matching.getMatchingId())
                         .checks(1)
                         .build();
                 pushRepository.save(push);
@@ -186,6 +188,21 @@ public class MatchingService {
         try {
             if ("신청".equals(matching.getStatus())) {
                 matching.setStatus("성사됨");
+                UserProfile recipientProfile;
+                if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
+                    recipientProfile = matching.getMentee();
+                } else {
+                    recipientProfile = matching.getMentor();
+                }
+
+                Push push = Push.builder()
+                        .type(PushCategory.매칭)
+                        .contents(userProfile.getUser().getNickname()+"님이 매칭을 수락하셨습니다.")
+                        .user(recipientProfile.getUser())
+                        .targetId(matching.getMatchingId())
+                        .checks(1)
+                        .build();
+                pushRepository.save(push);
             }
 
             return true;
@@ -216,6 +233,21 @@ public class MatchingService {
         try {
             if(matching.getStatus().equals("신청")){
                 matching.setStatus("거절");
+                UserProfile recipientProfile;
+                if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
+                    recipientProfile = matching.getMentee();
+                } else {
+                    recipientProfile = matching.getMentor();
+                }
+
+                Push push = Push.builder()
+                        .type(PushCategory.매칭)
+                        .contents(userProfile.getUser().getNickname()+"님이 매칭을 거절하셨습니다.")
+                        .user(recipientProfile.getUser())
+                        .targetId(matching.getMatchingId())
+                        .checks(1)
+                        .build();
+                pushRepository.save(push);
             }
             return true;
 
@@ -280,6 +312,21 @@ public class MatchingService {
         try {
             if(matching.getStatus().equals("성사됨") ){
                 matching.setStatus("진행");
+                UserProfile recipientProfile;
+                if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
+                    recipientProfile = matching.getMentee();
+                } else {
+                    recipientProfile = matching.getMentor();
+                }
+
+                Push push = Push.builder()
+                        .type(PushCategory.매칭)
+                        .contents(userProfile.getUser().getNickname()+"와의 매칭이 확정되었습니다.")
+                        .user(recipientProfile.getUser())
+                        .targetId(matching.getMatchingId())
+                        .checks(1)
+                        .build();
+                pushRepository.save(push);
             }
             return true;
         }catch (Exception e){
@@ -310,7 +357,21 @@ public class MatchingService {
         try {
                 if(matching.getStatus().equals("진행") ){
                      matching.setStatus("완료");;
-                     matchingRepository.save(matching);
+                    UserProfile recipientProfile;
+                    if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
+                        recipientProfile = matching.getMentee();
+                    } else {
+                        recipientProfile = matching.getMentor();
+                    }
+
+                    Push push = Push.builder()
+                            .type(PushCategory.매칭)
+                            .contents(userProfile.getUser().getNickname()+"님과의 매칭이 종료되었습니다.")
+                            .user(recipientProfile.getUser())
+                            .targetId(matching.getMatchingId())
+                            .checks(1)
+                            .build();
+                    pushRepository.save(push);
                 }
             return true;
         } catch (CustomException e) {
