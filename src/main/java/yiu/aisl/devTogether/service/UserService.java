@@ -35,6 +35,7 @@ public class UserService {
 
     // [API]  내 정보 조회
     public Object getMyProfile(CustomUserDetails userDetails, MultipartFile img) {
+
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));

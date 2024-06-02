@@ -71,15 +71,16 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                //공통
+                                //공통 ***************************8(권한 필요한 놈들 먼저 배치하기)************************************
+                                .requestMatchers("/notice","ask/answer", "/faq").hasRole("ADMIN")
+                                .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee").hasRole("MENTOR")
+                                .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor").hasRole("MENTEE")
                                 .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change",
                                         "/email" ,"token/change", "/token/refresh", "/nickname",
                                         "/board", "/board/post", "/board/like", "/board/scrap", "/notice/detail","/notice","/subject",
-                                        "/mentor","/mentee","/ask","/subject","/main",
+                                        "/mentor","/mentee","/ask","/subject","/main","/faq",
                                         "/message").permitAll()
-                                .requestMatchers("/notice/*","ask/answer").hasRole("ADMIN")
-                                .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee").hasRole("MENTOR")
-                                .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor").hasRole("MENTEE")
+
                                 .anyRequest().authenticated()
                 )
 

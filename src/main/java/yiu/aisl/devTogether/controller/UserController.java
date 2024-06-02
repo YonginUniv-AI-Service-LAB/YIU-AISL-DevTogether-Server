@@ -31,8 +31,8 @@ public class UserController {
 
     // 내 정보 수정 = 수정 필요
     @PutMapping(value = "")
-    public ResponseEntity<Boolean> updateProfile(MultipartFile img,@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MyProfileRequestDto dto) throws Exception {
-        return new ResponseEntity<Boolean>(userService.updateProfile(customUserDetails, dto,img), HttpStatus.OK);
+    public ResponseEntity<Boolean> updateProfile(MultipartFile img,@AuthenticationPrincipal CustomUserDetails customUserDetails, @ModelAttribute  MyProfileRequestDto dto) throws Exception {
+        return new ResponseEntity<Boolean>(userService.updateProfile(customUserDetails, dto,img), HttpStatus.OK);       //원래 RequestBody였는데 이미지 이슈로 ModelAttribute로 수정했슴다!
     }
 
     // 내가 작성한 댓글 조회 = test 완료

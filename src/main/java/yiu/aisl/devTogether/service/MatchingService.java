@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.*;
+import yiu.aisl.devTogether.domain.state.PushCategory;
 import yiu.aisl.devTogether.dto.MatchingRequestDto;
 import yiu.aisl.devTogether.dto.ProfileResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -24,6 +25,7 @@ public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final UserProfileRepository userProfileRepository;
     private final MatchingScrapRepository matchingScrapRepository;
+    private final PushRepository pushRepository;
 
     //멘토 조회(멘티가 멘토 조회)
     public Object mentorList(CustomUserDetails userDetails) {
@@ -125,6 +127,14 @@ public class MatchingService {
                         .mentee(mentee)
                         .build();
                 matchingRepository.save(matching);
+                Push push = Push.builder()
+                        .type(PushCategory.매칭)
+                        .contents(userProfile.getUser().getNickname()+"님이 신청하였습니다.")
+                        .user(mentee.getUser())
+                        .checks(1)
+                        .build();
+                pushRepository.save(push);
+
             } else if (profileRole == 2) { //멘티
                 UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
                 Matching  matching = Matching.builder()
@@ -133,6 +143,13 @@ public class MatchingService {
                         .mentor(mentor)
                         .build();
                 matchingRepository.save(matching);
+                Push push = Push.builder()
+                        .type(PushCategory.매칭)
+                        .contents(userProfile.getUser().getNickname()+"님이 신청하였습니다.")
+                        .user(mentor.getUser())
+                        .checks(1)
+                        .build();
+                pushRepository.save(push);
             }
             return true;
         } catch (Exception e) {

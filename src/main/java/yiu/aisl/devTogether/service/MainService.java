@@ -98,9 +98,7 @@ public class MainService {
     }
 
     private void appendUserInfo(UserProfile userProfile, StringBuilder userInfo) {
-        userInfo.append("이메일: ").append(userProfile.getUser().getEmail())
-                .append(", 이름: ").append(userProfile.getUser().getName())
-                .append(", 닉네임: ").append(userProfile.getUser().getNickname())
+        userInfo.append(", 닉네임: ").append(userProfile.getUser().getNickname())
                 .append(", 역할: ").append(userProfile.getUser().getRole())
                 .append(", 나이: ").append(userProfile.getUser().getAge())
                 .append(", 성별: ").append(userProfile.getUser().getGender())
