@@ -23,9 +23,7 @@ import yiu.aisl.devTogether.security.TokenProvider;
 import yiu.aisl.devTogether.repository.*;
 import java.io.UnsupportedEncodingException;
 import java.time.Duration;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor// 주입받아야하는 final 필드에 대한 생성자를 생성
@@ -39,10 +37,87 @@ public class MainService {
     private final JavaMailSender javaMailSender;
     private final FilesService filesService;
     private final UserProfileRepository userProfileRepository;
-
-
     private long exp_refreshToken = Duration.ofDays(14).toMillis(); // 만료시간 2주
     private String authNum;
+
+    //과목 넘겨주기
+    public List<String> getSubjects() {
+        return Arrays.asList(
+                "C", "C++", "Java", "JavaScript", "Python", "Ruby", "Go", "C#", "Swift", "Rust",
+                "Kotlin", "PHP", "TypeScript", "HTML", "CSS", "Scala", "Haskell", "Objective-C",
+                "Perl", "Lua", "Shell", "R", "Dart", "Assembly", "Visual Basic", "F#", "Clojure",
+                "Erlang", "Fortran", "Julia", "MATLAB", "Groovy", "PL/SQL", "SQL", "Prolog", "Ada",
+                "COBOL", "Pascal", "Lisp", "Scheme", "Tcl", "ActionScript", "Delphi", "PowerShell",
+                "Batch", "Arduino", "VHDL", "Verilog", "Java Spring"
+        );
+    }
+
+
+    //main
+    public Map<String, List<String>> getList() {
+        List<String> subject = new ArrayList<>(getSubjects());
+        List<UserProfile> mentorList = userProfileRepository.findByRole(1);
+        List<UserProfile> menteeList = userProfileRepository.findByRole(2);
+        Map<String, List<String>> result = new HashMap<>();
+        // Mentor 정보 저장
+        List<String> mentorInfoList = new ArrayList<>();
+        for (UserProfile mentor : mentorList) {
+            StringBuilder mentorInfo = new StringBuilder();
+            appendUserInfo(mentor, mentorInfo);
+            mentorInfoList.add(mentorInfo.toString());
+        }
+        // Mentor가 5개 미만인 경우 null 추가
+        while (mentorInfoList.size() < 5) {
+            mentorInfoList.add(null);
+        }
+        // Mentee 정보 저장
+        List<String> menteeInfoList = new ArrayList<>();
+        for (UserProfile mentee : menteeList) {
+            StringBuilder menteeInfo = new StringBuilder();
+            appendUserInfo(mentee, menteeInfo);
+            menteeInfoList.add(menteeInfo.toString());
+        }
+        // Mentee가 5개 미만인 경우 null 추가
+        while (menteeInfoList.size() < 5) {
+            menteeInfoList.add(null);
+        }
+
+        Collections.shuffle(subject);
+        Collections.shuffle(menteeInfoList);
+        Collections.shuffle(mentorInfoList);
+
+        List<String> randomSubject = subject.subList(0, 5);
+        List<String> randoMentor = menteeInfoList.subList(0, 5);
+        List<String> randomMentee = mentorInfoList.subList(0, 5);
+
+        result.put("subjects", randomSubject);
+        result.put("mentors", randoMentor);
+        result.put("mentees", randomMentee);
+
+        return result;
+    }
+
+    private void appendUserInfo(UserProfile userProfile, StringBuilder userInfo) {
+        userInfo.append("이메일: ").append(userProfile.getUser().getEmail())
+                .append(", 이름: ").append(userProfile.getUser().getName())
+                .append(", 닉네임: ").append(userProfile.getUser().getNickname())
+                .append(", 역할: ").append(userProfile.getUser().getRole())
+                .append(", 나이: ").append(userProfile.getUser().getAge())
+                .append(", 성별: ").append(userProfile.getUser().getGender())
+                .append(", 수업료: ").append(userProfile.getUser().getFee())
+                .append(", 수업 방식: ").append(userProfile.getUser().getMethod())
+                .append(", 지역1: ").append(userProfile.getUser().getLocation1())
+                .append(", 지역2: ").append(userProfile.getUser().getLocation2())
+                .append(", 지역3: ").append(userProfile.getUser().getLocation3())
+                .append(", 과목1: ").append(userProfile.getUser().getSubject1())
+                .append(", 과목2: ").append(userProfile.getUser().getSubject2())
+                .append(", 과목3: ").append(userProfile.getUser().getSubject3())
+                .append(", 과목4: ").append(userProfile.getUser().getSubject4())
+                .append(", 과목5: ").append(userProfile.getUser().getSubject5());
+    }
+
+
+
 
 
     //회원가입
@@ -393,14 +468,7 @@ public class MainService {
     }
 
 
-    public List<String> getSubjects() {
-        return List.of(
-                "C", "C++", "Java", "JavaScript", "Python", "Ruby", "Go", "C#", "Swift", "Rust",
-                "Kotlin", "PHP", "TypeScript", "HTML", "CSS", "Scala", "Haskell", "Objective-C",
-                "Perl", "Lua", "Shell", "R", "Dart", "Assembly", "Visual Basic", "F#", "Clojure",
-                "Erlang", "Fortran", "Julia", "MATLAB", "Groovy", "PL/SQL", "SQL", "Prolog", "Ada",
-                "COBOL", "Pascal", "Lisp", "Scheme", "Tcl", "ActionScript", "Delphi", "PowerShell",
-                "Batch", "Arduino", "VHDL", "Verilog", "Java Spring"
-        );
-    }
+
+
+
 }

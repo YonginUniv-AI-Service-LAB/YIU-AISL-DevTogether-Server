@@ -2,7 +2,9 @@ package yiu.aisl.devTogether.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +18,9 @@ import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.service.FilesService;
 import yiu.aisl.devTogether.service.MainService;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 @RestController  //controller + responsebody > json형태로 객체 반환
 @RequiredArgsConstructor // final이 선언된 모든 필드를 인자값으로 하는 생성자
@@ -34,6 +38,23 @@ public class MainController {
     private final FilesService filesService;
 
     //ResponseEntity는 HTTP 응답을 나타내는 Spring 클래스
+
+
+
+
+    // 과목 프론트로 넘겨주기
+    @GetMapping(value = "/subject")
+    public ResponseEntity<List<String>> subject() {
+        List<String> subjects = mainService.getSubjects();
+        return new ResponseEntity<>(subjects, HttpStatus.OK);
+    }
+    //메인
+    @GetMapping("/main")
+    public ResponseEntity<Object> getList() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(mainService.getList(), HttpStatus.OK);
+    }
 
     //회원가입        회원가입을 성공했냐 안 했냐 유무를 가지고 판별해야하므로 Bool타입 사용
     @PostMapping(value = "/register" )
@@ -90,17 +111,13 @@ public class MainController {
     public ResponseEntity<Boolean> addRole(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return new ResponseEntity<Boolean>(mainService.addRole(userDetails), HttpStatus.OK);
     }
-    // 과목 프론트로 넘겨주기
-    @GetMapping(value = "/subject")
-    public ResponseEntity<List<String>> subject(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<String> subjects = mainService.getSubjects();
-        return new ResponseEntity<>(subjects, HttpStatus.OK);
-    }
+
 
     //파일 다운로드
     @GetMapping("/download")
     public ResponseEntity<FilesResponseDto> downloadFile(Long fileId) throws Exception {
         return new ResponseEntity<FilesResponseDto>(filesService.downloadFile(fileId), HttpStatus.OK);
     }
+
 
 }

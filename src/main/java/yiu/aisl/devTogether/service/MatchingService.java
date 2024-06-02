@@ -177,6 +177,36 @@ public class MatchingService {
         }
     }
 
+    //신청 거절
+    public Boolean refusal(String email, MatchingRequestDto.RefusalDTO request)throws Exception {
+        User user = findByEmail(email);
+        UserProfile userProfile = findByUserProfile(user);
+        Matching matching = findByMatchingId(request.getMatchingId());
+
+        // 400: 데이터 미입력
+        if(request.getMatchingId() == null){
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+        // 매칭 ID가 자기랑 관련 있는지 확인
+        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
+                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
+
+        // 403 - 권한 없음
+        if (!isRelatedToUser) {
+            throw new CustomException(ErrorCode.NO_AUTH);
+        }
+
+        try {
+            if(matching.getStatus().equals("신청")){
+                matching.setStatus("거절");
+            }
+            return true;
+
+
+        }catch (Exception e){
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     //신청 삭제
     public Boolean delete( String email, MatchingRequestDto.DeleteDTO request) throws Exception{
@@ -211,36 +241,6 @@ public class MatchingService {
         }
     }
 
-    //신청 거절
-    public Boolean refusal(String email, MatchingRequestDto.RefusalDTO request)throws Exception {
-        User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
-        Matching matching = findByMatchingId(request.getMatchingId());
-
-        // 400: 데이터 미입력
-        if(request.getMatchingId() == null){
-            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        }
-        // 매칭 ID가 자기랑 관련 있는지 확인
-        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
-                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
-
-        // 403 - 권한 없음
-        if (!isRelatedToUser) {
-            throw new CustomException(ErrorCode.NO_AUTH);
-        }
-
-        try {
-            if(matching.getStatus().equals("신청")){
-                matching.setStatus("거절");
-            }
-            return true;
-
-
-        }catch (Exception e){
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
 
     //신청 확정
     public Boolean confirm(String email,MatchingRequestDto.ConfirmDTO request)throws Exception {
