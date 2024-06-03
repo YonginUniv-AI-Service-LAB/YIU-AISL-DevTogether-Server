@@ -32,6 +32,7 @@ public class FaqService {
 
     //faq 등록
     public Boolean create(String email,FaqRequestDto.CreateDTO request)throws Exception {
+        // 404 - 회원 없음
         User user = findByEmail(email);
         //400 - 데이터 미입력
         if(request.getTitle().isEmpty() || request.getContents().isEmpty() )
@@ -47,15 +48,19 @@ public class FaqService {
             e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
 
     //faq 삭제
     public Boolean delete(String email,FaqRequestDto.DeleteDTO request) throws Exception{
-        //404 - id없음
+        // 404 - 회원 없음
+        User user = findByEmail(email);
+        //404 - faqId 없음
         Faq faq = findByFaqId(request.getFaqId());
+        //400 - 데이터 미입력
+        if(request.getFaqId() == null){
+            throw  new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
         try{
             faqRepository.deleteById(request.getFaqId());
             return true;
@@ -69,11 +74,15 @@ public class FaqService {
 
     //faq 수정
     public Boolean update(String email,FaqRequestDto.UpdateDTO request)throws Exception {
-        //400 - 데이터 미입력
-        if(request.getFaqId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty()
-        )
-            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        //404 - 회원없음
         User user = findByEmail(email);
+
+        //404 - faqId없음
+        Faq faq = findByFaqId(request.getFaqId());
+
+        //400 - 데이터 미입력
+        if(request.getFaqId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty())
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         try{
             Optional<Faq> modifyFaq = faqRepository.findByFaqId(request.getFaqId());
             Faq modifiedFaq = modifyFaq.get();
@@ -87,11 +96,13 @@ public class FaqService {
     }
 
 
-
+    //faqId 찾음
     private Faq findByFaqId(Long faqId) {
         return faqRepository.findById(faqId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
+
+    //이메일로 유저정보 찾음
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));

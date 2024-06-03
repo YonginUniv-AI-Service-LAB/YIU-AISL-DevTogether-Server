@@ -16,38 +16,38 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ask")
+
 public class AskController {
     private final AskService askService;
 
     // ask 조회
-    @GetMapping
+    @GetMapping("/ask")
     public ResponseEntity<List> getList() throws Exception {
         return new ResponseEntity<List>(askService.getList(), HttpStatus.OK);
     }
     // ask 등록
-    @PostMapping
+    @PostMapping("/ask")
     public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, AskRequestDto.CreateDTO request, List<MultipartFile> file ) throws Exception {
         System.out.println("ask_create request: " + request);
         return new ResponseEntity<Boolean>(askService
                 .create( user.getEmail(),request,file), HttpStatus.OK);
     }
     // ask 답변
-    @PostMapping("/answer")
+    @PostMapping("/admin/ask/answer")
     public ResponseEntity<Boolean> answer(@AuthenticationPrincipal CustomUserDetails user,@ModelAttribute("askId") Long askId,  AskRequestDto.AnswerDTO request) throws Exception {
         System.out.println("ask_answer request: " + request);
         return new ResponseEntity<Boolean>(askService.answer(user.getEmail(),askId, request), HttpStatus.OK);
     }
 
     // ask 삭제
-    @DeleteMapping
+    @DeleteMapping("/ask")
     public ResponseEntity<Boolean> delete( @AuthenticationPrincipal CustomUserDetails user,AskRequestDto.DeleteDTO request, List<MultipartFile> file) throws Exception {
         System.out.println("ask_delete request" + request);
         return new ResponseEntity<Boolean>(askService.delete(user.getEmail(),request), HttpStatus.OK);
     }
 
     // ask 수정
-    @PutMapping
+    @PutMapping("/ask")
     public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user,  AskRequestDto.UpdateDTO request, List<MultipartFile> file) throws Exception {
         System.out.println("ask_update request" + request);
         return new ResponseEntity<Boolean>(askService.update(user.getEmail(),request,file), HttpStatus.OK);

@@ -44,15 +44,14 @@ public class NoticeService {
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
 
 
     //공지사항 등록
-    public Boolean create(String email, NoticeRequestDto.CreateDTO request, List<MultipartFile> file) {
+    public Boolean create(String email, NoticeRequestDto.CreateDTO request, List<MultipartFile> file) throws Exception{
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());    //열거형 상수
+        // 404
         User user = findByEmail(email);
         Boolean files = filesService.isMFile(file);
         // 400 - 데이터 미입력
@@ -81,18 +80,16 @@ public class NoticeService {
 
 
     //공지사항 삭제
-    public Boolean delete(String email, NoticeRequestDto.DeleteDTO request) {
+    public Boolean delete(String email, NoticeRequestDto.DeleteDTO request)throws Exception {
+        // 404 - 회원없음
         User user = findByEmail(email);
         // 404 - id 없음
-        Optional<Notice> notice = noticeRepository.findByNoticeId(request.getNoticeId());
-        if (notice.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
+        Notice notice = findByNoticeId(request.getNoticeId());
         try{
             //deleteByNoticeId로 하면 SQL에서 NoticeId 프로퍼티를 인식하지못함
             noticeRepository.deleteById(request.getNoticeId());
-            if (notice.get().getFiles()) {
-                filesService.deleteAllFile(4, notice.get().getNoticeId());
+            if (notice.getFiles()) {
+                filesService.deleteAllFile(4, notice.getNoticeId());
             }
             return true;
         }
@@ -106,7 +103,11 @@ public class NoticeService {
 
 
     // 공지사항 수정
-    public Boolean update(String email, NoticeRequestDto.UpdateDTO request, List<MultipartFile> file) {
+    public Boolean update(String email, NoticeRequestDto.UpdateDTO request, List<MultipartFile> file)throws Exception {
+        // 404 - 회원없음
+        User user = findByEmail(email);
+        // 404 - id 없음
+        Notice notice = findByNoticeId(request.getNoticeId());
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());
         Boolean files = filesService.isMFile(file);
         // 400 - 데이터 미입력
@@ -114,8 +115,8 @@ public class NoticeService {
                 || request.getNoticeCategory() == null || request.getNoticeId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-        // 403 - 권한 없음
-        User user = findByEmail(email);
+
+
         try {
             Optional<Notice> modifyNotice = noticeRepository.findByNoticeId(request.getNoticeId());
             Notice modifiedNotice = modifyNotice.get();
