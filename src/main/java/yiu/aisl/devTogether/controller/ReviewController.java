@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.PostExchange;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.Review;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.ReportRequestDto;
 import yiu.aisl.devTogether.dto.ReviewRequestDto;
 import yiu.aisl.devTogether.service.ReviewService;
@@ -23,17 +24,17 @@ import java.util.List;
 public class ReviewController {
     public final ReviewService reviewService;
 
-    //보낸 리뷰 조회
-    @GetMapping("/send")
-    public ResponseEntity<List> getMessage(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(reviewService.getSend(user.getEmail()), HttpStatus.OK);
-    }
-
-    //받은 리뷰 조회
-    @GetMapping("/receive")
-    public ResponseEntity<List> creatReport(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail()), HttpStatus.OK);
-    }
+//    //보낸 리뷰 조회
+//    @GetMapping("/send")
+//    public ResponseEntity<List> getMessage(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
+//        return new ResponseEntity<List>(reviewService.getSend(user.getEmail(), role), HttpStatus.OK);
+//    }
+//
+//    //받은 리뷰 조회
+//    @GetMapping("/receive")
+//    public ResponseEntity<List> creatReport(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
+//        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), role), HttpStatus.OK);
+//    }
 
     //리뷰 작성
     @PostMapping

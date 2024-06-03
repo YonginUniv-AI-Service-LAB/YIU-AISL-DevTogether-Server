@@ -19,6 +19,7 @@ import yiu.aisl.devTogether.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,41 +33,56 @@ public class ReviewService {
     public final UserProfileRepository userProfileRepository;
     public final MatchingRepository matchingRepository;
 
-    //보낸 리뷰 조회 -- 모든 리뷰 보이게? 내 룰과 리뷰 카테고리가 같은거 가져오기
-    public List<ReviewResponseDto> getSend(String email) throws Exception {
-        //403: 권한없음 -- 로그인 됬는지 확인
-        User user = findByUserEmail(email);
-
-
-        try {
-
-//            // 매칭 아이디에서
-//            List<Review> reviews = ;
+//    //보낸 리뷰 조회 -- 모든 리뷰 보이게? 내 룰과 리뷰 카테고리가 같은거 가져오기
+//    public List<ReviewResponseDto> getSend(String email, Integer role) throws Exception {
 //
+//        //403: 권한없음 -- 로그인 됬는지 확인
+//        User user = findByUserEmail(email);
+//        UserProfile userProfile = findByUserProfileId(user, role);
+//        List<Matching> matchingList = matchingRepository.findByMentor(userProfile);
+////        List<Review> reviewList =reviewRepository.findByMatchingIdAndCategory(matching, role);
+//        List<Review> reviewList = new ArrayList<>();
+//        for (Matching matching : matchingList) {
+//            List<Review> reviews = reviewRepository.findByMatchingIdAndCategory(matching, role);
+//            reviewList.addAll(reviews);
+//        }
+//        try {
 //            // Review를 ReviewResponseDto로 변환
-//            List<ReviewResponseDto> reviewResponseDtos = reviews.stream()
-//                    .map(review -> new ReviewResponseDto(review))
+//            return reviewList.stream()
+//                    .map(ReviewResponseDto::new)
 //                    .collect(Collectors.toList());
-//            return reviewResponseDtos;
-            return null;
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //받은 리뷰 조회 --- 숨져긴 리뷰 안 보이게 설정? 내 룰과 리뷰 카테고리가 다른걸 가져오기
-    public List<Review> getReceive(String email) throws Exception {
-
-        //403: 권한없음
-        findByUserEmail(email);
-        try {
-            List<Review> reviews = null;
-
-            return reviews;
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+////            return null;
+//        } catch (Exception e) {
+//            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+//
+//    //받은 리뷰 조회 --- 숨져긴 리뷰 안 보이게 설정? 내 룰과 리뷰 카테고리가 다른걸 가져오기 ---test 필요
+//    public List<ReviewResponseDto> getReceive(String email, Integer role) throws Exception {
+//        Integer roles = role;
+//        if (roles == 1) {
+//            roles = 2;
+//        } else if (roles == 2) {
+//            roles = 1;
+//        }
+//        //403: 권한없음 -- 로그인 됬는지 확인
+//        User user = findByUserEmail(email);
+//        UserProfile userProfile = findByUserProfileId(user, roles);
+//        List<Matching> matchingList = matchingRepository.findByMentor(userProfile);
+//        List<Review> reviewList = new ArrayList<>();
+//        for (Matching matching : matchingList) {
+//            List<Review> reviews = reviewRepository.findByMatchingIdAndCategory(matching, role);
+//            reviewList.addAll(reviews);
+//        }
+//        try {
+//            // Review를 ReviewResponseDto로 변환
+//            return reviewList.stream()
+//                    .map(ReviewResponseDto::new)
+//                    .collect(Collectors.toList());
+//        } catch (Exception e) {
+//            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     //리뷰 작성 -- test 미실시
     public Boolean creatreview(String email, ReviewRequestDto.creatDto request) throws Exception {
@@ -154,7 +170,8 @@ public class ReviewService {
 //    public List<Review> findUserProfileByMatchingId(String email) {
 //        User user = findByUserEmail(email);
 //        UserProfile userProfile = findByUserProfile(user);
-//        Matching matching = findByMentor(userProfile);
+//        List<Matching> matching = matchingRepository.findByMentor(user);
+//        List<Review> reviewList =reviewRepository.findByMatchingId(matching)
 //        return reviewRepository.findByMatchingId(matching);
 //    }
 

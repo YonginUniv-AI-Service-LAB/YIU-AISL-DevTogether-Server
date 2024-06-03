@@ -30,6 +30,7 @@ public class FilesService {
     @Value("${file.dir}")
     private String fileDir;
     ClassPathResource resource = new ClassPathResource("file.dir");
+
     //파일 dir 저장
     public String saveFileProj(MultipartFile files) throws Exception {
         try {
@@ -103,15 +104,14 @@ public class FilesService {
         }
     }
 
-    //test 안 해봄
     public void deleteFile(Long fileId) throws Exception {
         Files filesId = filesRepository.findByFileId(fileId).get();
 
         try {
 
-                filesRepository.deleteById(fileId);
-                File dfile = new File(filesId.getPath());
-                dfile.delete();
+            filesRepository.deleteById(fileId);
+            File dfile = new File(filesId.getPath());
+            dfile.delete();
 
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

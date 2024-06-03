@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewResponseDto {
     private Long reviewId;
-    private Matching matchingId;
+    private Long matchingId;
     private String contents;
     private Boolean hide;
     private Integer category;
@@ -19,7 +19,7 @@ public class ReviewResponseDto {
     public static ReviewResponseDto getReview(Review review) {
         return new ReviewResponseDto(
                 review.getReviewId(),
-                review.getMatchingId(),
+                review.getMatchingId().getMatchingId(),
                 review.getContents(),
                 review.getHide(),
                 review.getCategory()
@@ -28,7 +28,7 @@ public class ReviewResponseDto {
 
     public ReviewResponseDto(Review review) {
         this.reviewId = review.getReviewId();
-        this.matchingId = review.getMatchingId();
+        this.matchingId = review.getMatchingId().getMatchingId();
         this.contents = review.getContents();
         this.hide = review.getHide();
         this.category = review.getCategory();

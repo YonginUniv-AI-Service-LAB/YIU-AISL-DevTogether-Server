@@ -37,3 +37,7 @@ out/
 .vscode/
 
 application.properties
+
+###파일 안보이게###
+/src/main/resources/static/files/*
+!/src/main/resources/static/files/.gitkeep

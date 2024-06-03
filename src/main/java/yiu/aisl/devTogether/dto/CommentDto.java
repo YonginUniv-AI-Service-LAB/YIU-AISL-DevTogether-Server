@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
-    private Board board;
+    private Long board;
     private String contents;
     private Long userId;
     private Long boardId;
@@ -24,7 +24,7 @@ public class CommentDto {
 
     public static CommentDto getCommentDto(Comment comment){
         return new CommentDto(
-                comment.getBoard(),
+                comment.getBoard().getBoardId(),
                 comment.getContents(),
                 comment.getUser().getId(),
                 comment.getBoard().getBoardId(),
