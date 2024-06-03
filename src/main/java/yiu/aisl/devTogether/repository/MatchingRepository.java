@@ -15,5 +15,6 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
     Optional<Matching> findByMatchingId(Long matchingId);
 
     List<Matching> findByMentor(User user);
+    List<Matching> findByMentor(UserProfile userProfile);
     List<Matching> findByMentee(User user);
 }

@@ -8,6 +8,7 @@ import yiu.aisl.devTogether.domain.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,38 +17,37 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardDto {
     private Long boardId;
-    private String title;
     private String contents;
     private Long userId;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
     private Boolean files;
     private List<FilesResponseDto> filesList;
-    private List<Comment> comments;
+    private List<CommentDto> comments;
 
     public static BoardDto getboardDto(Board board) {
         return new BoardDto(
                 board.getBoardId(),
-                board.getTitle(),
                 board.getContents(),
                 board.getUser().getId(),
                 board.getCreatedAt(),
                 board.getUpdatedAt(),
                 board.getFiles(),
                 board.getFilesList(),
-                board.getComments()
+                board.getComments().stream()
+                        .map(CommentDto::new)
+                        .collect(Collectors.toList())
         );
     }
 
-    public BoardDto(Board board) {
-        this.boardId = board.getBoardId();
-        this.title = board.getTitle();
-        this.contents = board.getContents();
-        this.createAt = board.getCreatedAt();
-        this.updatedAt = board.getUpdatedAt();
-        this.userId = board.getUser().getId();
-        this.files = board.getFiles();
-        this.comments = board.getComments();
-        this.filesList = board.getFilesList();
-    }
+//        public BoardDto(Board board) {
+//            this.boardId = board.getBoardId();
+//            this.contents = board.getContents();
+//            this.createAt = board.getCreatedAt();
+//            this.updatedAt = board.getUpdatedAt();
+//            this.userId = board.getUser().getId();
+//            this.files = board.getFiles();
+//            this.comments = board.getComments();
+//            this.filesList = board.getFilesList();
+//        }
 }

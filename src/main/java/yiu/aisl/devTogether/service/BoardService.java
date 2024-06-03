@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.*;
+import yiu.aisl.devTogether.domain.state.PushCategory;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
 import yiu.aisl.devTogether.dto.FilesResponseDto;
@@ -27,7 +28,7 @@ public class BoardService {
     private final FilesService filesService;
     private final FilesRepository filesRepository;
     private final BoardScrapRepository boardScrapRepository;
-
+    public final PushRepository pushRepository;
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
         try {
@@ -250,7 +251,14 @@ public class BoardService {
                     .build();
 
             commentRepository.save(comment);
-
+            Push push = Push.builder()
+                    .user(board.getUser())
+                    .type(PushCategory.댓글)
+                    .targetId(board.getBoardId())
+                    .contents("게시글에 댓글이 달렸습니다.")
+                    .checks(0)
+                    .build();
+            pushRepository.save(push);
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
