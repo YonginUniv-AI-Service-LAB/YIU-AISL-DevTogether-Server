@@ -24,17 +24,17 @@ import java.util.List;
 public class ReviewController {
     public final ReviewService reviewService;
 
-    //보낸 리뷰 조회
-    @GetMapping("/send")
-    public ResponseEntity<List> getMessage(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
-        return new ResponseEntity<List>(reviewService.getSend(user.getEmail(), role), HttpStatus.OK);
-    }
-
-    //받은 리뷰 조회
-    @GetMapping("/receive")
-    public ResponseEntity<List> creatReport(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
-        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), role), HttpStatus.OK);
-    }
+//    //보낸 리뷰 조회
+//    @GetMapping("/send")
+//    public ResponseEntity<List> getMessage(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
+//        return new ResponseEntity<List>(reviewService.getSend(user.getEmail(), role), HttpStatus.OK);
+//    }
+//
+//    //받은 리뷰 조회
+//    @GetMapping("/receive")
+//    public ResponseEntity<List> creatReport(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
+//        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), role), HttpStatus.OK);
+//    }
 
     //리뷰 작성
     @PostMapping
