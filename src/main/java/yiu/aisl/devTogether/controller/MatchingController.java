@@ -44,7 +44,7 @@ public class MatchingController {
 
     // 신청하기
     @PostMapping("/matching/application")
-    public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.MenteeApplyDTO request)throws Exception  {
+    public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.applyDTO request)throws Exception  {
         return new ResponseEntity<Boolean>(matchingService.apply(user.getEmail(),request), HttpStatus.OK);
     }
 

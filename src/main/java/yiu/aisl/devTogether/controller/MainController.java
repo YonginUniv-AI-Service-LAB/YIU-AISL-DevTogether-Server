@@ -98,11 +98,11 @@ public class MainController {
         return new ResponseEntity<Boolean>(mainService.emailFind(user.getEmail(),request), HttpStatus.OK);
     }
 
-//    //refresh토큰
-//    @PostMapping(value = "/token/refresh")
-//    public ResponseEntity<TokenDto>  createNewAccessToken(TokenDto tokenDto) throws  Exception{
-//        return new ResponseEntity<>(mainService.refreshAccessToken(tokenDto), HttpStatus.OK);
-//    }
+    //refresh토큰
+    @PostMapping(value = "/token/refresh")
+    public ResponseEntity<TokenDto>  createNewAccessToken(TokenDto tokenDto) throws  Exception{
+        return new ResponseEntity<>(mainService.refreshAccessToken(tokenDto), HttpStatus.OK);
+    }
 
     // role 추가 (멘토 또는 멘티 값 추가)
     @PutMapping(value = "/role")

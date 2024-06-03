@@ -31,7 +31,7 @@ public class FaqService {
     }
 
     //faq 등록
-    public Boolean create(String email,FaqRequestDto.CreateDTO request) {
+    public Boolean create(String email,FaqRequestDto.CreateDTO request)throws Exception {
         User user = findByEmail(email);
         //400 - 데이터 미입력
         if(request.getTitle().isEmpty() || request.getContents().isEmpty() )
@@ -53,7 +53,7 @@ public class FaqService {
 
 
     //faq 삭제
-    public Boolean delete(String email,FaqRequestDto.DeleteDTO request) {
+    public Boolean delete(String email,FaqRequestDto.DeleteDTO request) throws Exception{
         //404 - id없음
         Faq faq = findByFaqId(request.getFaqId());
         try{
@@ -68,7 +68,7 @@ public class FaqService {
 
 
     //faq 수정
-    public Boolean update(String email,FaqRequestDto.UpdateDTO request) {
+    public Boolean update(String email,FaqRequestDto.UpdateDTO request)throws Exception {
         //400 - 데이터 미입력
         if(request.getFaqId() == null || request.getTitle().isEmpty() || request.getContents().isEmpty()
         )

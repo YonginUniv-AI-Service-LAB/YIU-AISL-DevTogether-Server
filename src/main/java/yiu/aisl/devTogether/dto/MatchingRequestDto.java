@@ -21,7 +21,6 @@ public class MatchingRequestDto {
     @Setter
     public static class MentorApplyDTO {
         private UserProfile mentee;
-        private UserProfile mentor;
 
 
     }
@@ -29,7 +28,6 @@ public class MatchingRequestDto {
     @Setter
     public static class MenteeApplyDTO {
         private UserProfile mentor;
-        private UserProfile mentee;
     }
 
     @Getter

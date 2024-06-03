@@ -113,7 +113,7 @@ public class MatchingService {
 
 
     // 신청하기
-    public Boolean apply(String email, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
+    public Boolean apply(String email, MatchingRequestDto.applyDTO request) throws Exception {
         User user = findByEmail(email);
         UserProfile userProfile = findByUserProfile(user);
         Integer profileRole = userProfile.getRole();
@@ -121,6 +121,9 @@ public class MatchingService {
 
             if (profileRole == 1) { //멘토
                 UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
+                if (mentee.getRole() != 2) { // 대상이 멘티가 아닌 경우
+                    throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
+                }
                 Matching matching = Matching.builder()
                         .status("신청")
                         .mentor(userProfile)
@@ -138,6 +141,9 @@ public class MatchingService {
 
             } else if (profileRole == 2) { //멘티
                 UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
+                if (mentor.getRole() != 1) { // 대상이 멘티가 아닌 경우
+                    throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
+                }
                 Matching  matching = Matching.builder()
                         .status("신청")
                         .mentee(userProfile)
@@ -383,10 +389,12 @@ public class MatchingService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
 
-    private UserProfile findByUserProfile(User user) {
-        return userProfileRepository.findByUser(user)
+
+    private UserProfile findByUserAndRole(User user,Integer role) {
+        return userProfileRepository.findByUserAndRole(user, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
+
 
     private Matching findByMatchingId(Long matchingId) {
         return matchingRepository.findByMatchingId(matchingId)
@@ -397,6 +405,9 @@ public class MatchingService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
-
+    private UserProfile findByUserProfile(User user) {
+        return userProfileRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+    }
 
 }
