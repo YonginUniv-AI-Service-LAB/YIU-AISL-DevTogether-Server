@@ -171,9 +171,10 @@ public class UserService {
 
     // [API] 내 멘티 관리하기
     public Object getMyMentee(CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
+        Long user = userDetails.getUser().getId();
+        Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 1);
 
-        List<Matching> myMentee = matchingRepository.findByMentor(user);
+        List<Matching> myMentee = matchingRepository.findByMentor(userProfile);
         return myMentee.stream()
                 .map(MatchingResponseDto::new)
                 .collect(Collectors.toList());
@@ -181,9 +182,10 @@ public class UserService {
 
     // [API] 내 멘토 관리하기
     public Object getMyMentor(CustomUserDetails userDetails) {
-        User user = userDetails.getUser();
+        Long user = userDetails.getUser().getId();
+        Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 2);
 
-        List<Matching> myMentor = matchingRepository.findByMentee(user);
+        List<Matching> myMentor = matchingRepository.findByMentee(userProfile);
         return myMentor.stream()
                 .map(MatchingResponseDto::new)
                 .collect(Collectors.toList());
