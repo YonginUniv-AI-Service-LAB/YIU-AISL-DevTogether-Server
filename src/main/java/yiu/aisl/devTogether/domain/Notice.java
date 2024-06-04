@@ -6,8 +6,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -48,4 +50,6 @@ public class Notice {
     @Enumerated(EnumType.ORDINAL)
     private NoticeCategory noticeCategory;
 
+    public List<FilesResponseDto> getFilesList() {return null;
+    }
 }
