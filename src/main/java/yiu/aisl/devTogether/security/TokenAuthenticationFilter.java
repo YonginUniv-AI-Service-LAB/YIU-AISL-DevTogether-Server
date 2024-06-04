@@ -40,6 +40,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null && tokenProvider.validToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
+            System.out.println("권한 : " +authentication.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

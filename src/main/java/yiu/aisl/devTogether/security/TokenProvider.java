@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.User;
@@ -58,19 +59,18 @@ public class TokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidTime))
                 .setSubject(user.getNickname())
                 .claim("email", user.getEmail())
-                .claim("role", role)
                 .claim("nickname", user.getNickname())
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
 
         if (role == 0) {
-            jwtBuilder.claim("role", "ADMIN");
+            jwtBuilder.claim("role", role);
             System.out.println("관리자 권한 부여");
         } else if (role == 1) {
-            jwtBuilder.claim("role", "MENTOR");
+            jwtBuilder.claim("role", role);
             System.out.println("멘토 권한 부여");
         } else if(role == 2) {
-            jwtBuilder.claim("role", "MENTEE");
+            jwtBuilder.claim("role", role);
             System.out.println("멘티 권한 부여");
         }
 
@@ -79,9 +79,17 @@ public class TokenProvider {
 
 
     public Authentication getAuthentication(String token) {
-        CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByEmail(this.getEmail(token));
+        Claims claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        String email = claims.get("email", String.class);
+        Integer role = claims.get("role", Integer.class); // role 값을 정수형으로 가져옴
+
+        UserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByEmail(email);
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+        customUserDetails.setRole(role); // CustomUserDetails에 role 설정
+
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
+
 
 
 
