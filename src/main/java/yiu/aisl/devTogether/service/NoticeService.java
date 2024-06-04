@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
+import yiu.aisl.devTogether.dto.BoardDto;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 import yiu.aisl.devTogether.dto.NoticeRequestDto;
 import yiu.aisl.devTogether.dto.NoticeResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -40,6 +42,14 @@ public class NoticeService {
         Notice notice = findByNoticeId(request.getNoticeId());
         try{
             NoticeResponseDto response = NoticeResponseDto.GetNoticeDTO(notice);
+
+
+            if (notice.getFiles()) {
+                List<FilesResponseDto> filesList = filesService.getFiles(4, notice.getNoticeId());
+                response.setFilesList(filesList);
+            }
+
+
             return response;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
