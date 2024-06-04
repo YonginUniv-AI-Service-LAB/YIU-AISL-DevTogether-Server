@@ -80,7 +80,7 @@ public class SecurityConfig {
                                         "/board", "/board/post", "/board/like", "/board/scrap","/subject",
                                         "/mentor","/mentee","/subject","/main",
                                         "/faq","/notice","/notice/detail","/ask",
-                                        "/message").permitAll()
+                                        "/message","/download").permitAll()
 
                                 .anyRequest().authenticated()
                 )
