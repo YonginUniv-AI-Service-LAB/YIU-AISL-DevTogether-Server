@@ -191,6 +191,26 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    // [API] 내 멘토 프로필 조회
+    public Object getMyMentorProfile(CustomUserDetails userDetails) {
+        Long user = userDetails.getUser().getId();
+
+        Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 1);
+        return userProfile.stream()
+                .map(UserProfileResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // [API] 내 멘티 프로필 조회
+    public Object getMyMenteeProfile(CustomUserDetails userDetails) {
+        Long user = userDetails.getUser().getId();
+
+        Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 2);
+        return userProfile.stream()
+                .map(UserProfileResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     // [API] 내 멘토 프로필 변경하기
     public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) throws Exception {
         Long user = userDetails.getUser().getId();

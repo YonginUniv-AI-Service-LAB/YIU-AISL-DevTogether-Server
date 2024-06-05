@@ -67,6 +67,22 @@ public class UserController {
         return new ResponseEntity<>(userService.getMyMentor(customUserDetails), HttpStatus.OK);
     }
 
+    // 내 멘토 프로필 조회
+    @GetMapping(value = "/mentor")
+    public ResponseEntity<Object> getMyMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyMentorProfile(customUserDetails), HttpStatus.OK);
+    }
+
+    // 내 멘티 프로필 조회
+    @GetMapping(value = "/mentee")
+    public ResponseEntity<Object> getMyMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyMenteeProfile(customUserDetails), HttpStatus.OK);
+    }
+
     // 내 멘토 프로필 수정 = test 완료
     @PutMapping(value = "/mentor")
     public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserProfileRequestDto request) throws Exception {
