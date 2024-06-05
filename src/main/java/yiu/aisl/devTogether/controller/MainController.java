@@ -98,10 +98,16 @@ public class MainController {
         return new ResponseEntity<Boolean>(mainService.emailFind(user.getEmail(),request), HttpStatus.OK);
     }
 
-    //refresh토큰
+    // accessToke 재발급
     @PostMapping(value = "/token/refresh")
     public ResponseEntity<TokenDto>  createNewAccessToken(TokenDto tokenDto) throws  Exception{
         return new ResponseEntity<>(mainService.refreshAccessToken(tokenDto), HttpStatus.OK);
+    }
+
+    // 멘토&멘티 변경시 accessToken 재발급
+    @PostMapping(value = "/token/change")
+    public ResponseEntity<TokenDto> createUserChangeAccessToken(TokenDto tokenDto) throws Exception {
+        return new ResponseEntity<>(mainService.changeAccessToken(tokenDto), HttpStatus.OK);
     }
 
     // role 추가 (멘토 또는 멘티 값 추가)
