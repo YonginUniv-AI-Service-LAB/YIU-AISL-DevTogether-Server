@@ -159,13 +159,13 @@ public class FilesService {
     //파일 다운로드
     public FilesResponseDto downloadFile(Long fileId) throws Exception {
 
-        Files files = filesRepository.findById(fileId).get();
-//        String fileName = URLEncoder.encode(files.getOriginName(),"UTF-8").replaceAll("\\+", "%20");
-        String fileName = files.getOriginName();
         try {
+            Files files = filesRepository.findById(fileId).get();
+//        String fileName = URLEncoder.encode(files.getOriginName(),"UTF-8").replaceAll("\\+", "%20");
+            String fileName = files.getOriginName();
             File downloadFile = new File(files.getPath());
 
-            byte fileByte[] = FileUtil.readAsByteArray(downloadFile);
+            byte[] fileByte = FileUtil.readAsByteArray(downloadFile);
             Long bytes = java.nio.file.Files.size(Path.of(files.getPath())) / 1024;
 
             return FilesResponseDto.builder()
@@ -187,10 +187,7 @@ public class FilesService {
 
     // 파일 유무 탐색
     public Boolean isFile(MultipartFile file) {
-        if (file != null && !file.isEmpty()) {
-            return true;
-        }
-        return false;
+        return file != null && !file.isEmpty();
     }
 
     public Boolean isMFile(List<MultipartFile> files) {

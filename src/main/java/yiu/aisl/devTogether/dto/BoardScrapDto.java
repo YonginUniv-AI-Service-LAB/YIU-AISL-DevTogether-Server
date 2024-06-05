@@ -20,7 +20,7 @@ public class BoardScrapDto {
     private Integer board;
     private String title;
     private String contents;
-    private List<Likes> likes;
+    private Integer likes;
     private LocalDateTime createdAt;
 
     public BoardScrapDto(BoardScrap scrap) {
@@ -29,6 +29,6 @@ public class BoardScrapDto {
         this.title = scrap.getBoard().getTitle();
         this.contents = scrap.getBoard().getContents();
         this.createdAt = scrap.getCreatedAt();
-        this.likes = scrap.getBoard().getLikes();
+        this.likes = scrap.getBoard().getLikes().size();
     }
 }

@@ -23,6 +23,7 @@ public class BoardDto {
     private LocalDateTime updatedAt;
     private Boolean files;
     private List<FilesResponseDto> filesList;
+    private Integer likeCount;
     private List<CommentDto> comments;
 
     public static BoardDto getboardDto(Board board) {
@@ -34,6 +35,7 @@ public class BoardDto {
                 board.getUpdatedAt(),
                 board.getFiles(),
                 board.getFilesList(),
+                board.getLikes().size(),
                 board.getComments().stream()
                         .map(CommentDto::new)
                         .collect(Collectors.toList())

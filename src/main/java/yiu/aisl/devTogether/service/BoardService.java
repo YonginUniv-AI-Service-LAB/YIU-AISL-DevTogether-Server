@@ -29,6 +29,7 @@ public class BoardService {
     private final FilesRepository filesRepository;
     private final BoardScrapRepository boardScrapRepository;
     public final PushRepository pushRepository;
+
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
         try {
@@ -240,9 +241,10 @@ public class BoardService {
         }
         //403: 권한없음
         User user = findByUserEmail(email);
-
+        //404: 보드 id 없음
+        Board board = findByBoardId(request.getBoardId());
         try {
-            Board board = findByBoardId(request.getBoardId());
+
 
             Comment comment = Comment.builder()
                     .board(board)
@@ -268,20 +270,21 @@ public class BoardService {
 
     //댓글 삭제
     public Boolean deleteComment(String email, BoardRequestDto.DeleteCommentDto request) throws Exception {
-        //400: 데이터 미입력
-        if (request.getBoardId() == null || request.getCommentId() == null) {
+          //400: 데이터 미입력
+        if (request.getCommentId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         //404: id 없음"
-        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
-        if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
-//        Board board = findByBoardId(request.getBoardId());
         Optional<Comment> comment = commentRepository.findByCommentId(request.getCommentId());
         if (comment.isEmpty()) {
             throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }
+        Optional<Board> board = boardRepository.findByBoardId(comment.get().getBoard().getBoardId());
+        if (board.isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_EXIST_ID);
+        }
+//        Board board = findByBoardId(request.getBoardId());
+
         //403: 권한없음 -- 다시 확인하기
 //        Board existingboard = board.get();
         Comment existingComment = comment.get();
@@ -302,12 +305,14 @@ public class BoardService {
     public Boolean updateComment(String email, BoardRequestDto.UpdateCommentDto request) throws Exception {
         User user = findByUserEmail(email);
         //400: 데이터 미입력
-        if (request.getBoardId() == null || request.getCommentId() == null || request.getContents() == null) {
+        if (request.getCommentId() == null || request.getContents() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+
         //404: id 없음
-        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
         Optional<Comment> comment = commentRepository.findByCommentId(request.getCommentId());
+        Optional<Board> board = boardRepository.findByBoardId(comment.get().getBoard().getBoardId());
+
         if (board.isEmpty() || comment.isEmpty()) {
             throw new CustomException(ErrorCode.NOT_EXIST_ID);
         }

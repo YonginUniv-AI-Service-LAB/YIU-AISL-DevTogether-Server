@@ -55,15 +55,15 @@ public class BoardRequestDto {
     @Getter
     @Setter
     public class UpdateCommentDto {
-        private Long boardId;
+//        private Long boardId;
         private Long CommentId;
         private String contents;
     }
     @Getter
     @Setter
     public class DeleteCommentDto{
-        private Long boardId;
-        private Long CommentId;
+//        private Long boardId;
+        private Long commentId;
     }
     @Getter
     @Setter
