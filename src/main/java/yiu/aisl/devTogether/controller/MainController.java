@@ -56,10 +56,10 @@ public class MainController {
 
     //회원가입        회원가입을 성공했냐 안 했냐 유무를 가지고 판별해야하므로 Bool타입 사용
     @PostMapping(value = "/register" )
-    public ResponseEntity<Boolean> register(RegisterRequestDto request,MultipartFile img) throws Exception{
+    public ResponseEntity<Boolean> register(RegisterRequestDto request) throws Exception{
         //@RequestBody를 사용하지 않았기 때문에 x-www-form-urlencoded 이 데이터 형식 사용 가능
         System.out.println(" registration request: " + request);
-        return new ResponseEntity<Boolean>(mainService.register(request,img), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(mainService.register(request), HttpStatus.OK);
     }
     //로그인   사용자에 대한 정보를 포함한 토큰이 필요함 따라서 LoginResponseDto로 반환해야함
     @PostMapping(value = "/login")

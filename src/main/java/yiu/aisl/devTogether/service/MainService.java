@@ -102,16 +102,16 @@ public class MainService {
                 .append(", 역할: ").append(userProfile.getUser().getRole())
                 .append(", 나이: ").append(userProfile.getUser().getAge())
                 .append(", 성별: ").append(userProfile.getUser().getGender())
-                .append(", 수업료: ").append(userProfile.getUser().getFee())
-                .append(", 수업 방식: ").append(userProfile.getUser().getMethod())
+                .append(", 수업료: ").append(userProfile.getFee())
+                .append(", 수업 방식: ").append(userProfile.getMethod())
                 .append(", 지역1: ").append(userProfile.getUser().getLocation1())
                 .append(", 지역2: ").append(userProfile.getUser().getLocation2())
                 .append(", 지역3: ").append(userProfile.getUser().getLocation3())
-                .append(", 과목1: ").append(userProfile.getUser().getSubject1())
-                .append(", 과목2: ").append(userProfile.getUser().getSubject2())
-                .append(", 과목3: ").append(userProfile.getUser().getSubject3())
-                .append(", 과목4: ").append(userProfile.getUser().getSubject4())
-                .append(", 과목5: ").append(userProfile.getUser().getSubject5());
+                .append(", 과목1: ").append(userProfile.getSubject1())
+                .append(", 과목2: ").append(userProfile.getSubject2())
+                .append(", 과목3: ").append(userProfile.getSubject3())
+                .append(", 과목4: ").append(userProfile.getSubject4())
+                .append(", 과목5: ").append(userProfile.getSubject5());
     }
 
 
@@ -119,9 +119,8 @@ public class MainService {
 
 
     //회원가입
-    public Boolean register(RegisterRequestDto request, MultipartFile img) throws Exception {
+    public Boolean register(RegisterRequestDto request) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
-        Boolean imgs = filesService.isFile(img);
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
 
         QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
@@ -156,16 +155,12 @@ public class MainService {
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
-                    .phone(request.getPhone())
-                    .img(imgs)
                     .birth(request.getBirth())
                     .question(questionCategory)
                     .answer(request.getAnswer())
                     .build();
             userRepository.save(user);
-            if (imgs) {
-                filesService.saveFileDb(img, 0, user.getId());
-            }
+
             if(request.getRole() == 1) {
                 UserProfile userProfile = UserProfile.builder()
                         .role(1)

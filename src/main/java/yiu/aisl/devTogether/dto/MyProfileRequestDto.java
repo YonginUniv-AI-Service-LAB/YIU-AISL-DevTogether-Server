@@ -27,6 +27,7 @@ public class MyProfileRequestDto {
     private String subject4;
     private String subject5;
     private String method;
-    private MultipartFile img;
     private Integer fee;
+    private MultipartFile img;
+
 }

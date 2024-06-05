@@ -53,16 +53,6 @@ public class UserProfile {
     @Column
     private Boolean files;
 
-
-    @Column
-    private String location1;
-
-    @Column
-    private String location2;
-
-    @Column
-    private String location3;
-
     @Column
     private String subject1;
 

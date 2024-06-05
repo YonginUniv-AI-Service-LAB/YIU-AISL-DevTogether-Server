@@ -35,32 +35,29 @@ public class UserService {
 
     // [API]  내 정보 조회
     public Object getMyProfile(CustomUserDetails userDetails) {
-
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH)
-        ));
-
+        User user = userRepository.findByEmail(userDetails.getUser().getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_AUTH));
+        UserProfile userProfile = userProfileRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_AUTH));
         return MyProfileResponseDto.builder()
-                .email(user.get().getEmail())
-                .name(user.get().getName())
-                .nickname(user.get().getNickname())
-                .role(user.get().getRole().name())
-                .gender(user.get().getGender().name())
-                .age(user.get().getAge())
-                .location1(user.get().getLocation1())
-                .location2(user.get().getLocation2())
-                .location3(user.get().getLocation3())
-                .subject1(user.get().getSubject1())
-                .subject2(user.get().getSubject2())
-                .subject3(user.get().getSubject3())
-                .subject4(user.get().getSubject4())
-                .subject5(user.get().getSubject5())
-                .method(user.get().getMethod())
-                .fee(user.get().getFee())
-                .img(user.get().getImg())
-
+                .email(user.getEmail())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .role(user.getRole().name())
+                .gender(user.getGender().name())
+                .age(user.getAge())
+                .location1(user.getLocation1())
+                .location2(user.getLocation2())
+                .location3(user.getLocation3())
+                .subject1(userProfile.getSubject1())
+                .subject2(userProfile.getSubject2())
+                .subject3(userProfile.getSubject3())
+                .subject4(userProfile.getSubject4())
+                .subject5(userProfile.getSubject5())
+                .method(userProfile.getMethod())
+                .fee(userProfile.getFee())
+                .img(userProfile.getImg())
                 .build();
-
     }
 
     // [API] 내 정보 수정
@@ -71,6 +68,9 @@ public class UserService {
 
         User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(()->
                 new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
+        UserProfile userProfile = userProfileRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_AUTH));
+
 
         // 데이터 미입력 (400)
         if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null) {
@@ -95,16 +95,16 @@ public class UserService {
         user.setLocation1(dto.getLocation1());
         user.setLocation2(dto.getLocation2());
         user.setLocation3(dto.getLocation3());
-        user.setSubject1(dto.getSubject1());
-        user.setSubject2(dto.getSubject2());
-        user.setSubject3(dto.getSubject3());
-        user.setSubject4(dto.getSubject4());
-        user.setSubject5(dto.getSubject5());
-        user.setMethod(dto.getMethod());
-        user.setFee(dto.getFee());
-        user.setImg(imgs);
+        userProfile.setSubject1(dto.getSubject1());
+        userProfile.setSubject2(dto.getSubject2());
+        userProfile.setSubject3(dto.getSubject3());
+        userProfile.setSubject4(dto.getSubject4());
+        userProfile.setSubject5(dto.getSubject5());
+        userProfile.setMethod(dto.getMethod());
+        userProfile.setFee(dto.getFee());
+        userProfile.setImg(imgs);
         if (imgs) {
-            filesService.saveFileDb(img, 0, user.getId());
+            filesService.saveFileDb(img, 1, user.getId());
         }
         return true;
     }

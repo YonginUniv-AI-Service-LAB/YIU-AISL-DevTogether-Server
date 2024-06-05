@@ -43,18 +43,17 @@ public class User {
     private String nickname;
 
     @Column(nullable = false)
-    private String birth;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private RoleCategory role;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.ORDINAL)
-    private GenderCategory gender;
+    private String birth;
+
+
 
     @Column(nullable = false)
-    private String phone;
+    @Enumerated(EnumType.ORDINAL)
+    private GenderCategory gender;
 
     @Column(nullable = false)
     private Integer age;
@@ -64,15 +63,6 @@ public class User {
 
     @Column(nullable = false)
     private String answer;
-
-    @Column( length = 255)
-    private Boolean img;
-
-    @Column
-    private Integer fee;
-
-    @Column
-    private String method;
 
     @Column
     private String location1;
@@ -84,22 +74,8 @@ public class User {
     private String location3;
 
     @Column
-    private String subject1;
-    @Column
-    private String subject2;
-    @Column
-    private String subject3;
-    @Column
-    private String subject4;
-    @Column
-    private String subject5;
-
-    @Column
     @ColumnDefault("1")
     private Integer checks;
-
-
-
 
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
@@ -113,30 +89,7 @@ public class User {
     private LocalDateTime updatedAt;
 
 
-    public User(Long id, String name, String nickname,  String email,Boolean img,  RoleCategory role,  GenderCategory genderCategory, String pwd, Integer age, String method, Integer fee, String location1, String location2, String subject1, String subject2 , String subject3 , String subject4 , String subject5 , String location3 ,LocalDateTime createdAt, LocalDateTime updatedAt, Integer check) {
-        this.id = id;
-        this.email = email;
-        this.pwd = pwd;
-        this.name = name;
-        this.nickname = nickname;
-        this.role = role;
-        this.gender = genderCategory;
-        this.img = img;
-        this.age = age;
-        this.method = method;
-        this.fee = fee;
-        this.location1 = location1;
-        this.location2 = location2;
-        this.location3 = location3;
-        this.subject1 = subject1;
-        this.subject2 = subject2;
-        this.subject3 = subject3;
-        this.subject4 = subject4;
-        this.subject5 = subject5;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.checks = check;
-    }
+
 
     public void encodePwd(PasswordEncoder passwordEncoder){
         this.pwd = passwordEncoder.encode(pwd);
