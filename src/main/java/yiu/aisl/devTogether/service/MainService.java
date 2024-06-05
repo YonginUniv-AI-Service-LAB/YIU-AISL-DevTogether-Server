@@ -385,8 +385,10 @@ public class MainService {
     }
 
 
+        // accessToken 재발급
         public TokenDto refreshAccessToken(TokenDto token) throws Exception {
-        String email = null;
+        System.out.println("메소드 진입 성공");
+        String email;
         try {
             email = tokenProvider.getEmail(token.getAccessToken());
         }//만료된 경우
@@ -398,13 +400,47 @@ public class MainService {
                 new CustomException(ErrorCode.NOT_EXIST_MEMBER));
         //유효성 검사
         Token refreshToken = validRefreshToken(user, token.getRefreshToken());
-        int role = 0;
+        int role = tokenProvider.getRole(token.getAccessToken());
 
-        if (user.getRole() == RoleCategory.멘토멘티) {
-
+        try {
+            if (refreshToken != null) {    //유효하다면 토큰 생성
+                return TokenDto.builder()
+                        .accessToken(tokenProvider.createToken(user, role))
+                        .refreshToken(refreshToken.getRefreshToken())
+                        .build();
+            }//로그인 필요
+            else {
+                throw new CustomException(ErrorCode.LOGIN_REQUIRED);
+            }
         }
-        if(user.getRole() == RoleCategory.멘토 || user.getRole() == RoleCategory.멘티){
+        catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    // 멘토 & 멘티 변경 시 accessToken 재발급
+    public TokenDto changeAccessToken(TokenDto token) throws Exception {
+        String email;
+        try {
+            email = tokenProvider.getEmail(token.getAccessToken());
+        }//만료된 경우
+        catch (ExpiredJwtException e) {
+            email = e.getClaims().get("email", String.class);
+        }
+        //이메일을 사용하여 해당 사용자를 db에서 찾음
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+        if(user.getRole() != RoleCategory.멘토멘티) {
+            throw new CustomException(ErrorCode.NO_AUTH);
+        }
+        //유효성 검사
+        Token refreshToken = validRefreshToken(user, token.getRefreshToken());
+        int role = tokenProvider.getRole(token.getAccessToken());
+
+        if(role == 1 && user.getRole() == RoleCategory.멘토멘티) {
+            role = 2;
+        } else if(role == 2 && user.getRole() == RoleCategory.멘토멘티) {
+            role = 1;
         }
 
         try {
@@ -422,6 +458,7 @@ public class MainService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
     // refresh token을 생성
     private String createRefreshToken(User user) {
         Token token = tokenRepository.save(

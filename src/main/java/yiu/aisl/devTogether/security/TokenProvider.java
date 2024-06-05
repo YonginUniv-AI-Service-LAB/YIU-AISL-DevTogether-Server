@@ -96,8 +96,11 @@ public class TokenProvider {
     public String getEmail(String token) {
         Claims claims = getClaims(token);
         return claims.get("email", String.class);
+    }
 
-
+    public Integer getRole(String token) {
+        Claims claims = getClaims(token);
+        return claims.get("role", Integer.class);
     }
 
 
