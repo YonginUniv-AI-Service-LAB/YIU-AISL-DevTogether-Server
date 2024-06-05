@@ -32,15 +32,23 @@ public class AskService {
     private final FilesService filesService;
     private final PushRepository pushRepository;
 
-    //ask 조회
-    public List <AskResponseDto >getList() throws  Exception {
-        List<Ask> ask = askRepository.findByOrderByCreatedAtDesc();
-        List<AskResponseDto> getListDto = new ArrayList<>();
-        ask.forEach(s->getListDto.add(AskResponseDto.GetAskDTO(s)));
-        return getListDto;
+    //ask 조회(내가 쓴 글 조회)
+    public List<AskResponseDto> getList(String email) throws Exception {
+        User user = findByEmail(email);
+        List<Ask> askList = askRepository.findByUser(user);
+        List<AskResponseDto> getList = new ArrayList<>();
+        askList.forEach(ask -> getList.add(AskResponseDto.GetAskDTO(ask)));
+
+        return getList;
+    }
+    //ask 조회(관리자용)
+    public List <AskResponseDto >getAdminList() throws  Exception {
+        List<Ask> askAdminList = askRepository.findByOrderByCreatedAtDesc();
+        List<AskResponseDto> getAdminList = new ArrayList<>();
+        askAdminList.forEach(s->getAdminList.add(AskResponseDto.GetAskDTO(s)));
+        return getAdminList;
 
     }
-
 
 
 
@@ -200,5 +208,6 @@ public class AskService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
+
 
 }

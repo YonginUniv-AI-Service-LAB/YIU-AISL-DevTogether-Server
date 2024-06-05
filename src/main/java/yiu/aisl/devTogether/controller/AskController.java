@@ -20,11 +20,19 @@ import java.util.List;
 public class AskController {
     private final AskService askService;
 
-    // ask 조회
+    // ask 조회(내가 쓴 글 조회)
     @GetMapping("/ask")
-    public ResponseEntity<List> getList() throws Exception {
-        return new ResponseEntity<List>(askService.getList(), HttpStatus.OK);
+    public ResponseEntity<List> getList(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(askService.getList(user.getEmail()), HttpStatus.OK);
     }
+    // ask 조회(관리자용)
+    @GetMapping("/admin/ask")
+    public ResponseEntity<List> getAdminList() throws Exception {
+        return new ResponseEntity<List>(askService.getAdminList(), HttpStatus.OK);
+    }
+
+
+
     // ask 등록
     @PostMapping("/ask")
     public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, AskRequestDto.CreateDTO request, List<MultipartFile> file ) throws Exception {
