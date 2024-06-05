@@ -72,9 +72,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 //공통 ***************************8(권한 필요한 놈들 먼저 배치하기)************************************
-                                .requestMatchers("/admin/notice","/admin/ask/answer", "/admin/faq").hasRole("ADMIN")
-                                .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee").hasRole("MENTOR")
-                                .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor").hasRole("MENTEE")
+                                .requestMatchers("/admin/notice","/admin/ask/answer", "/faq").hasRole("ADMIN")
+                                .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee","/matching/application/mentee").hasRole("MENTOR")
+                                .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor","/matching/application/mentor").hasRole("MENTEE")
                                 .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change",
                                         "/email" ,"token/change", "/token/refresh", "/nickname",
                                         "/board", "/board/post", "/board/like", "/board/scrap","/subject",

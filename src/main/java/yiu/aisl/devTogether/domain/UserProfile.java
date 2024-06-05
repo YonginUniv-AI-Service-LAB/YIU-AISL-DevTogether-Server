@@ -53,6 +53,31 @@ public class UserProfile {
     @Column
     private Boolean files;
 
+
+    @Column
+    private String location1;
+
+    @Column
+    private String location2;
+
+    @Column
+    private String location3;
+
+    @Column
+    private String subject1;
+
+    @Column
+    private String subject2;
+
+    @Column
+    private String subject3;
+
+    @Column
+    private String subject4;
+
+    @Column
+    private String subject5;
+
     @Column
     @ColumnDefault("0")
     private Integer checks;

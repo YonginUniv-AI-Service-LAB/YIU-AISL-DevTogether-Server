@@ -25,10 +25,10 @@ public class RegisterRequestDto {
     private Integer role;
     private Integer gender;
     private Integer age;
+    private String phone;
     private String birth;
     private Integer question;
     private String answer;
-    private MultipartFile img;
 
 
 

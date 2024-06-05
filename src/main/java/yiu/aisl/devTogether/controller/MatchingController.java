@@ -42,11 +42,17 @@ public class MatchingController {
     }
 
 
-    // 신청하기
-    @PostMapping("/matching/application")
-    public ResponseEntity<Boolean> apply(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.applyDTO request)throws Exception  {
+    // 신청하기(멘티가 멘토에게)
+    @PostMapping("/matching/application/mentor")
+    public ResponseEntity<Boolean> applyMentor(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.MentorApplyDTO request)throws Exception  {
         return new ResponseEntity<Boolean>(matchingService.apply(user.getEmail(),request), HttpStatus.OK);
     }
+    // 신청하기(멘토가 멘티에게)
+    @PostMapping("/matching/application/mentee")
+    public ResponseEntity<Boolean> applyMentee(@AuthenticationPrincipal CustomUserDetails user, MatchingRequestDto.MenteeApplyDTO request)throws Exception  {
+        return new ResponseEntity<Boolean>(matchingService.apply(user.getEmail(),request), HttpStatus.OK);
+    }
+
 
     //신청 수락
     @PutMapping("/matching/application")

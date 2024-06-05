@@ -28,8 +28,13 @@ public class User {
     @Column(unique = true)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false,
+            length = 255)
     private String email;
+
+    @Column(nullable = false, length = 255)
+    @JsonIgnore
+    private String pwd;
 
     @Column(nullable = false,  length = 20)
     private String name;
@@ -44,14 +49,12 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private RoleCategory role;
 
-
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private GenderCategory gender;
 
-    @Column(nullable = false, length = 255)
-    @JsonIgnore
-    private String pwd;
+    @Column(nullable = false)
+    private String phone;
 
     @Column(nullable = false)
     private Integer age;
@@ -61,9 +64,6 @@ public class User {
 
     @Column(nullable = false)
     private String answer;
-
-
-
 
     @Column( length = 255)
     private Boolean img;

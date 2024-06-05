@@ -13,4 +13,5 @@ import lombok.Setter;
 public class PwdChangeRequestDto {
     private String email;
     private String pwd;
+    private String authNum;
 }

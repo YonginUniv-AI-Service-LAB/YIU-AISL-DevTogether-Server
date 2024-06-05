@@ -127,8 +127,9 @@ public class MainService {
         QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
         //400 - 데이터 미입력
         if (  request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getName().isEmpty()
-                || request.getNickname().isEmpty()   || request.getRole() == null   || request.getGender() == null
-                || request.getAge() == null || request.getBirth().isEmpty()  || request.getQuestion()== null    || request.getAnswer().isEmpty()                        )
+                || request.getNickname().isEmpty()   || request.getRole() == null
+                || request.getGender() == null  || request.getAge() == null || request.getBirth().isEmpty()
+                || request.getQuestion()== null    || request.getAnswer().isEmpty()                        )
         {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
@@ -155,6 +156,7 @@ public class MainService {
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
+                    .phone(request.getPhone())
                     .img(imgs)
                     .birth(request.getBirth())
                     .question(questionCategory)
@@ -341,6 +343,9 @@ public class MainService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()
                 -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
         try {
+
+
+
             user.setPwd(passwordEncoder.encode(request.getPwd()));
             userRepository.save(user);
         }
