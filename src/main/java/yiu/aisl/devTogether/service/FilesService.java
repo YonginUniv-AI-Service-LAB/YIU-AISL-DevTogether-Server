@@ -155,17 +155,18 @@ public class FilesService {
         return true;
     }
 
-
+    //        String fileName = URLEncoder.encode(files.getOriginName(),"UTF-8").replaceAll("\\+", "%20");
     //파일 다운로드
     public FilesResponseDto downloadFile(Long fileId) throws Exception {
 
         try {
             Files files = filesRepository.findById(fileId).get();
-//        String fileName = URLEncoder.encode(files.getOriginName(),"UTF-8").replaceAll("\\+", "%20");
-            String fileName = files.getOriginName();
-            File downloadFile = new File(files.getPath());
 
-            byte[] fileByte = FileUtil.readAsByteArray(downloadFile);
+            String fileName = files.getOriginName();
+//            File downloadFile = new File(files.getPath());
+//            byte[] fileByte = FileUtil.readAsByteArray(downloadFile);
+            Path imagePath = Path.of(files.getPath());
+            byte[] fileByte = java.nio.file.Files.readAllBytes(imagePath);
             Long bytes = java.nio.file.Files.size(Path.of(files.getPath())) / 1024;
 
             return FilesResponseDto.builder()
