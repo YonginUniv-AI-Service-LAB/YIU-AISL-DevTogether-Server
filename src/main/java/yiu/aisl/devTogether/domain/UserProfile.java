@@ -32,8 +32,8 @@ public class UserProfile {
     @Column(columnDefinition = "TEXT")
     private String pr;
 
-    @Column
-    private String link;
+    @Column(columnDefinition = "TEXT")
+    private String portfolio;
 
     @Column
     private String contents;
