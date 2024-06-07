@@ -256,7 +256,7 @@ public class BoardService {
             Push push = Push.builder()
                     .user(board.getUser())
                     .type(PushCategory.댓글)
-                    .targetId(board.getBoardId())
+                    .typeId(board.getBoardId())
                     .contents("게시글에 댓글이 달렸습니다.")
                     .checks(0)
                     .build();

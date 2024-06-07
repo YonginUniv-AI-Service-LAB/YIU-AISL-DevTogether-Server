@@ -106,7 +106,7 @@ public class AskService {
                     .type(PushCategory.문의)
                     .contents("관리자님이 답변을 남겼습니다.")
                     .user(ask.getUser())
-                    .targetId(ask.getAskId())
+                    .typeId(ask.getAskId())
                     .checks(0)
                     .build();
             askRepository.save(ask);

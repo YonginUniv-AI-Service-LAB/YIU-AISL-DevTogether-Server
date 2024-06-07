@@ -34,7 +34,7 @@ public class Push {
     private Integer checks;
 
     @Column
-    private Long targetId;
+    private Long typeId;
 
     @Column(columnDefinition = "TEXT")
     private String contents;

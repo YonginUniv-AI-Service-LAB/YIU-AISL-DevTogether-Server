@@ -141,7 +141,7 @@ public class MatchingService {
                     .type(PushCategory.매칭)
                     .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
                     .user(mentor.getUser())
-                    .targetId(matching.getMatchingId())
+                    .typeId(matching.getMatchingId())
                     .checks(0)
                     .build();
             pushRepository.save(push);
@@ -179,7 +179,7 @@ public class MatchingService {
                     .type(PushCategory.매칭)
                     .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
                     .user(mentee.getUser())
-                    .targetId(matching.getMatchingId())
+                    .typeId(matching.getMatchingId())
                     .checks(0)
                     .build();
             pushRepository.save(push);
@@ -227,7 +227,7 @@ public class MatchingService {
                         .type(PushCategory.매칭)
                         .contents(userProfile.getUser().getNickname() + "님이 매칭을 수락하셨습니다.")
                         .user(recipientProfile.getUser())
-                        .targetId(matching.getMatchingId())
+                        .typeId(matching.getMatchingId())
                         .checks(1)
                         .build();
                 pushRepository.save(push);
@@ -272,7 +272,7 @@ public class MatchingService {
                         .type(PushCategory.매칭)
                         .contents(userProfile.getUser().getNickname() + "님이 매칭을 거절하셨습니다.")
                         .user(recipientProfile.getUser())
-                        .targetId(matching.getMatchingId())
+                        .typeId(matching.getMatchingId())
                         .checks(1)
                         .build();
                 pushRepository.save(push);
@@ -351,7 +351,7 @@ public class MatchingService {
                         .type(PushCategory.매칭)
                         .contents(userProfile.getUser().getNickname() + "와의 매칭이 확정되었습니다.")
                         .user(recipientProfile.getUser())
-                        .targetId(matching.getMatchingId())
+                        .typeId(matching.getMatchingId())
                         .checks(1)
                         .build();
                 pushRepository.save(push);
@@ -397,7 +397,7 @@ public class MatchingService {
                         .type(PushCategory.매칭)
                         .contents(userProfile.getUser().getNickname() + "님과의 매칭이 종료되었습니다.")
                         .user(recipientProfile.getUser())
-                        .targetId(matching.getMatchingId())
+                        .typeId(matching.getMatchingId())
                         .checks(1)
                         .build();
                 pushRepository.save(push);

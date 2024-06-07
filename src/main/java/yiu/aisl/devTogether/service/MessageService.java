@@ -48,7 +48,7 @@ public class MessageService {
             Push push = Push.builder()
                     .user(message.getToUserid())
                     .type(PushCategory.쪽지)
-                    .targetId(message.getMessageId())
+                    .typeId(message.getMessageId())
                     .contents("쪽지가 왔습니다.")
                     .checks(0)
                     .build();

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class PushResponseDto {
     private Long pushId;
     private PushCategory type;
-    private Long targetId;
+    private Long typeId;
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -24,7 +24,7 @@ public class PushResponseDto {
     public PushResponseDto(Push push) {
         this.pushId = push.getId();
         this.type = push.getType();
-        this.targetId = push.getTargetId();
+        this.typeId = push.getTypeId();
         this.contents = push.getContents();
         this.createdAt = push.getCreatedAt();
         this.updatedAt = push.getUpdatedAt();
