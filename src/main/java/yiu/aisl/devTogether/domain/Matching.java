@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import yiu.aisl.devTogether.domain.state.MatchingCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
+import yiu.aisl.devTogether.domain.state.SubjectCategory;
 
 import java.time.LocalDateTime;
 
@@ -32,12 +33,13 @@ public class Matching {
     private String status;
 
     @Column
-    private String subject;
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject;
 
     @Column
     private Integer tutoringFee;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String contents;
 
     @CreationTimestamp

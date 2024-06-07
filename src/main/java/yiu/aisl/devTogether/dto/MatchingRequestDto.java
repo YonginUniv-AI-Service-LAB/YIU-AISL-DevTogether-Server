@@ -11,11 +11,17 @@ public class MatchingRequestDto {
     @Setter
     public static class MentorApplyDTO {
         private UserProfile mentor;
+        private Integer subject;
+        private String contents;
+        private Integer tutoringFee;
     }
     @Getter
     @Setter
     public static class MenteeApplyDTO {
         private UserProfile mentee;
+        private Integer subject;
+        private String contents;
+        private Integer tutoringFee;
     }
     @Getter
     @Setter

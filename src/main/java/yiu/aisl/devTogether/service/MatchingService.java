@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.*;
 import yiu.aisl.devTogether.domain.state.PushCategory;
+import yiu.aisl.devTogether.domain.state.SubjectCategory;
 import yiu.aisl.devTogether.dto.MatchingRequestDto;
 import yiu.aisl.devTogether.dto.ProfileResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -113,32 +114,37 @@ public class MatchingService {
 
 
     // 신청하기(멘티가 멘토에게)
-    public Boolean apply(String email, MatchingRequestDto.MentorApplyDTO request) throws Exception {
+    public Boolean applyMentor(String email, MatchingRequestDto.MentorApplyDTO request) throws Exception {
         User user = findByEmail(email);
         UserProfile userProfile = findByUserProfile(user);
-        Integer profileRole = userProfile.getRole();
         try {
 
-            if (profileRole == 2) { //멘티
-                UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
-                if (mentor.getRole() != 1) { // 대상이 멘티가 아닌 경우
-                    throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
-                }
-                Matching matching = Matching.builder()
-                        .status("신청")
-                        .mentee(userProfile)
-                        .mentor(mentor)
-                        .build();
-                matchingRepository.save(matching);
-                Push push = Push.builder()
-                        .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
-                        .user(mentor.getUser())
-                        .targetId(matching.getMatchingId())
-                        .checks(0)
-                        .build();
-                pushRepository.save(push);
+
+            UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
+            if (mentor.getRole() != 1) { // 대상이 멘티가 아닌 경우
+                throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
             }
+            if (request.getSubject() == null || request.getContents().isEmpty() || request.getTutoringFee() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+
+            Matching matching = Matching.builder()
+                    .status("신청")
+                    .mentee(userProfile)
+                    .mentor(mentor)
+                    .subject(SubjectCategory.fromInt(request.getSubject()))
+                    .tutoringFee(request.getTutoringFee())
+                    .contents(request.getContents())
+                    .build();
+            matchingRepository.save(matching);
+            Push push = Push.builder()
+                    .type(PushCategory.매칭)
+                    .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
+                    .user(mentor.getUser())
+                    .targetId(matching.getMatchingId())
+                    .checks(0)
+                    .build();
+            pushRepository.save(push);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,33 +153,38 @@ public class MatchingService {
     }
 
     // 신청하기(멘토가 멘티에게)
-    public Boolean apply(String email, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
+    public Boolean applyMentee(String email, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
         User user = findByEmail(email);
         UserProfile userProfile = findByUserProfile(user);
-        Integer profileRole = userProfile.getRole();
         try {
 
-            if (profileRole == 1) { //멘토
-                UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
-                if (mentee.getRole() != 2) { // 대상이 멘티가 아닌 경우
-                    throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
-                }
-                Matching matching = Matching.builder()
-                        .status("신청")
-                        .mentor(userProfile)
-                        .mentee(mentee)
-                        .build();
-                matchingRepository.save(matching);
-                Push push = Push.builder()
-                        .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
-                        .user(mentee.getUser())
-                        .targetId(matching.getMatchingId())
-                        .checks(0)
-                        .build();
-                pushRepository.save(push);
 
+            UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
+            if (mentee.getRole() != 2) { // 대상이 멘티가 아닌 경우
+                throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
             }
+            if (request.getSubject() == null || request.getContents().isEmpty() || request.getTutoringFee() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+            Matching matching = Matching.builder()
+                    .status("신청")
+                    .mentor(userProfile)
+                    .mentee(mentee)
+                    .subject(SubjectCategory.fromInt(request.getSubject()))
+                    .tutoringFee(request.getTutoringFee())
+                    .contents(request.getContents())
+                    .build();
+            matchingRepository.save(matching);
+            Push push = Push.builder()
+                    .type(PushCategory.매칭)
+                    .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
+                    .user(mentee.getUser())
+                    .targetId(matching.getMatchingId())
+                    .checks(0)
+                    .build();
+            pushRepository.save(push);
+
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
