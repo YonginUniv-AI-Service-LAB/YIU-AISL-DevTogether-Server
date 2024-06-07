@@ -53,7 +53,9 @@ public class UserProfile {
     @Column
     private Boolean files;
 
-
+    @Column
+    @ColumnDefault("0")
+    private Integer checks;
 
     @Column
     private String subject1;
@@ -70,9 +72,6 @@ public class UserProfile {
     @Column
     private String subject5;
 
-    @Column
-    @ColumnDefault("0")
-    private Integer checks;
 
     @CreationTimestamp
     @Column

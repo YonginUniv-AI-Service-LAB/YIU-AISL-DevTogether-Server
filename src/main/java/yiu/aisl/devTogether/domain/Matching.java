@@ -31,6 +31,15 @@ public class Matching {
     @Column
     private String status;
 
+    @Column
+    private String subject;
+
+    @Column
+    private Integer tutoringFee;
+
+    @Column
+    private String contents;
+
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt;

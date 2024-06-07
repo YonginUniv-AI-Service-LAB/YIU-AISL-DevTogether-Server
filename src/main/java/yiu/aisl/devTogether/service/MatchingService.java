@@ -35,7 +35,7 @@ public class MatchingService {
         List<UserProfile> userProfiles = userProfileRepository.findByRole(1);
         return userProfiles.stream()
                 .filter(userProfile -> userProfile.getChecks() == 1)
-                .map(ProfileResponseDto::new)
+                .map(userProfile -> new ProfileResponseDto(userProfile, userProfile.getUser()))
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +46,7 @@ public class MatchingService {
 
         return userProfiles.stream()
                 .filter(userProfile -> userProfile.getChecks() == 1)
-                .map(ProfileResponseDto::new)
+                .map(userProfile -> new ProfileResponseDto(userProfile, userProfile.getUser()))
                 .collect(Collectors.toList());
     }
 
