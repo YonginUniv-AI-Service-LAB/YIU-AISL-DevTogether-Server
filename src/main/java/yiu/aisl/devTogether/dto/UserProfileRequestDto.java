@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class UserProfileRequestDto {
     private String introduction;
     private String pr;
-    private String link;
+    private String portfolio;
     private String contents;
     private String schedule;
     private String method;

@@ -101,6 +101,7 @@ public class AskService {
         try {
             ask.setAnswer(request.getAnswer());
             ask.setStatus(status);
+
             Push push = Push.builder()
                     .type(PushCategory.문의)
                     .contents("관리자님이 답변을 남겼습니다.")

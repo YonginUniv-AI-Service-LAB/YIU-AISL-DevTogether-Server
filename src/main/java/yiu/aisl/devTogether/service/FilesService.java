@@ -176,6 +176,7 @@ public class FilesService {
                     .fileData(fileByte)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 

@@ -16,7 +16,7 @@ public class ProfileResponseDto {
     private Long userProfileId;
     private String introduction;
     private String pr;
-    private String link;
+    private String portfolio;
     private String contents;
     private String schedule;
     private String method;
@@ -29,7 +29,7 @@ public class ProfileResponseDto {
         this.userProfileId = userProfile.getUserProfileId();
         this.introduction = userProfile.getIntroduction();
         this.pr= userProfile.getPr();
-        this.link = userProfile.getLink();
+        this.portfolio = userProfile.getPortfolio();
         this.contents = userProfile.getContents();
         this.schedule = userProfile.getSchedule();
         this.method = userProfile.getMethod();

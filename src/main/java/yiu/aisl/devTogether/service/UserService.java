@@ -218,7 +218,7 @@ public class UserService {
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
 
-        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getLink().isEmpty() ||
+        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
                 dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee()==null) {
             userProfile.setChecks(0);
         } else {
@@ -227,7 +227,7 @@ public class UserService {
 
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
-        userProfile.setLink(dto.getLink());
+        userProfile.setPortfolio(dto.getPortfolio());
         userProfile.setContents(dto.getContents());
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
@@ -244,7 +244,7 @@ public class UserService {
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
 
-        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getLink().isEmpty() ||
+        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
         dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee()==null) {
             userProfile.setChecks(0);
         } else {
@@ -253,7 +253,7 @@ public class UserService {
 
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
-        userProfile.setLink(dto.getLink());
+        userProfile.setPortfolio(dto.getPortfolio());
         userProfile.setContents(dto.getContents());
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());

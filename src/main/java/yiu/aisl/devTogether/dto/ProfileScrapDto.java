@@ -20,7 +20,7 @@ public class ProfileScrapDto {
     private LocalDateTime createdAt;
     private String introduction;
     private String pr;
-    private String link;
+    private String portfolio;
     private String contents;
     private String schedule;
     private String method;
@@ -33,7 +33,7 @@ public class ProfileScrapDto {
         this.createdAt = scrap.getCreatedAt();
         this.introduction = scrap.getUserProfile().getIntroduction();
         this.pr = scrap.getUserProfile().getPr();
-        this.link = scrap.getUserProfile().getLink();
+        this.portfolio = scrap.getUserProfile().getPortfolio();
         this.contents = scrap.getUserProfile().getContents();
         this.schedule = scrap.getUserProfile().getSchedule();
         this.method = scrap.getUserProfile().getMethod();
