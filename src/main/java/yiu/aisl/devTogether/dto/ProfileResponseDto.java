@@ -32,8 +32,9 @@ public class ProfileResponseDto {
     private String location2;
     private String location3;
     private Boolean img;
+    private Integer scrap;
 
-    public ProfileResponseDto(UserProfile userProfile, User user) {
+    public ProfileResponseDto(UserProfile userProfile, User user,Integer scrap) {
         this.userProfileId = userProfile.getUserProfileId();
         this.introduction = userProfile.getIntroduction();
         this.pr= userProfile.getPr();
@@ -51,6 +52,8 @@ public class ProfileResponseDto {
         this.location2=user.getLocation2();
         this.location3=user.getLocation3();
         this.img = userProfile.getImg();
+        this.scrap=scrap;
+
 
 
     }

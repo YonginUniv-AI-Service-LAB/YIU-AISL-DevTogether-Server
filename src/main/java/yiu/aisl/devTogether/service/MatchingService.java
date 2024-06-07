@@ -35,22 +35,28 @@ public class MatchingService {
         Long user = userDetails.getUser().getId();
         List<UserProfile> userProfiles = userProfileRepository.findByRole(1);
         return userProfiles.stream()
-                .filter(userProfile -> userProfile.getChecks() == 1)
-                .map(userProfile -> new ProfileResponseDto(userProfile, userProfile.getUser()))
+                .filter(userProfile -> userProfile.getChecks() != null && userProfile.getChecks() == 1)
+                .map(userProfile -> {
+                    // 스크랩 여부를 확인하여 1 또는 0으로 설정
+                    Integer scrap = matchingScrapRepository.findByUserAndUserProfileAndStatus(userDetails.getUser(), userProfile, 1).isPresent() ? 1 : 0;
+                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap);
+                })
                 .collect(Collectors.toList());
     }
-
     //멘티 조회(멘토가 멘티 조회)
     public Object menteeList(CustomUserDetails userDetails) {
         Long user = userDetails.getUser().getId();
         List<UserProfile> userProfiles = userProfileRepository.findByRole(2);
 
         return userProfiles.stream()
-                .filter(userProfile -> userProfile.getChecks() == 1)
-                .map(userProfile -> new ProfileResponseDto(userProfile, userProfile.getUser()))
+                .filter(userProfile -> userProfile.getChecks() != null && userProfile.getChecks() == 1)
+                .map(userProfile -> {
+                    // 스크랩 여부를 확인하여 1 또는 0으로 설정
+                    Integer scrap = matchingScrapRepository.findByUserAndUserProfileAndStatus(userDetails.getUser(), userProfile, 2).isPresent() ? 1 : 0;
+                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap);
+                })
                 .collect(Collectors.toList());
     }
-
     // 멘토 스크랩( 현재 멘티일 때)
     public Boolean mentorScrap(String email, MatchingRequestDto.ScrapDto request) throws Exception {
         User user = findByEmail(email);
@@ -139,7 +145,7 @@ public class MatchingService {
             matchingRepository.save(matching);
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
+                    .contents(userProfile.getUser().getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -177,7 +183,7 @@ public class MatchingService {
             matchingRepository.save(matching);
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(userProfile.getUser().getNickname() + "님이 신청하였습니다.")
+                    .contents(userProfile.getUser().getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -225,7 +231,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님이 매칭을 수락하셨습니다.")
+                        .contents(userProfile.getUser().getNickname() + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -270,7 +276,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님이 매칭을 거절하셨습니다.")
+                        .contents(userProfile.getUser().getNickname() + "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -349,7 +355,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "와의 매칭이 확정되었습니다.")
+                        .contents(userProfile.getUser().getNickname() + "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -395,7 +401,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님과의 매칭이 종료되었습니다.")
+                        .contents(userProfile.getUser().getNickname() + "님과의 과외가 종료되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -412,13 +418,6 @@ public class MatchingService {
         return userProfileRepository.findByUserProfileId(userProfileId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
-
-
-    private UserProfile findByUserAndRole(User user, Integer role) {
-        return userProfileRepository.findByUserAndRole(user, role)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
-    }
-
 
     private Matching findByMatchingId(Long matchingId) {
         return matchingRepository.findByMatchingId(matchingId)
