@@ -34,7 +34,23 @@ public class Matching {
 
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private SubjectCategory subject;
+    private SubjectCategory subject1;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject2;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject3;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject4;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject5;
 
     @Column
     private Integer tutoringFee;

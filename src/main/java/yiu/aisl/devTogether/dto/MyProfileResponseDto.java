@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+import yiu.aisl.devTogether.domain.state.SubjectCategory;
 
 @Getter
 @Builder
@@ -20,11 +21,11 @@ public class MyProfileResponseDto {
     private String location1;
     private String location2;
     private String location3;
-    private String subject1;
-    private String subject2;
-    private String subject3;
-    private String subject4;
-    private String subject5;
+    private SubjectCategory subject1;
+    private SubjectCategory subject2;
+    private SubjectCategory subject3;
+    private SubjectCategory subject4;
+    private SubjectCategory subject5;
     private String method;
     private Integer fee;
     private Boolean img;

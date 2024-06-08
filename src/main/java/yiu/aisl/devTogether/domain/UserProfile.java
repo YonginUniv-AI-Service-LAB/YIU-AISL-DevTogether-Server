@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import yiu.aisl.devTogether.domain.state.SubjectCategory;
 
 import java.time.LocalDateTime;
 
@@ -58,19 +59,24 @@ public class UserProfile {
     private Integer checks;
 
     @Column
-    private String subject1;
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject1;
 
     @Column
-    private String subject2;
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject2;
 
     @Column
-    private String subject3;
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject3;
 
     @Column
-    private String subject4;
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject4;
 
     @Column
-    private String subject5;
+    @Enumerated(EnumType.ORDINAL)
+    private SubjectCategory subject5;
 
 
     @CreationTimestamp

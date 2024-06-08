@@ -14,6 +14,8 @@ import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,7 @@ public class MatchingService {
                 })
                 .collect(Collectors.toList());
     }
+
     //멘티 조회(멘토가 멘티 조회)
     public Object menteeList(CustomUserDetails userDetails) {
         Long user = userDetails.getUser().getId();
@@ -57,6 +60,7 @@ public class MatchingService {
                 })
                 .collect(Collectors.toList());
     }
+
     // 멘토 스크랩( 현재 멘티일 때)
     public Boolean mentorScrap(String email, MatchingRequestDto.ScrapDto request) throws Exception {
         User user = findByEmail(email);
@@ -122,23 +126,46 @@ public class MatchingService {
     // 신청하기(멘티가 멘토에게)
     public Boolean applyMentor(String email, MatchingRequestDto.MentorApplyDTO request) throws Exception {
         User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
+        UserProfile userProfile = findByUserAndRole(user,2);
         try {
 
-
             UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
+
             if (mentor.getRole() != 1) { // 대상이 멘티가 아닌 경우
                 throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
             }
-            if (request.getSubject() == null || request.getContents().isEmpty() || request.getTutoringFee() == null) {
+
+            List<SubjectCategory> mentorSubjects = Arrays.asList(
+                    mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
+                    mentor.getSubject4(), mentor.getSubject5()
+            );
+            System.out.println("멘토"+ mentorSubjects);
+            if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+
+            List<SubjectCategory> menteeSubjects = new ArrayList<>();
+            if (request.getSubject1() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
+            if (request.getSubject2() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
+            if (request.getSubject3() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
+            if (request.getSubject4() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
+            if (request.getSubject5() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
+
+            if (menteeSubjects.isEmpty()) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+
+            boolean matchingSubject = mentorSubjects.stream().anyMatch(menteeSubjects::contains);
+            System.out.println(menteeSubjects);
+
+            if (!matchingSubject) {
+                throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
 
             Matching matching = Matching.builder()
                     .status("신청")
                     .mentee(userProfile)
                     .mentor(mentor)
-                    .subject(SubjectCategory.fromInt(request.getSubject()))
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
@@ -153,7 +180,7 @@ public class MatchingService {
             pushRepository.save(push);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+             e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
@@ -161,7 +188,7 @@ public class MatchingService {
     // 신청하기(멘토가 멘티에게)
     public Boolean applyMentee(String email, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
         User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
+        UserProfile userProfile = findByUserAndRole(user, 1);
         try {
 
 
@@ -169,14 +196,38 @@ public class MatchingService {
             if (mentee.getRole() != 2) { // 대상이 멘티가 아닌 경우
                 throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
             }
-            if (request.getSubject() == null || request.getContents().isEmpty() || request.getTutoringFee() == null) {
+
+            List<SubjectCategory> menteeSubjects = Arrays.asList(
+                    mentee.getSubject1(), mentee.getSubject2(), mentee.getSubject3(),
+                    mentee.getSubject4(), mentee.getSubject5()
+            );
+
+
+            System.out.println("멘티"+menteeSubjects);
+            if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
+            List<SubjectCategory> mentorSubjects = new ArrayList<>();
+            if (request.getSubject1() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
+            if (request.getSubject2() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
+            if (request.getSubject3() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
+            if (request.getSubject4() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
+            if (request.getSubject5() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
+
+            if (mentorSubjects.isEmpty()) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+            boolean matchingSubject = menteeSubjects.stream().anyMatch(mentorSubjects::contains);
+            System.out.println("멘토"+mentorSubjects);
+
+            if (!matchingSubject) {
+                throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+            }
+
             Matching matching = Matching.builder()
                     .status("신청")
                     .mentor(userProfile)
                     .mentee(mentee)
-                    .subject(SubjectCategory.fromInt(request.getSubject()))
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
@@ -372,7 +423,7 @@ public class MatchingService {
     //신청 종료
     public Boolean end(String email, MatchingRequestDto.EndDTO request) throws Exception {
         User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
+        UserProfile userProfile = findByUserAndRole(user, 1);
         Matching matching = findByMatchingId(request.getMatchingId());
         Integer profileRole = userProfile.getRole();
 
@@ -431,6 +482,10 @@ public class MatchingService {
 
     private UserProfile findByUserProfile(User user) {
         return userProfileRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+    }
+    private UserProfile findByUserAndRole(User user, Integer role) {
+        return userProfileRepository.findByUserAndRole(user, role )
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 

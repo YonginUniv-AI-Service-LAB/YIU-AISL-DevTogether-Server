@@ -25,7 +25,11 @@ public class MatchingResponseDto {
     private Long mentor;
     private Long mentee;
     private String status;
-    private SubjectCategory subject;
+    private SubjectCategory subject1;
+    private SubjectCategory subject2;
+    private SubjectCategory subject3;
+    private SubjectCategory subject4;
+    private SubjectCategory subject5;
     private Integer tutoringFee;
     private String contents;
     private LocalDateTime createAt;
@@ -39,7 +43,11 @@ public class MatchingResponseDto {
                 matching.getMentor().getUserProfileId(),
                 matching.getMentee().getUserProfileId(),
                 matching.getStatus(),
-                matching.getSubject(),
+                matching.getSubject1(),
+                matching.getSubject2(),
+                matching.getSubject3(),
+                matching.getSubject4(),
+                matching.getSubject5(),
                 matching.getTutoringFee(),
                 matching.getContents(),
                 matching.getCreatedAt(),
@@ -52,10 +60,14 @@ public class MatchingResponseDto {
         this.matchingId = matching.getMatchingId();
         this.mentor = matching.getMentor().getUserProfileId();
         this.mentee = matching.getMentee().getUserProfileId();
-        this.subject = matching.getSubject();
+        this.status = matching.getStatus();
+        this.subject1 = matching.getSubject1();
+        this.subject2 = matching.getSubject2();
+        this.subject3 = matching.getSubject3();
+        this.subject4 = matching.getSubject4();
+        this.subject5 = matching.getSubject5();
         this.contents = matching.getContents();
         this.tutoringFee = matching.getTutoringFee();
-        this.status = matching.getStatus();
         this.createAt = matching.getCreatedAt();
         this.updatedAt = matching.getUpdatedAt();
         this.endedAt = matching.getEndedAt();
