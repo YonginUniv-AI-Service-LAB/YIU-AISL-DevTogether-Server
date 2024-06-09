@@ -98,7 +98,7 @@ public class MainService {
     }
 
     private void appendUserInfo(UserProfile userProfile, StringBuilder userInfo) {
-        userInfo.append(", 닉네임: ").append(userProfile.getUser().getNickname())
+        userInfo.append(", 닉네임: ").append(userProfile.getNickname())
                 .append(", 역할: ").append(userProfile.getUser().getRole())
                 .append(", 나이: ").append(userProfile.getUser().getAge())
                 .append(", 성별: ").append(userProfile.getUser().getGender())
@@ -139,7 +139,7 @@ public class MainService {
             throw new CustomException(ErrorCode.DUPLICATE);
         }
         //409 - 데이터 중복 (닉네임)
-        if (userRepository.findByNickname(request.getNickname()).isPresent()) {
+        if (userProfileRepository.findByNickname(request.getNickname()).isPresent()) {
 
             throw new CustomException(ErrorCode.DUPLICATE);
         }
@@ -151,7 +151,6 @@ public class MainService {
                     .email(request.getEmail())
                     .pwd(passwordEncoder.encode(request.getPwd()))
                     .name(request.getName())
-                    .nickname(request.getNickname())
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
@@ -159,12 +158,14 @@ public class MainService {
                     .question(questionCategory)
                     .answer(request.getAnswer())
                     .build();
+
             userRepository.save(user);
 
             if(request.getRole() == 1) {
                 UserProfile userProfile = UserProfile.builder()
                         .role(1)
                         .user(user)
+                        .nickname(request.getNickname())
                         .build();
 
                 userProfileRepository.save(userProfile);
@@ -172,6 +173,7 @@ public class MainService {
                 UserProfile userProfile = UserProfile.builder()
                         .role(2)
                         .user(user)
+                        .nickname(request.getNickname())
                         .build();
 
                 userProfileRepository.save(userProfile);
@@ -179,12 +181,14 @@ public class MainService {
                 UserProfile userProfile1 = UserProfile.builder()
                         .role(1)
                         .user(user)
+                        .nickname(request.getNickname())
                         .build();
                 userProfileRepository.save(userProfile1);
 
                 UserProfile userProfile2 = UserProfile.builder()
                         .role(2)
                         .user(user)
+                        .nickname(request.getNickname())
                         .build();
 
                 userProfileRepository.save(userProfile2);
@@ -352,7 +356,7 @@ public class MainService {
     //닉네임 중복
     public Boolean nicknameCheck(NicknameCheckRequestDto request) throws Exception{
         // 409 데이터 중복
-        if (userRepository.findByNickname(request.getNickname()).isPresent()) {
+        if (userProfileRepository.findByNickname(request.getNickname()).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE);
         }
         return true;

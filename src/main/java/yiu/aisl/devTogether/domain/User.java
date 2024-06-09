@@ -39,17 +39,12 @@ public class User {
     @Column(nullable = false,  length = 20)
     private String name;
 
-    @Column(nullable = false,  length = 20)
-    private String nickname;
-
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private RoleCategory role;
 
     @Column(nullable = false)
     private String birth;
-
-
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)

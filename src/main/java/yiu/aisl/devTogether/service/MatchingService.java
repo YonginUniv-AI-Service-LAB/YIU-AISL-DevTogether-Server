@@ -172,7 +172,7 @@ public class MatchingService {
             matchingRepository.save(matching);
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(userProfile.getUser().getNickname() + "님이 과외를 신청했습니다.")
+                //    .contents(userProfile.get().getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -234,7 +234,7 @@ public class MatchingService {
             matchingRepository.save(matching);
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(userProfile.getUser().getNickname() + "님이 과외를 신청했습니다.")
+                  //  .contents(userProfile.getUser().getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -282,7 +282,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님이 과외를 수락했습니다.")
+                       // .contents(userProfile.getUser().getNickname() + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -327,7 +327,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님이 과외를 거절했습니다.")
+                       // .contents(userProfile.getUser().getNickname() + "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -406,7 +406,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님과의 과외가 확정되었습니다.")
+                       // .contents(userProfile.getUser().getNickname() + "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -452,7 +452,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getUser().getNickname() + "님과의 과외가 종료되었습니다.")
+                     //   .contents(userProfile.getUser().getNickname() + "님과의 과외가 종료되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)

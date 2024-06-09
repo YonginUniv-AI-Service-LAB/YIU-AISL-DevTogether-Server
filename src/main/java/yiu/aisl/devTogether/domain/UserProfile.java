@@ -27,6 +27,10 @@ public class UserProfile {
     @Column
     private Integer role;
 
+    @Column(nullable = false,  length = 20)
+    private String nickname;
+
+
     @Column(columnDefinition = "TEXT")
     private String introduction;
 

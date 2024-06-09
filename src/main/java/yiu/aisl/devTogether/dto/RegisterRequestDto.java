@@ -3,11 +3,7 @@ package yiu.aisl.devTogether.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-import yiu.aisl.devTogether.domain.state.QuestionCategory;
 
-
-import java.io.File;
 
 
 @Getter

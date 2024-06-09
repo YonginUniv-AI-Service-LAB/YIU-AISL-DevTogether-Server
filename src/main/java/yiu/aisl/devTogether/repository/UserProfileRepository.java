@@ -25,8 +25,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
     Optional<UserProfile> findByUserAndRole(User user, Integer role);
 
-
-
+    Optional<UserProfile>findByNickname(String nickname);
 
 
 }
