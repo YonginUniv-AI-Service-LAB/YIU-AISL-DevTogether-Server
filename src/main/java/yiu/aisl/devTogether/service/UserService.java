@@ -38,31 +38,23 @@ public class UserService {
     public Object getMyProfile(CustomUserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUser().getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.NO_AUTH));
-        UserProfile userProfile = userProfileRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException(ErrorCode.NO_AUTH));
+
         return MyProfileResponseDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
-                .nickname(user.getNickname())
                 .role(user.getRole().name())
                 .gender(user.getGender().name())
                 .age(user.getAge())
                 .location1(user.getLocation1())
                 .location2(user.getLocation2())
                 .location3(user.getLocation3())
-                .subject1(userProfile.getSubject1())
-                .subject2(userProfile.getSubject2())
-                .subject3(userProfile.getSubject3())
-                .subject4(userProfile.getSubject4())
-                .subject5(userProfile.getSubject5())
-                .method(userProfile.getMethod())
-                .fee(userProfile.getFee())
-                .img(userProfile.getImg())
+                .question(user.getQuestion())
+                .answer(user.getAnswer())
                 .build();
     }
 
     // [API] 내 정보 수정
-    public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto, MultipartFile img) throws Exception {
+    public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto) throws Exception {
         if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
@@ -77,17 +69,7 @@ public class UserService {
         if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-        String nickname = dto.getNickname();
-        System.out.println(user.getNickname());
-        System.out.println(nickname);
 
-        // 데이터 중복(닉네임) (409)
-        if(!nickname.equals(user.getNickname())) {
-            if(userRepository.findByNickname(nickname).isPresent()) {
-                throw new CustomException(ErrorCode.DUPLICATE);
-            } else user.setNickname(nickname);
-        }
-        Boolean imgs = filesService.isFile(img);
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
         user.setRole(RoleCategory.values()[dto.getRole()]);
@@ -96,17 +78,9 @@ public class UserService {
         user.setLocation1(dto.getLocation1());
         user.setLocation2(dto.getLocation2());
         user.setLocation3(dto.getLocation3());
-        userProfile.setSubject1(SubjectCategory.fromInt(dto.getSubject1()));
-        userProfile.setSubject2(SubjectCategory.fromInt(dto.getSubject2()));
-        userProfile.setSubject3(SubjectCategory.fromInt(dto.getSubject3()));
-        userProfile.setSubject4(SubjectCategory.fromInt(dto.getSubject4()));
-        userProfile.setSubject5(SubjectCategory.fromInt(dto.getSubject5()));
-        userProfile.setMethod(dto.getMethod());
-        userProfile.setFee(dto.getFee());
-        userProfile.setImg(imgs);
-        if (imgs) {
-            filesService.saveFileDb(img, 1, user.getId());
-        }
+        user.setAnswer(dto.getAnswer());
+        user.setQuestion(dto.getQuestion());
+
         return true;
     }
 
@@ -213,7 +187,7 @@ public class UserService {
     }
 
     // [API] 내 멘토 프로필 변경하기
-    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) throws Exception {
+    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
         Long user = userDetails.getUser().getId();
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 1).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
@@ -225,7 +199,7 @@ public class UserService {
         } else {
             userProfile.setChecks(1);
         }
-
+        Boolean imgs = filesService.isFile(img);
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
         userProfile.setPortfolio(dto.getPortfolio());
@@ -233,13 +207,22 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
+        userProfile.setSubject1(SubjectCategory.fromInt(dto.getSubject1()));
+        userProfile.setSubject2(SubjectCategory.fromInt(dto.getSubject2()));
+        userProfile.setSubject3(SubjectCategory.fromInt(dto.getSubject3()));
+        userProfile.setSubject4(SubjectCategory.fromInt(dto.getSubject4()));
+        userProfile.setSubject5(SubjectCategory.fromInt(dto.getSubject5()));
+        userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
+        if (imgs) {
+            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
+        }
         return true;
     }
 
     // [API] 내 멘티 프로필 변경하기
-    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) throws Exception {
+    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
         Long user = userDetails.getUser().getId();
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
@@ -251,7 +234,7 @@ public class UserService {
         } else {
             userProfile.setChecks(1);
         }
-
+        Boolean imgs = filesService.isFile(img);
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
         userProfile.setPortfolio(dto.getPortfolio());
@@ -259,9 +242,17 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
+        userProfile.setSubject1(SubjectCategory.fromInt(dto.getSubject1()));
+        userProfile.setSubject2(SubjectCategory.fromInt(dto.getSubject2()));
+        userProfile.setSubject3(SubjectCategory.fromInt(dto.getSubject3()));
+        userProfile.setSubject4(SubjectCategory.fromInt(dto.getSubject4()));
+        userProfile.setSubject5(SubjectCategory.fromInt(dto.getSubject5()));
+        userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
-
+        if (imgs) {
+            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
+        }
         return true;
     }
 

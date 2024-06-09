@@ -180,7 +180,7 @@ public class MatchingService {
             pushRepository.save(push);
             return true;
         } catch (Exception e) {
-             e.printStackTrace();
+            e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }

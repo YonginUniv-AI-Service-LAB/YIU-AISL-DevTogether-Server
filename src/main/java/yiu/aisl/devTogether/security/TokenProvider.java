@@ -57,9 +57,9 @@ public class TokenProvider {
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(now)
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidTime))
-                .setSubject(user.getNickname())
+                .setSubject(user.getName())
                 .claim("email", user.getEmail())
-                .claim("nickname", user.getNickname())
+                .claim("name", user.getName())
                 .signWith(secretKey, SignatureAlgorithm.HS256);
 
 

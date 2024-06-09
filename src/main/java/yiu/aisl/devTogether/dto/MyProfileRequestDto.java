@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+import yiu.aisl.devTogether.domain.state.QuestionCategory;
 
 import java.util.List;
 
@@ -21,13 +22,7 @@ public class MyProfileRequestDto {
     private String location1;
     private String location2;
     private String location3;
-    private Integer subject1;
-    private Integer subject2;
-    private Integer subject3;
-    private Integer subject4;
-    private Integer subject5;
-    private String method;
-    private Integer fee;
-    private MultipartFile img;
+    private QuestionCategory question;
+    private String answer;
 
 }
