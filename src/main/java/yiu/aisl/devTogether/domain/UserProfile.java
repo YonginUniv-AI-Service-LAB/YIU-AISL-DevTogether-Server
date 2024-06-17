@@ -90,4 +90,7 @@ public class UserProfile {
     @UpdateTimestamp
     @Column
     private LocalDateTime updatedAt;
+
+
+
 }

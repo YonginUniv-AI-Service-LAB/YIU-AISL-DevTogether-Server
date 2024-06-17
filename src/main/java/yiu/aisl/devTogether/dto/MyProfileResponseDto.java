@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-import yiu.aisl.devTogether.domain.state.QuestionCategory;
-import yiu.aisl.devTogether.domain.state.SubjectCategory;
 
 @Getter
 @Builder
@@ -22,5 +19,5 @@ public class MyProfileResponseDto {
     private String location2;
     private String location3;
     private String answer;
-    private QuestionCategory question;
+    private String question;
 }

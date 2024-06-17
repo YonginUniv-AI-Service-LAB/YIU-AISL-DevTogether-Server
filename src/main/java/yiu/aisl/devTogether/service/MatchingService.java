@@ -126,7 +126,7 @@ public class MatchingService {
     // 신청하기(멘티가 멘토에게)
     public Boolean applyMentor(String email, MatchingRequestDto.MentorApplyDTO request) throws Exception {
         User user = findByEmail(email);
-        UserProfile userProfile = findByUserAndRole(user,2);
+        UserProfile userProfile = findByUserAndRole(user, 2);
         try {
 
             UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
@@ -139,7 +139,7 @@ public class MatchingService {
                     mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
                     mentor.getSubject4(), mentor.getSubject5()
             );
-            System.out.println("멘토"+ mentorSubjects);
+            System.out.println("멘토" + mentorSubjects);
             if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
@@ -172,7 +172,7 @@ public class MatchingService {
             matchingRepository.save(matching);
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                //    .contents(userProfile.get().getNickname() + "님이 과외를 신청했습니다.")
+                    .contents(userProfile.getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -203,7 +203,7 @@ public class MatchingService {
             );
 
 
-            System.out.println("멘티"+menteeSubjects);
+            System.out.println("멘티" + menteeSubjects);
             if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
@@ -218,7 +218,7 @@ public class MatchingService {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
             boolean matchingSubject = menteeSubjects.stream().anyMatch(mentorSubjects::contains);
-            System.out.println("멘토"+mentorSubjects);
+            System.out.println("멘토" + mentorSubjects);
 
             if (!matchingSubject) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
@@ -234,7 +234,7 @@ public class MatchingService {
             matchingRepository.save(matching);
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                  //  .contents(userProfile.getUser().getNickname() + "님이 과외를 신청했습니다.")
+                    .contents(userProfile.getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -253,9 +253,14 @@ public class MatchingService {
     //신청 수락
     public Boolean approve(String email, MatchingRequestDto.ApproveDTO request) throws Exception {
         User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
-        Matching matching = findByMatchingId(request.getMatchingId());
 
+
+
+       // UserProfile userProfile = findByUserAndRole(user, 1);
+        UserProfile userProfile = findByUserProfile(user);
+
+        //UserProfile userProfile = findByUserAndRole(user, 2);
+        Matching matching = findByMatchingId(request.getMatchingId());
         // 400: 데이터 미입력
         if (request.getMatchingId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -282,7 +287,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                       // .contents(userProfile.getUser().getNickname() + "님이 과외를 수락했습니다.")
+                        .contents(userProfile.getNickname() + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -327,7 +332,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                       // .contents(userProfile.getUser().getNickname() + "님이 과외를 거절했습니다.")
+                        .contents(userProfile.getNickname() + "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -406,7 +411,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                       // .contents(userProfile.getUser().getNickname() + "님과의 과외가 확정되었습니다.")
+                        .contents(userProfile.getNickname() + "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -452,7 +457,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                     //   .contents(userProfile.getUser().getNickname() + "님과의 과외가 종료되었습니다.")
+                        .contents(userProfile.getNickname() + "님과의 과외가 종료되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -464,6 +469,9 @@ public class MatchingService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
 
     public UserProfile findByUserProfileId(Long userProfileId) {
         return userProfileRepository.findByUserProfileId(userProfileId)
@@ -484,8 +492,9 @@ public class MatchingService {
         return userProfileRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
+
     private UserProfile findByUserAndRole(User user, Integer role) {
-        return userProfileRepository.findByUserAndRole(user, role )
+        return userProfileRepository.findByUserAndRole(user, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 

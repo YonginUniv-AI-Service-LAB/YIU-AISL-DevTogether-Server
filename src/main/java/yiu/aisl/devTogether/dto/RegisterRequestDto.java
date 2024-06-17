@@ -23,7 +23,7 @@ public class RegisterRequestDto {
     private Integer age;
     private String phone;
     private String birth;
-    private Integer question;
+    private String question;
     private String answer;
 
 

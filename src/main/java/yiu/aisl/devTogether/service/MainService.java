@@ -8,13 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
-import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -123,7 +121,6 @@ public class MainService {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
 
-        QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
         //400 - 데이터 미입력
         if (  request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getName().isEmpty()
                 || request.getNickname().isEmpty()   || request.getRole() == null
@@ -155,7 +152,7 @@ public class MainService {
                     .gender(genderCategory)
                     .age(request.getAge())
                     .birth(request.getBirth())
-                    .question(questionCategory)
+                    .question(request.getQuestion())
                     .answer(request.getAnswer())
                     .build();
 
@@ -202,7 +199,7 @@ public class MainService {
     // 이메일 찾기
     public Boolean emailFind(String email,EmailDto request) throws Exception {
         User user = findByEmail(email);
-        QuestionCategory questionCategory = QuestionCategory.fromInt(request.getQuestion());
+
         // 404 - 회원없음
         if (!user.getName().equals(request.getName()) ||
                 !user.getBirth().equals(request.getBirth())) {
@@ -216,7 +213,7 @@ public class MainService {
         }
 
         // 401 - 정보 불일치
-        if(!user.getQuestion().equals(questionCategory) || !user.getAnswer().equals(request.getAnswer())) {
+        if(!user.getQuestion().equals(request.getQuestion()) || !user.getAnswer().equals(request.getAnswer())) {
             throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
         }
         return true;
@@ -276,14 +273,14 @@ public class MainService {
     //회원가입 시 이메일 인증
     public String registerEmail(String email) throws MessagingException, UnsupportedEncodingException {
         if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        MimeMessage emailForm = createEmailForm(email + "@naver.com", "devTogether 회원가입 인증번호");
+        MimeMessage emailForm = createEmailForm(email , "devTogether 회원가입 인증번호");
         javaMailSender.send(emailForm);
         return authNum;
     }
     //비밀번호 변경 시 이메일 인증
     public String pwdEmail(String email) throws MessagingException, UnsupportedEncodingException {
         if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        MimeMessage emailForm = createEmailForm(email + "@naver.com", "비밀번호 재설정을 위한 안내");
+        MimeMessage emailForm = createEmailForm(email , "비밀번호 재설정을 위한 안내");
         javaMailSender.send(emailForm);
         return authNum;
     }
@@ -326,7 +323,7 @@ public class MainService {
         Random random = new Random();
         StringBuilder key = new StringBuilder();
 
-        for(int i = 0; i < 8; i++) {
+        for(int i = 0; i < 6; i++) {
             int digit = random.nextInt(10);
             key.append(digit);
         }
