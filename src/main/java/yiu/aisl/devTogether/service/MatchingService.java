@@ -126,9 +126,10 @@ public class MatchingService {
 
 
     // 신청하기(멘티가 멘토에게)
-    public Boolean applyMentor(String email, MatchingRequestDto.MentorApplyDTO request) throws Exception {
-        User user = findByEmail(email);
-        UserProfile userProfile = findByUserAndRole(user, 2);
+    public Boolean applyMentor(CustomUserDetails userDetails, MatchingRequestDto.MentorApplyDTO request) throws Exception {
+        Long userId = userDetails.getUser().getId();
+
+        UserProfile userProfile = findByUserIdAndRole(userId, 2);
         try {
 
             UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
@@ -147,11 +148,11 @@ public class MatchingService {
             }
 
             List<SubjectCategory> menteeSubjects = new ArrayList<>();
-            menteeSubjects.add(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.fromInt(0));
-            menteeSubjects.add(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.fromInt(0));
-            menteeSubjects.add(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.fromInt(0));
-            menteeSubjects.add(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.fromInt(0));
-            menteeSubjects.add(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.fromInt(0));
+            if (request.getSubject1() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
+            if (request.getSubject2() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
+            if (request.getSubject3() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
+            if (request.getSubject4() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
+            if (request.getSubject5() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
 
             if (menteeSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -168,18 +169,20 @@ public class MatchingService {
                     .status("신청")
                     .mentee(userProfile)
                     .mentor(mentor)
-                    .subject1(SubjectCategory.fromInt(request.getSubject1()))
-                    .subject2(SubjectCategory.fromInt(request.getSubject2()))
-                    .subject3(SubjectCategory.fromInt(request.getSubject3()))
-                    .subject4(SubjectCategory.fromInt(request.getSubject4()))
-                    .subject5(SubjectCategory.fromInt(request.getSubject5()))
+                    .subject1(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.fromInt(0))
+                    .subject2(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.fromInt(0))
+                    .subject3(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.fromInt(0))
+                    .subject4(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.fromInt(0))
+                    .subject5(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.fromInt(0))
+
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
             matchingRepository.save(matching);
+
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(userProfile.getNickname() + "님이 과외를 신청했습니다.")
+                    .contents("과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -192,10 +195,12 @@ public class MatchingService {
         }
     }
 
+
+
     // 신청하기(멘토가 멘티에게)
-    public Boolean applyMentee(String email, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
-        User user = findByEmail(email);
-        UserProfile userProfile = findByUserAndRole(user, 1);
+    public Boolean applyMentee(CustomUserDetails userDetails, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
+        Long userId = userDetails.getUser().getId();
+        UserProfile userProfile = findByUserIdAndRole(userId, 1);
         try {
 
 
@@ -215,11 +220,11 @@ public class MatchingService {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
             List<SubjectCategory> mentorSubjects = new ArrayList<>();
-            mentorSubjects.add(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.fromInt(0));
-            mentorSubjects.add(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.fromInt(0));
-            mentorSubjects.add(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.fromInt(0));
-            mentorSubjects.add(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.fromInt(0));
-            mentorSubjects.add(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.fromInt(0));
+            if (request.getSubject1() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
+            if (request.getSubject2() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
+            if (request.getSubject3() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
+            if (request.getSubject4() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
+            if (request.getSubject5() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
 
             if (mentorSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -235,18 +240,18 @@ public class MatchingService {
                     .status("신청")
                     .mentor(userProfile)
                     .mentee(mentee)
-                    .subject1(SubjectCategory.fromInt(request.getSubject1()))
-                    .subject2(SubjectCategory.fromInt(request.getSubject2()))
-                    .subject3(SubjectCategory.fromInt(request.getSubject3()))
-                    .subject4(SubjectCategory.fromInt(request.getSubject4()))
-                    .subject5(SubjectCategory.fromInt(request.getSubject5()))
+                    .subject1(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.fromInt(0))
+                    .subject2(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.fromInt(0))
+                    .subject3(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.fromInt(0))
+                    .subject4(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.fromInt(0))
+                    .subject5(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.fromInt(0))
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
             matchingRepository.save(matching);
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(userProfile.getNickname() + "님이 과외를 신청했습니다.")
+                    .contents("과외를 신청했습니다.")
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -294,7 +299,7 @@ public class MatchingService {
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(nickname+ "님이 과외를 수락했습니다.")
+                        .contents("과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
@@ -339,7 +344,7 @@ public class MatchingService {
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(nickname+ "님이 과외를 거절했습니다.")
+                        .contents("과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
@@ -377,7 +382,6 @@ public class MatchingService {
                 matchingRepository.deleteById(request.getMatchingId());
                 matching.setStatus("성사안됨");
             }
-
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -417,7 +421,7 @@ public class MatchingService {
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(nickname+ "님과의 과외가 확정되었습니다.")
+                        .contents("과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
@@ -462,7 +466,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getNickname()+ "님이 과외를 수락했습니다.")
+                        .contents("과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
@@ -493,8 +497,8 @@ public class MatchingService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 
-    private UserProfile findByUserProfile(User user) {
-        return userProfileRepository.findByUser(user)
+    private UserProfile findByUserIdAndRole(Long userId, Integer role) {
+        return userProfileRepository.findByUserIdAndRole(userId, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 

@@ -18,4 +18,5 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
     List<Matching> findByMentee(UserProfile user);
     List<Matching> findByMentee(Optional<UserProfile> userProfile);
 
+
 }
