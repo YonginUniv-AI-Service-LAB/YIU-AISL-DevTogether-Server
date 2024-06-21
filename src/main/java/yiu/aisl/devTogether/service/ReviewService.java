@@ -68,12 +68,7 @@ public class ReviewService {
 
     //받은 리뷰 조회 --- 숨져긴 리뷰 안 보이게 설정? 내 룰과 리뷰 카테고리가 다른걸 가져오기 ---test 필요
     public List<ReviewResponseDto> getReceive(String email, Integer role) throws Exception {
-        Integer roles = role;
-        if (roles == 1) {
-            roles = 2;
-        } else if (roles == 2) {
-            roles = 1;
-        }
+
         //403: 권한없음 -- 로그인 됬는지 확인
         User user = findByUserEmail(email);
         UserProfile userProfile = findByUserProfileId(user, role);
@@ -85,7 +80,7 @@ public class ReviewService {
         }
         List<Review> reviewList = new ArrayList<>();
         for (Matching matching : matchingList) {
-            List<Review> reviews = reviewRepository.findByMatchingIdAndCategory(matching, roles);
+            List<Review> reviews = reviewRepository.findByMatchingIdAndCategoryAndHide(matching, role, false);
             reviewList.addAll(reviews);
         }
         try {
@@ -99,7 +94,7 @@ public class ReviewService {
     }
 
     //리뷰 작성
-    public Boolean creatreview(String email, ReviewRequestDto.creatDto request) throws Exception {
+    public Boolean creatreview(String email, ReviewRequestDto.creatDto request, Integer role) throws Exception {
         //400: 데이터 미입력
         if (request.contents == null || request.matchingId == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -112,8 +107,8 @@ public class ReviewService {
         LocalDateTime endAt = matchingRepository.findByMatchingId(request.matchingId).get().getEndedAt();
 
         User user = findByUserEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
-        Integer profileRole = userProfile.getRole();
+        UserProfile userProfile = findByUserProfile(user, role);
+//        Integer profileRole = userProfile.getRole();
 
         // N일 지나기 전 true
         if (ChronoUnit.DAYS.between(endAt, now) <= 7) {
@@ -122,7 +117,10 @@ public class ReviewService {
                         .matchingId(matching)
                         .contents(request.getContents())
                         .hide(false)
-                        .category(profileRole)
+                        .category(role)
+                        .star1(request.star1)
+                        .star2(request.star2)
+                        .star3(request.star3)
                         .build();
                 reviewRepository.save(review);
                 return true;
@@ -135,15 +133,15 @@ public class ReviewService {
     }
 
     //리뷰 숨기기 -- test 미실시
-    public Boolean switchHide(String email, ReviewRequestDto.hideDto request) throws Exception {
+    public Boolean switchHide(String email, ReviewRequestDto.hideDto request, Integer role) throws Exception {
         //404: 리뷰 id 없음
         findByReviewId(request.review_id);
         Optional<Review> review = reviewRepository.findByReviewId(request.review_id);
         Review getReview = review.get();
         //403: 권한없음 --- 리뷰와 리뷰 프로필 값 다름
         User user = findByUserEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
-        if (!getReview.getCategory().equals(userProfile.getRole())) {
+        UserProfile userProfile = findByUserProfile(user, role);
+        if (!getReview.getCategory().equals(role)) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
         try {
@@ -165,8 +163,8 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 
-    public UserProfile findByUserProfile(User user) {
-        return userProfileRepository.findByUser(user)
+    public UserProfile findByUserProfile(User user, Integer role) {
+        return userProfileRepository.findByUserAndRole(user, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 

@@ -28,7 +28,7 @@ public class MyBoardDto {
         this.contents = board.getContents();
         this.createAt = board.getCreatedAt();
         this.updatedAt = board.getUpdatedAt();
-        this.userId = board.getUser().getId();
+        this.userId = board.getUserProfile().getUser().getId();
         this.files = board.getFiles();
         this.filesList = board.getFilesList();
     }

@@ -17,6 +17,7 @@ public class BoardRequestDto {
     public static class CreateDto{
         private String title;
         private String contents;
+        private Integer category;
 //        private List<MultipartFile> files;
     }
     @Getter

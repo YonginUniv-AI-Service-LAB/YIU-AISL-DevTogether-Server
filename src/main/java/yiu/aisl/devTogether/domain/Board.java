@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
+import yiu.aisl.devTogether.domain.state.BoardCategory;
+import yiu.aisl.devTogether.domain.state.NoticeCategory;
 import yiu.aisl.devTogether.dto.FilesResponseDto;
 
 import java.time.LocalDateTime;
@@ -37,12 +39,17 @@ public class Board {
     @Column
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_profile_id")
     @ManyToOne
-    private User user;
+//    private User user;
+    private UserProfile userProfile;
 
     @Column
     private Boolean files;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private BoardCategory Category;
 
     // board가 관계 주인   게시판 로드시 즉시 댓글 가져오기  보드 삭제시 댓글 자동삭제
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

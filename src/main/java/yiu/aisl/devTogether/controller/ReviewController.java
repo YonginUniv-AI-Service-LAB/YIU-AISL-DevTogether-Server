@@ -25,26 +25,45 @@ public class ReviewController {
     public final ReviewService reviewService;
 
     //보낸 리뷰 조회
-    @GetMapping("/send")
-    public ResponseEntity<List> getMessage(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
-        return new ResponseEntity<List>(reviewService.getSend(user.getEmail(), role), HttpStatus.OK);
+    @GetMapping("/send/mentor")
+    public ResponseEntity<List> getMessageMentor(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(reviewService.getSend(user.getEmail(), 1), HttpStatus.OK);
+    }
+
+    @GetMapping("/send/mentee")
+    public ResponseEntity<List> getMessageMentee(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(reviewService.getSend(user.getEmail(), 2), HttpStatus.OK);
     }
 
     //받은 리뷰 조회
-    @GetMapping("/receive")
-    public ResponseEntity<List> creatReport(@AuthenticationPrincipal CustomUserDetails user, Integer role) throws Exception {
-        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), role), HttpStatus.OK);
+    @GetMapping("/receive/mentor")
+    public ResponseEntity<List> creatReportMentor(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), 2), HttpStatus.OK);
+    }
+
+    @GetMapping("/receive/mentee")
+    public ResponseEntity<List> creatReportMentee(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), 1), HttpStatus.OK);
     }
 
     //리뷰 작성
-    @PostMapping
-    public ResponseEntity<Boolean> creatReport(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.creatDto request) throws Exception {
-        return new ResponseEntity<Boolean>(reviewService.creatreview(user.getEmail(), request), HttpStatus.OK);
+    @PostMapping("/mentor")
+    public ResponseEntity<Boolean> creatReportMentor(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.creatDto request) throws Exception {
+        return new ResponseEntity<Boolean>(reviewService.creatreview(user.getEmail(), request, 1), HttpStatus.OK);
+    }
+
+    @PostMapping("/mentee")
+    public ResponseEntity<Boolean> creatReportMentee(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.creatDto request) throws Exception {
+        return new ResponseEntity<Boolean>(reviewService.creatreview(user.getEmail(), request, 2), HttpStatus.OK);
     }
 
     //리뷰 숨기기
-    @PostMapping("hide")
-    public ResponseEntity<Boolean> creatReport(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.hideDto request) throws Exception {
-        return new ResponseEntity<Boolean>(reviewService.switchHide(user.getEmail(), request), HttpStatus.OK);
+    @PostMapping("/hide/mentor")
+    public ResponseEntity<Boolean> hideReportMentor(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.hideDto request) throws Exception {
+        return new ResponseEntity<Boolean>(reviewService.switchHide(user.getEmail(), request, 1), HttpStatus.OK);
+    }
+    @PostMapping("/hide/mentee")
+    public ResponseEntity<Boolean> hideReportMentee(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.hideDto request) throws Exception {
+        return new ResponseEntity<Boolean>(reviewService.switchHide(user.getEmail(), request, 2), HttpStatus.OK);
     }
 }

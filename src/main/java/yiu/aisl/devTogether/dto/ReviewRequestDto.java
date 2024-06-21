@@ -14,6 +14,9 @@ public class ReviewRequestDto {
     public class creatDto {
         public Long matchingId;
         public String contents;
+        public Integer star1;
+        public Integer star2;
+        public Integer star3;
     }
 
     @Getter

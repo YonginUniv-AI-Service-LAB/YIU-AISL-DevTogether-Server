@@ -32,6 +32,16 @@ public class Review {
     private Integer category;
 
     @Column
+    private Integer star1;
+
+    @Column
+    private Integer star2;
+
+    @Column
+    private Integer star3;
+
+
+    @Column
     @CreationTimestamp
     private LocalDateTime createdAt;
 

@@ -101,8 +101,10 @@ public class UserService {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
-
-        List<Board> myBoards = boardRepository.findByUser(user.get());
+        Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUser(userDetails.getUser()).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH)
+        ));
+        List<Board> myBoards = boardRepository.findByUserProfile(userProfile.get());
         return myBoards.stream()
                 .map(MyBoardDto::new)
                 .collect(Collectors.toList());

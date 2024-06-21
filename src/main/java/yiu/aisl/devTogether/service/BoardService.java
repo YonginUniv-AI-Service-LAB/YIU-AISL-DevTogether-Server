@@ -5,7 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.*;
+import yiu.aisl.devTogether.domain.state.AskCategory;
+import yiu.aisl.devTogether.domain.state.BoardCategory;
 import yiu.aisl.devTogether.domain.state.PushCategory;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
 import yiu.aisl.devTogether.dto.FilesResponseDto;
@@ -29,7 +32,7 @@ public class BoardService {
     private final FilesRepository filesRepository;
     private final BoardScrapRepository boardScrapRepository;
     public final PushRepository pushRepository;
-
+    public final UserProfileRepository userProfileRepository;
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
         try {
@@ -65,22 +68,25 @@ public class BoardService {
     }
 
     //게시판 등록
-    public Boolean create(String email, BoardRequestDto.CreateDto request, List<MultipartFile> file) {
-        //403 권한 없음 - db 유무만 탐색
+    public Boolean create(String email, Integer role, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception{
+        //403 권한 없음
         User user = findByUserEmail(email);
-        System.out.println();
+        UserProfile userProfile = findByUserProfile(user, role);
+
         //400 데이터 미입력
-        if (request.getTitle().isEmpty() || request.getContents().isEmpty()) {
+        if (request.getTitle().isEmpty() || request.getContents().isEmpty() || request.getCategory() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+        BoardCategory boardCategory = BoardCategory.fromInt(request.getCategory());
         Boolean files = filesService.isMFile(file);
 //        System.out.println(files);
         try {
             Board board = Board.builder()
                     .title(request.getTitle())
                     .contents(request.getContents())
-                    .user(user)
+                    .userProfile(userProfile)
                     .files(files)
+                    .Category(boardCategory)
                     .build();
             boardRepository.save(board);
             if (files) {
@@ -91,7 +97,6 @@ public class BoardService {
         }
         return true;
     }
-
     //게시판 삭제
     public Boolean delete(String email, BoardRequestDto.DeleteDto request) throws Exception {
         //400: 데이터 미입력
@@ -105,7 +110,7 @@ public class BoardService {
         }
         //403: 권한없음 ????
         Board existingboard = board.get();
-        if (!existingboard.getUser().getEmail().equals(email)) {
+        if (!existingboard.getUserProfile().getUser().getEmail().equals(email)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
 
@@ -137,7 +142,7 @@ public class BoardService {
         //403: 권한없음
         Board existingboard = board.get();
 
-        if (!existingboard.getUser().equals(user)) {
+        if (!existingboard.getUserProfile().getUser().equals(user)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
 
@@ -169,7 +174,7 @@ public class BoardService {
         // 403: 권한 없음
         User user = findByUserEmail(email);
         // 404: id 없음
-        findByBoardId(request.getBoardId());
+       Board board = findByBoardId(request.getBoardId());
         try {
             // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
             if (request.getCount()) {
@@ -182,6 +187,15 @@ public class BoardService {
                             .type(0)
                             .build();
                     likeRepository.save(makelike);
+                    Push push = Push.builder()
+                            .user(board.getUserProfile().getUser())
+                            .type(PushCategory.게시판)
+                            .typeId(board.getBoardId())
+                            .contents("게시글에 좋아요가 달렸습니다.")
+                            .checks(0)
+                            .build();
+                    pushRepository.save(push);
+
                 }
             } else {// 취소 했을때
                 if (likeRepository.findByUseridAndTypeId(user, request.getBoardId()).isPresent()) {
@@ -254,7 +268,7 @@ public class BoardService {
 
             commentRepository.save(comment);
             Push push = Push.builder()
-                    .user(board.getUser())
+                    .user(board.getUserProfile().getUser())
                     .type(PushCategory.댓글)
                     .typeId(board.getBoardId())
                     .contents("게시글에 댓글이 달렸습니다.")
@@ -270,7 +284,7 @@ public class BoardService {
 
     //댓글 삭제
     public Boolean deleteComment(String email, BoardRequestDto.DeleteCommentDto request) throws Exception {
-          //400: 데이터 미입력
+        //400: 데이터 미입력
         if (request.getCommentId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
@@ -350,6 +364,14 @@ public class BoardService {
                             .type(1)
                             .build();
                     likeRepository.save(makelike);
+                    Push push = Push.builder()
+                            .user(comment.getUser())
+                            .type(PushCategory.댓글)
+                            .typeId(comment.getCommentId())
+                            .contents("댓글에 좋아요가 달렸습니다.")
+                            .checks(0)
+                            .build();
+                    pushRepository.save(push);
                 }
             } else {// 취소 했을때
                 if (likeRepository.findByUseridAndTypeId(user, request.getCommentId()).isPresent()) {
@@ -377,6 +399,10 @@ public class BoardService {
 
     public User findByUserEmail(String email) {
         return userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
+    }
+    public UserProfile findByUserProfile(User user, Integer role){
+        return userProfileRepository.findByUserAndRole(user, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
 

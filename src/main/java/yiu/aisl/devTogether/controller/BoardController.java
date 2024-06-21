@@ -8,9 +8,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.config.CustomUserDetails;
+import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.UserProfile;
+import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.BoardDto;
 import yiu.aisl.devTogether.dto.BoardRequestDto;
 import yiu.aisl.devTogether.dto.FilesResponseDto;
+import yiu.aisl.devTogether.exception.CustomException;
+import yiu.aisl.devTogether.exception.ErrorCode;
+import yiu.aisl.devTogether.repository.UserProfileRepository;
+import yiu.aisl.devTogether.repository.UserRepository;
 import yiu.aisl.devTogether.service.BoardService;
 import yiu.aisl.devTogether.service.FilesService;
 
@@ -21,7 +28,6 @@ import java.util.List;
 @RequestMapping(value = "/board")
 public class BoardController {
     private final BoardService boardService;
-
     //게시판 전체조회
     @GetMapping
     public ResponseEntity<List> getList() throws Exception {
@@ -35,18 +41,26 @@ public class BoardController {
     }
 
     //게시판 등록
-    @PostMapping
-    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception {
-        return new ResponseEntity<Boolean>(boardService.create(user.getEmail(), request, file), HttpStatus.OK);
-    }
+//    @PostMapping
+//    public ResponseEntity<Boolean> create(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception {
+//        return new ResponseEntity<Boolean>(boardService.create(user.getEmail(), request, file), HttpStatus.OK);
+//    }
 
+    @PostMapping("/mentor")
+    public ResponseEntity<Boolean> createForMentor(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.create(user.getEmail(),1 ,request, file), HttpStatus.OK);
+    }
+    @PostMapping("/mentee")
+    public ResponseEntity<Boolean> createForMentee(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.create(user.getEmail(), 2, request, file), HttpStatus.OK);
+    }
     //게시판 삭제
     @DeleteMapping
     public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteDto request) throws Exception {
         return new ResponseEntity<Boolean>(boardService.delete(user.getEmail(), request), HttpStatus.OK);
     }
 
-    //게시판 수정 ~~~~~~~~~~~  file 확인 필요
+    //게시판 수정
     @PutMapping
     public ResponseEntity<Boolean> update(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
         return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), request, file), HttpStatus.OK);

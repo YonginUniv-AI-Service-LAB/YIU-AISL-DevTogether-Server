@@ -17,8 +17,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class BoardDto {
     private Long boardId;
+    private String title;
     private String contents;
-    private Long userId;
+    private Long userProfileId;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
     private Boolean files;
@@ -29,8 +30,9 @@ public class BoardDto {
     public static BoardDto getboardDto(Board board) {
         return new BoardDto(
                 board.getBoardId(),
+                board.getTitle(),
                 board.getContents(),
-                board.getUser().getId(),
+                board.getUserProfile().getUser().getId(),
                 board.getCreatedAt(),
                 board.getUpdatedAt(),
                 board.getFiles(),
