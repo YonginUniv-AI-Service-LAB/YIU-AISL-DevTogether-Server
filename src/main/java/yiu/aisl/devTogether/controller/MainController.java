@@ -85,11 +85,17 @@ public class MainController {
         System.out.println("pwdChange request" + request);
         return new ResponseEntity<Boolean>(mainService.pwdChange(request), HttpStatus.OK);
     }
-    //닉네임 변경
-    @PostMapping(value = "/nickname")
-    public ResponseEntity<Boolean> nicknameCheck(NicknameCheckRequestDto request) throws  Exception{
+    //멘토 닉네임 변경
+    @PostMapping(value = "/mentor/nickname")
+    public ResponseEntity<Boolean> mentorNicknameCheck(NicknameCheckRequestDto request) throws  Exception{
         System.out.println("nicknameCheck request" + request);
-        return new ResponseEntity<Boolean>(mainService.nicknameCheck(request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(mainService.mentorNicknameCheck(request), HttpStatus.OK);
+    }
+    //멘티 닉네임 변경
+    @PostMapping(value = "/mentee/nickname")
+    public ResponseEntity<Boolean> menteeNicknameCheck(NicknameCheckRequestDto request) throws  Exception{
+        System.out.println("nicknameCheck request" + request);
+        return new ResponseEntity<Boolean>(mainService.menteeNicknameCheck(request), HttpStatus.OK);
     }
 
     //email 찾기

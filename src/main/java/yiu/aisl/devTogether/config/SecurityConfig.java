@@ -76,10 +76,10 @@ public class SecurityConfig {
                                 .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee","/matching/application/mentee").hasRole("MENTOR")
                                 .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor","/matching/application/mentor").hasRole("MENTEE")
                                 .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change",
-                                        "/email" ,"token/change", "/token/refresh", "/nickname",
+                                        "/email" ,"token/change", "/token/refresh", "/mentee/nickname", "/mentor/nickname",
                                         "/board", "/board/post", "/board/like", "/board/scrap","/subject",
                                         "/mentor","/mentee","/subject","/main",
-                                        "/notice","/notice/detail","/faq",
+                                        "/notice","/notice/detail","/faq","/matching/application",
                                         "/message","/download").permitAll()
 
                                 .anyRequest().authenticated()

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum SubjectCategory {
+    NULL(0),
     C(1),
     Cpp(2),
     Java(3),

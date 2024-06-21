@@ -2,6 +2,7 @@ package yiu.aisl.devTogether.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.*;
@@ -31,6 +32,7 @@ public class MatchingService {
     private final UserProfileRepository userProfileRepository;
     private final MatchingScrapRepository matchingScrapRepository;
     private final PushRepository pushRepository;
+
 
     //멘토 조회(멘티가 멘토 조회)
     public Object mentorList(CustomUserDetails userDetails) {
@@ -145,11 +147,11 @@ public class MatchingService {
             }
 
             List<SubjectCategory> menteeSubjects = new ArrayList<>();
-            if (request.getSubject1() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
-            if (request.getSubject2() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
-            if (request.getSubject3() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
-            if (request.getSubject4() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
-            if (request.getSubject5() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
+            menteeSubjects.add(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.fromInt(0));
+            menteeSubjects.add(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.fromInt(0));
+            menteeSubjects.add(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.fromInt(0));
+            menteeSubjects.add(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.fromInt(0));
+            menteeSubjects.add(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.fromInt(0));
 
             if (menteeSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -166,6 +168,11 @@ public class MatchingService {
                     .status("신청")
                     .mentee(userProfile)
                     .mentor(mentor)
+                    .subject1(SubjectCategory.fromInt(request.getSubject1()))
+                    .subject2(SubjectCategory.fromInt(request.getSubject2()))
+                    .subject3(SubjectCategory.fromInt(request.getSubject3()))
+                    .subject4(SubjectCategory.fromInt(request.getSubject4()))
+                    .subject5(SubjectCategory.fromInt(request.getSubject5()))
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
@@ -208,11 +215,11 @@ public class MatchingService {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
             List<SubjectCategory> mentorSubjects = new ArrayList<>();
-            if (request.getSubject1() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
-            if (request.getSubject2() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
-            if (request.getSubject3() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
-            if (request.getSubject4() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
-            if (request.getSubject5() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
+            mentorSubjects.add(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.fromInt(0));
+            mentorSubjects.add(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.fromInt(0));
+            mentorSubjects.add(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.fromInt(0));
+            mentorSubjects.add(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.fromInt(0));
+            mentorSubjects.add(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.fromInt(0));
 
             if (mentorSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -228,6 +235,11 @@ public class MatchingService {
                     .status("신청")
                     .mentor(userProfile)
                     .mentee(mentee)
+                    .subject1(SubjectCategory.fromInt(request.getSubject1()))
+                    .subject2(SubjectCategory.fromInt(request.getSubject2()))
+                    .subject3(SubjectCategory.fromInt(request.getSubject3()))
+                    .subject4(SubjectCategory.fromInt(request.getSubject4()))
+                    .subject5(SubjectCategory.fromInt(request.getSubject5()))
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
@@ -250,27 +262,22 @@ public class MatchingService {
     }
 
 
-    //신청 수락
-    public Boolean approve(String email, MatchingRequestDto.ApproveDTO request) throws Exception {
-        User user = findByEmail(email);
 
-
-
-       // UserProfile userProfile = findByUserAndRole(user, 1);
-        UserProfile userProfile = findByUserProfile(user);
-
-        //UserProfile userProfile = findByUserAndRole(user, 2);
+    // 신청 수락
+    public Boolean approve(CustomUserDetails userDetails, MatchingRequestDto.ApproveDTO request) throws Exception {
+        Long userId = userDetails.getUser().getId();
         Matching matching = findByMatchingId(request.getMatchingId());
+
+        UserProfile mentorProfile = matching.getMentor();
+        UserProfile menteeProfile = matching.getMentee();
+
         // 400: 데이터 미입력
         if (request.getMatchingId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
-        // 매칭 ID가 자기랑 관련 있는지 확인
-        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
-                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
-
-        // 403 - 권한 없음
+        // 매칭 ID가 사용자와 관련 있는지 확인
+        boolean isRelatedToUser = mentorProfile.getUser().getId().equals(userId) || menteeProfile.getUser().getId().equals(userId);
         if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
@@ -279,63 +286,63 @@ public class MatchingService {
             if ("신청".equals(matching.getStatus())) {
                 matching.setStatus("성사됨");
                 UserProfile recipientProfile;
-                if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
-                    recipientProfile = matching.getMentee();
+                if (mentorProfile.getUser().getId().equals(userId)) {
+                    recipientProfile = menteeProfile;
                 } else {
-                    recipientProfile = matching.getMentor();
+                    recipientProfile = mentorProfile;
                 }
-
+                String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getNickname() + "님이 과외를 수락했습니다.")
+                        .contents(nickname+ "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(1)
+                        .checks(0)
                         .build();
                 pushRepository.save(push);
             }
-
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     //신청 거절
-    public Boolean refusal(String email, MatchingRequestDto.RefusalDTO request) throws Exception {
-        User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
+    public Boolean refusal(CustomUserDetails userDetails,  MatchingRequestDto.RefusalDTO request) throws Exception {
+        Long userId = userDetails.getUser().getId();
         Matching matching = findByMatchingId(request.getMatchingId());
+
+        UserProfile mentorProfile = matching.getMentor();
+        UserProfile menteeProfile = matching.getMentee();
 
         // 400: 데이터 미입력
         if (request.getMatchingId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-        // 매칭 ID가 자기랑 관련 있는지 확인
-        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
-                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
 
-        // 403 - 권한 없음
+        // 매칭 ID가 사용자와 관련 있는지 확인
+        boolean isRelatedToUser = mentorProfile.getUser().getId().equals(userId) || menteeProfile.getUser().getId().equals(userId);
         if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
-
         try {
             if (matching.getStatus().equals("신청")) {
                 matching.setStatus("거절");
                 UserProfile recipientProfile;
-                if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
-                    recipientProfile = matching.getMentee();
+                if (mentorProfile.getUser().getId().equals(userId)) {
+                    recipientProfile = menteeProfile;
                 } else {
-                    recipientProfile = matching.getMentor();
+                    recipientProfile = mentorProfile;
                 }
 
+                String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getNickname() + "님이 과외를 거절했습니다.")
+                        .contents(nickname+ "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(1)
+                        .checks(0)
                         .build();
                 pushRepository.save(push);
             }
@@ -348,26 +355,23 @@ public class MatchingService {
     }
 
     //신청 삭제
-    public Boolean delete(String email, MatchingRequestDto.DeleteDTO request) throws Exception {
-        User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
+    public Boolean delete(CustomUserDetails userDetails, MatchingRequestDto.DeleteDTO request) throws Exception {
+        Long userId = userDetails.getUser().getId();
         Matching matching = findByMatchingId(request.getMatchingId());
+
+        UserProfile mentorProfile = matching.getMentor();
+        UserProfile menteeProfile = matching.getMentee();
+
         // 400: 데이터 미입력
         if (request.getMatchingId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
-
-        // 매칭 ID가 자기랑 관련 있는지 확인
-        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
-                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
-
-        // 403 - 권한 없음
+        // 매칭 ID가 사용자와 관련 있는지 확인
+        boolean isRelatedToUser = mentorProfile.getUser().getId().equals(userId) || menteeProfile.getUser().getId().equals(userId);
         if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
-
-
         try {
             if (matching.getStatus().equals("신청")) {
                 matchingRepository.deleteById(request.getMatchingId());
@@ -382,39 +386,41 @@ public class MatchingService {
 
 
     //신청 확정
-    public Boolean confirm(String email, MatchingRequestDto.ConfirmDTO request) throws Exception {
-        User user = findByEmail(email);
-        UserProfile userProfile = findByUserProfile(user);
+    public Boolean confirm(CustomUserDetails userDetails, MatchingRequestDto.ConfirmDTO request) throws Exception {
+        Long userId = userDetails.getUser().getId();
         Matching matching = findByMatchingId(request.getMatchingId());
+
+        UserProfile mentorProfile = matching.getMentor();
+        UserProfile menteeProfile = matching.getMentee();
+
         // 400: 데이터 미입력
         if (request.getMatchingId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
-        // 매칭 ID가 자기랑 관련 있는지 확인
-        boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
-                matching.getMentee().getUserProfileId().equals(userProfile.getUserProfileId());
-
-        // 403 - 권한 없음
+        // 매칭 ID가 사용자와 관련 있는지 확인
+        boolean isRelatedToUser = mentorProfile.getUser().getId().equals(userId) || menteeProfile.getUser().getId().equals(userId);
         if (!isRelatedToUser) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
+
         try {
             if (matching.getStatus().equals("성사됨")) {
                 matching.setStatus("진행");
                 UserProfile recipientProfile;
-                if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
-                    recipientProfile = matching.getMentee();
+                if (mentorProfile.getUser().getId().equals(userId)) {
+                    recipientProfile = menteeProfile;
                 } else {
-                    recipientProfile = matching.getMentor();
+                    recipientProfile = mentorProfile;
                 }
 
+                String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getNickname() + "님과의 과외가 확정되었습니다.")
+                        .contents(nickname+ "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(1)
+                        .checks(0)
                         .build();
                 pushRepository.save(push);
             }
@@ -447,7 +453,6 @@ public class MatchingService {
         try {
             if (matching.getStatus().equals("진행")) {
                 matching.setStatus("완료");
-                ;
                 UserProfile recipientProfile;
                 if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
                     recipientProfile = matching.getMentee();
@@ -457,10 +462,10 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getNickname() + "님과의 과외가 종료되었습니다.")
+                        .contents(userProfile.getNickname()+ "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(1)
+                        .checks(0)
                         .build();
                 pushRepository.save(push);
             }

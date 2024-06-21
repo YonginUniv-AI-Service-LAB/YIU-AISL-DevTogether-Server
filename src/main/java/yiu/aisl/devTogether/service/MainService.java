@@ -284,7 +284,7 @@ public class MainService {
         javaMailSender.send(emailForm);
         return authNum;
     }
-    private MimeMessage createEmailForm(String email, String title) throws MessagingException, UnsupportedEncodingException {
+    private MimeMessage createEmailForm(String email, String title) throws MessagingException {
         // 코드 생성
         createCode();
         String setFrom = "yiuaiservicelab@naver.com";
@@ -330,7 +330,7 @@ public class MainService {
         authNum = key.toString();
     }
     //비밀번호 변경
-    public Boolean pwdChange(PwdChangeRequestDto request)  throws MessagingException, UnsupportedEncodingException{
+    public Boolean pwdChange(PwdChangeRequestDto request)  throws Exception {
         // 400 - 데이터 없음
         if(request.getEmail().isEmpty()|| request.getPwd().isEmpty())
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -350,15 +350,25 @@ public class MainService {
         }
         return true;
     }
-    //닉네임 중복
-    public Boolean nicknameCheck(NicknameCheckRequestDto request) throws Exception{
-        // 409 데이터 중복
-        if (userProfileRepository.findByNickname(request.getNickname()).isPresent()) {
+    // 멘토 닉네임 중복 확인
+    public boolean mentorNicknameCheck(NicknameCheckRequestDto request) throws CustomException {
+        Optional<UserProfile> userProfile = userProfileRepository.findByNicknameAndRole(request.getNickname(), 1);
+        if (userProfile.isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE);
         }
         return true;
-
     }
+
+    // 멘티 닉네임 중복 확인
+    public boolean menteeNicknameCheck(NicknameCheckRequestDto request) throws CustomException {
+        Optional<UserProfile> userProfile = userProfileRepository.findByNicknameAndRole(request.getNickname(), 2);
+        if (userProfile.isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE);
+        }
+        return true;
+    }
+
+
 
     // [API]  role 추가 (멘토 또는 멘티 값 추가)
     public Boolean addRole(CustomUserDetails userDetails) {

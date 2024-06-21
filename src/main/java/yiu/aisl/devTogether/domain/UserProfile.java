@@ -24,6 +24,10 @@ public class UserProfile {
     @ManyToOne
     private User user;
 
+    @JoinColumn(name = "matching_id")
+    @ManyToOne
+    private Matching matching;
+
     @Column
     private Integer role;
 
