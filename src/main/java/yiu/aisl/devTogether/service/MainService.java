@@ -246,14 +246,17 @@ public class MainService {
             }
             role = request.getRole();
         }
-
+        UserProfile userProfile = userProfileRepository.findByUserAndRole(user, role).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
 
         try {
             // 토큰 발급 (추가 정보 확인 하기 위해 이름 포함 시킴)
             user.setRefreshToken(createRefreshToken(user));
+
             LoginResponseDto response = LoginResponseDto.builder()
                     .email(user.getEmail())
                     .name(user.getName())
+                    .nickname(userProfile.getNickname())
+                    .role(role)
                     .token(TokenDto.builder()
                             .accessToken(tokenProvider.createToken(user, role))
                             .refreshToken(user.getRefreshToken())
@@ -267,19 +270,26 @@ public class MainService {
         }
     }
 
-
-
-
     //회원가입 시 이메일 인증
-    public String registerEmail(String email) throws MessagingException, UnsupportedEncodingException {
+    public String registerEmail(String email) throws MessagingException {
         if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        // 409 에러 이미 존재하는 이메일인 경우
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE);
+        }
+
         MimeMessage emailForm = createEmailForm(email , "devTogether 회원가입 인증번호");
         javaMailSender.send(emailForm);
         return authNum;
     }
     //비밀번호 변경 시 이메일 인증
-    public String pwdEmail(String email) throws MessagingException, UnsupportedEncodingException {
+    public String pwdEmail(String email) throws MessagingException {
         if(email == null) throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+
+        //409 에러 존재하지 않는 이메일인 경우
+        if (userRepository.findByEmail(email).isEmpty()) {
+            throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
+        }
         MimeMessage emailForm = createEmailForm(email , "비밀번호 재설정을 위한 안내");
         javaMailSender.send(emailForm);
         return authNum;
