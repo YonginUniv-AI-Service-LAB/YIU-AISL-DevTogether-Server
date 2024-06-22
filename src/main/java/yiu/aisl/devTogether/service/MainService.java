@@ -133,11 +133,10 @@ public class MainService {
 
         //409 - 데이터 중복 (이메일)
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-
             throw new CustomException(ErrorCode.DUPLICATE);
         }
         //409 - 데이터 중복 (닉네임)
-        if (userProfileRepository.findByNickname(request.getNickname()).isPresent()) {
+        if (userProfileRepository.findByNicknameAndRole(request.getNickname(), request.getRole()).isPresent()) {
 
             throw new CustomException(ErrorCode.DUPLICATE);
         }
