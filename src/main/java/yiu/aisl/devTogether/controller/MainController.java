@@ -124,7 +124,7 @@ public class MainController {
 
 
     //파일 다운로드
-    @GetMapping("/download")
+    @PostMapping("/download")
     public ResponseEntity<FilesResponseDto> downloadFile(Long fileId) throws Exception {
         return new ResponseEntity<FilesResponseDto>(filesService.downloadFile(fileId), HttpStatus.OK);
     }

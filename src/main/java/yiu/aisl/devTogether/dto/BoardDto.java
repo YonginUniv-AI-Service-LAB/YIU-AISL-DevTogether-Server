@@ -44,14 +44,13 @@ public class BoardDto {
         );
     }
 
-//        public BoardDto(Board board) {
-//            this.boardId = board.getBoardId();
-//            this.contents = board.getContents();
-//            this.createAt = board.getCreatedAt();
-//            this.updatedAt = board.getUpdatedAt();
-//            this.userId = board.getUser().getId();
-//            this.files = board.getFiles();
-//            this.comments = board.getComments();
-//            this.filesList = board.getFilesList();
-//        }
+        public BoardDto(Board board) {
+            this.boardId = board.getBoardId();
+            this.title = board.getTitle();
+            this.contents = board.getContents();
+            this.createAt = board.getCreatedAt();
+            this.updatedAt = board.getUpdatedAt();
+            this.files = board.getFiles();
+            this.filesList = board.getFilesList();
+        }
 }

@@ -33,6 +33,7 @@ public class BoardService {
     private final BoardScrapRepository boardScrapRepository;
     public final PushRepository pushRepository;
     public final UserProfileRepository userProfileRepository;
+
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
         try {
@@ -68,7 +69,7 @@ public class BoardService {
     }
 
     //게시판 등록
-    public Boolean create(String email, Integer role, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception{
+    public Boolean create(String email, Integer role, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception {
         //403 권한 없음
         User user = findByUserEmail(email);
         UserProfile userProfile = findByUserProfile(user, role);
@@ -97,6 +98,7 @@ public class BoardService {
         }
         return true;
     }
+
     //게시판 삭제
     public Boolean delete(String email, BoardRequestDto.DeleteDto request) throws Exception {
         //400: 데이터 미입력
@@ -127,9 +129,9 @@ public class BoardService {
     }
 
     //게시판 수정 -- 이미지 코드 확인 필요
-    public Boolean update(String email, BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
+    public Boolean update(String email,Integer role, BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
         User user = findByUserEmail(email);
-
+        UserProfile userProfile = findByUserProfile(user, role);
         //400: 데이터 미입력
         if (request.getTitle().isEmpty() || request.getContents().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -142,7 +144,7 @@ public class BoardService {
         //403: 권한없음
         Board existingboard = board.get();
 
-        if (!existingboard.getUserProfile().getUser().equals(user)) {
+        if (!existingboard.getUserProfile().equals(userProfile)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
 
@@ -174,7 +176,7 @@ public class BoardService {
         // 403: 권한 없음
         User user = findByUserEmail(email);
         // 404: id 없음
-       Board board = findByBoardId(request.getBoardId());
+        Board board = findByBoardId(request.getBoardId());
         try {
             // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
             if (request.getCount()) {
@@ -225,7 +227,6 @@ public class BoardService {
 //        }
         Board board = findByBoardId(request.getBoardId());
 
-
         //403: 권한없음
         User user = findByUserEmail(email);
 
@@ -247,7 +248,7 @@ public class BoardService {
     }
 
     //댓글 등록
-    public Boolean createComment(String email, BoardRequestDto.CreateCommentDto request) throws Exception {
+    public Boolean createComment(String email, BoardRequestDto.CreateCommentDto request, Integer role) throws Exception {
 
         //400: 데이터 미입력
         if (request.getContents() == null) {
@@ -255,6 +256,7 @@ public class BoardService {
         }
         //403: 권한없음
         User user = findByUserEmail(email);
+        UserProfile userProfile = findByUserProfile(user, role);
         //404: 보드 id 없음
         Board board = findByBoardId(request.getBoardId());
         try {
@@ -263,7 +265,7 @@ public class BoardService {
             Comment comment = Comment.builder()
                     .board(board)
                     .contents(request.getContents())
-                    .user(user)
+                    .userProfile(userProfile)
                     .build();
 
             commentRepository.save(comment);
@@ -279,7 +281,6 @@ public class BoardService {
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     //댓글 삭제
@@ -302,7 +303,7 @@ public class BoardService {
         //403: 권한없음 -- 다시 확인하기
 //        Board existingboard = board.get();
         Comment existingComment = comment.get();
-        if (!existingComment.getUser().getEmail().equals(email)) {
+        if (!existingComment.getUserProfile().getUser().getEmail().equals(email)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
 
@@ -332,7 +333,7 @@ public class BoardService {
         }
         //403: 권한없음
         Comment existingboard = comment.get();
-        if (!existingboard.getUser().getEmail().equals(email)) {
+        if (!existingboard.getUserProfile().getUser().getEmail().equals(email)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
         try {
@@ -365,7 +366,7 @@ public class BoardService {
                             .build();
                     likeRepository.save(makelike);
                     Push push = Push.builder()
-                            .user(comment.getUser())
+                            .user(comment.getUserProfile().getUser())
                             .type(PushCategory.댓글)
                             .typeId(comment.getCommentId())
                             .contents("댓글에 좋아요가 달렸습니다.")
@@ -401,7 +402,8 @@ public class BoardService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
-    public UserProfile findByUserProfile(User user, Integer role){
+
+    public UserProfile findByUserProfile(User user, Integer role) {
         return userProfileRepository.findByUserAndRole(user, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }

@@ -26,7 +26,7 @@ public class CommentDto {
         return new CommentDto(
                 comment.getBoard().getBoardId(),
                 comment.getContents(),
-                comment.getUser().getId(),
+                comment.getUserProfile().getUser().getId(),
                 comment.getBoard().getBoardId(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
@@ -38,6 +38,6 @@ public class CommentDto {
         this.contents = comment.getContents();
         this.createAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
-        this.userId = comment.getUser().getId();
+        this.userId = comment.getUserProfile().getUser().getId();
     }
 }

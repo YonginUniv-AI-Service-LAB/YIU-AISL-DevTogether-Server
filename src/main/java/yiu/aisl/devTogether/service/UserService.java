@@ -88,8 +88,10 @@ public class UserService {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
-
-        List<Comment> myComments = commentRepository.findByUser(user.get());
+        Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUser(userDetails.getUser()).orElseThrow(
+                () -> new CustomException(ErrorCode.NO_AUTH)
+        ));
+        List<Comment> myComments = commentRepository.findByUserProfile(userProfile.get());
         return myComments.stream()
                 .map(CommentRequestDto::new)
                 .collect(Collectors.toList());

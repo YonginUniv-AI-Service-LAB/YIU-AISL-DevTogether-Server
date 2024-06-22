@@ -26,6 +26,6 @@ public class CommentRequestDto {
         this.title = comment.getBoard().getTitle();
         this.createAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
-        this.userId = comment.getUser().getId();
+        this.userId = comment.getUserProfile().getUser().getId();
     }
 }
