@@ -13,6 +13,7 @@ import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
+import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -120,7 +121,7 @@ public class MainService {
     public Boolean register(RegisterRequestDto request) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
-
+        QuestionCategory question = QuestionCategory.fromInt(request.getQuestion());
         //400 - 데이터 미입력
         if (  request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getName().isEmpty()
                 || request.getNickname().isEmpty()   || request.getRole() == null
@@ -152,10 +153,9 @@ public class MainService {
                     .gender(genderCategory)
                     .age(request.getAge())
                     .birth(request.getBirth())
-                    .question(request.getQuestion())
+                    .question(question)
                     .answer(request.getAnswer())
                     .build();
-
             userRepository.save(user);
             if(request.getRole() == 0){
                 UserProfile userProfile = UserProfile.builder()
@@ -171,7 +171,6 @@ public class MainService {
                         .user(user)
                         .nickname(request.getNickname())
                         .build();
-
                 userProfileRepository.save(userProfile);
             } else if(request.getRole() == 2) {
                 UserProfile userProfile = UserProfile.builder()
@@ -179,7 +178,6 @@ public class MainService {
                         .user(user)
                         .nickname(request.getNickname())
                         .build();
-
                 userProfileRepository.save(userProfile);
             } else if(request.getRole() == 3) {
                 UserProfile userProfile1 = UserProfile.builder()

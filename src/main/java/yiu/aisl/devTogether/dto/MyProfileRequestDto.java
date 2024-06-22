@@ -17,7 +17,7 @@ public class MyProfileRequestDto {
     private String location1;
     private String location2;
     private String location3;
-    private String question;
+    private Integer question;
     private String answer;
 
 }

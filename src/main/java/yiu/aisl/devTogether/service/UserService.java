@@ -1,14 +1,13 @@
 package yiu.aisl.devTogether.service;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
+import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
-import yiu.aisl.devTogether.domain.state.SubjectCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
@@ -48,7 +47,7 @@ public class UserService {
                 .location1(user.getLocation1())
                 .location2(user.getLocation2())
                 .location3(user.getLocation3())
-                .question(user.getQuestion())
+                .question(user.getQuestion().getValue())
                 .answer(user.getAnswer())
                 .build();
     }
@@ -79,7 +78,7 @@ public class UserService {
         user.setLocation2(dto.getLocation2());
         user.setLocation3(dto.getLocation3());
         user.setAnswer(dto.getAnswer());
-        user.setQuestion(dto.getQuestion());
+        user.setQuestion(QuestionCategory.fromInt(dto.getQuestion()));
 
         return true;
     }
@@ -209,11 +208,11 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
-        userProfile.setSubject1(SubjectCategory.fromInt(dto.getSubject1()));
-        userProfile.setSubject2(SubjectCategory.fromInt(dto.getSubject2()));
-        userProfile.setSubject3(SubjectCategory.fromInt(dto.getSubject3()));
-        userProfile.setSubject4(SubjectCategory.fromInt(dto.getSubject4()));
-        userProfile.setSubject5(SubjectCategory.fromInt(dto.getSubject5()));
+        userProfile.setSubject1(dto.getSubject1());
+        userProfile.setSubject2(dto.getSubject2());
+        userProfile.setSubject3(dto.getSubject3());
+        userProfile.setSubject4(dto.getSubject4());
+        userProfile.setSubject5(dto.getSubject5());
         userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
@@ -244,11 +243,11 @@ public class UserService {
         userProfile.setSchedule(dto.getSchedule());
         userProfile.setMethod(dto.getMethod());
         userProfile.setFee(dto.getFee());
-        userProfile.setSubject1(SubjectCategory.fromInt(dto.getSubject1()));
-        userProfile.setSubject2(SubjectCategory.fromInt(dto.getSubject2()));
-        userProfile.setSubject3(SubjectCategory.fromInt(dto.getSubject3()));
-        userProfile.setSubject4(SubjectCategory.fromInt(dto.getSubject4()));
-        userProfile.setSubject5(SubjectCategory.fromInt(dto.getSubject5()));
+        userProfile.setSubject1(dto.getSubject1());
+        userProfile.setSubject2(dto.getSubject2());
+        userProfile.setSubject3(dto.getSubject3());
+        userProfile.setSubject4(dto.getSubject4());
+        userProfile.setSubject5(dto.getSubject5());
         userProfile.setImg(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);

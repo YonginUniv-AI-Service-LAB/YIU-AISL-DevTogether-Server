@@ -11,11 +11,11 @@ public class MatchingRequestDto {
     @Setter
     public static class MentorApplyDTO {
         private UserProfile mentor;
-        private Integer subject1;
-        private Integer subject2;
-        private Integer subject3;
-        private Integer subject4;
-        private Integer subject5;
+        private String subject1;
+        private String subject2;
+        private String subject3;
+        private String subject4;
+        private String subject5;
         private String contents;
         private Integer tutoringFee;
     }
@@ -23,11 +23,11 @@ public class MatchingRequestDto {
     @Setter
     public static class MenteeApplyDTO {
         private UserProfile mentee;
-        private Integer subject1;
-        private Integer subject2;
-        private Integer subject3;
-        private Integer subject4;
-        private Integer subject5;
+        private String subject1;
+        private String subject2;
+        private String subject3;
+        private String subject4;
+        private String subject5;
         private String contents;
         private Integer tutoringFee;
     }

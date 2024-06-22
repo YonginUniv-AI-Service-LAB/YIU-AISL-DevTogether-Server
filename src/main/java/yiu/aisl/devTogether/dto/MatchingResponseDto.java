@@ -6,12 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import yiu.aisl.devTogether.domain.Matching;
-import yiu.aisl.devTogether.domain.Subject;
-import yiu.aisl.devTogether.domain.User;
-import yiu.aisl.devTogether.domain.UserProfile;
-import yiu.aisl.devTogether.domain.state.MatchingCategory;
-import yiu.aisl.devTogether.domain.state.StatusCategory;
-import yiu.aisl.devTogether.domain.state.SubjectCategory;
 
 import java.time.LocalDateTime;
 
@@ -25,11 +19,11 @@ public class MatchingResponseDto {
     private Long mentor;
     private Long mentee;
     private String status;
-    private SubjectCategory subject1;
-    private SubjectCategory subject2;
-    private SubjectCategory subject3;
-    private SubjectCategory subject4;
-    private SubjectCategory subject5;
+    private String subject1;
+    private String subject2;
+    private String subject3;
+    private String subject4;
+    private String subject5;
     private Integer tutoringFee;
     private String contents;
     private LocalDateTime createAt;

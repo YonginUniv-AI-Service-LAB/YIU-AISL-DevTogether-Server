@@ -19,5 +19,5 @@ public class MyProfileResponseDto {
     private String location2;
     private String location3;
     private String answer;
-    private String question;
+    private Integer question;
 }

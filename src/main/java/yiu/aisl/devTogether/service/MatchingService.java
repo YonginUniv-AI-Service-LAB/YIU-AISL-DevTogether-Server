@@ -2,12 +2,10 @@ package yiu.aisl.devTogether.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.*;
 import yiu.aisl.devTogether.domain.state.PushCategory;
-import yiu.aisl.devTogether.domain.state.SubjectCategory;
 import yiu.aisl.devTogether.dto.MatchingRequestDto;
 import yiu.aisl.devTogether.dto.ProfileResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -138,7 +136,7 @@ public class MatchingService {
                 throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
             }
 
-            List<SubjectCategory> mentorSubjects = Arrays.asList(
+            List<String> mentorSubjects = Arrays.asList(
                     mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
                     mentor.getSubject4(), mentor.getSubject5()
             );
@@ -147,13 +145,7 @@ public class MatchingService {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
 
-            List<SubjectCategory> menteeSubjects = new ArrayList<>();
-            if (request.getSubject1() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
-            if (request.getSubject2() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
-            if (request.getSubject3() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
-            if (request.getSubject4() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
-            if (request.getSubject5() != null) menteeSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
-
+            List<String> menteeSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
             if (menteeSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
@@ -169,11 +161,11 @@ public class MatchingService {
                     .status("신청")
                     .mentee(userProfile)
                     .mentor(mentor)
-                    .subject1(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.fromInt(0))
-                    .subject2(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.fromInt(0))
-                    .subject3(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.fromInt(0))
-                    .subject4(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.fromInt(0))
-                    .subject5(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.fromInt(0))
+                    .subject1(request.getSubject1() != null ? request.getSubject1() : "Null")
+                    .subject2(request.getSubject2() != null ? request.getSubject1() : "Null")
+                    .subject3(request.getSubject3() != null ? request.getSubject1() : "Null")
+                    .subject4(request.getSubject4() != null ? request.getSubject1() : "Null")
+                    .subject5(request.getSubject5() != null ? request.getSubject1() :  "Null")
 
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
@@ -209,7 +201,7 @@ public class MatchingService {
                 throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
             }
 
-            List<SubjectCategory> menteeSubjects = Arrays.asList(
+            List<String> menteeSubjects = Arrays.asList(
                     mentee.getSubject1(), mentee.getSubject2(), mentee.getSubject3(),
                     mentee.getSubject4(), mentee.getSubject5()
             );
@@ -219,12 +211,8 @@ public class MatchingService {
             if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
-            List<SubjectCategory> mentorSubjects = new ArrayList<>();
-            if (request.getSubject1() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject1()));
-            if (request.getSubject2() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject2()));
-            if (request.getSubject3() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject3()));
-            if (request.getSubject4() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject4()));
-            if (request.getSubject5() != null) mentorSubjects.add(SubjectCategory.fromInt(request.getSubject5()));
+
+            List<String> mentorSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
 
             if (mentorSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -240,11 +228,11 @@ public class MatchingService {
                     .status("신청")
                     .mentor(userProfile)
                     .mentee(mentee)
-                    .subject1(request.getSubject1() != null ? SubjectCategory.fromInt(request.getSubject1()) : SubjectCategory.NULL)
-                    .subject2(request.getSubject2() != null ? SubjectCategory.fromInt(request.getSubject2()) : SubjectCategory.NULL)
-                    .subject3(request.getSubject3() != null ? SubjectCategory.fromInt(request.getSubject3()) : SubjectCategory.NULL)
-                    .subject4(request.getSubject4() != null ? SubjectCategory.fromInt(request.getSubject4()) : SubjectCategory.NULL)
-                    .subject5(request.getSubject5() != null ? SubjectCategory.fromInt(request.getSubject5()) : SubjectCategory.NULL)
+                    .subject1(request.getSubject1() != null ? request.getSubject1() : "Null")
+                    .subject2(request.getSubject2() != null ? request.getSubject1() : "Null")
+                    .subject3(request.getSubject3() != null ? request.getSubject1() :  "Null")
+                    .subject4(request.getSubject4() != null ? request.getSubject1() :  "Null")
+                    .subject5(request.getSubject5() != null ? request.getSubject1() :  "Null")
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
