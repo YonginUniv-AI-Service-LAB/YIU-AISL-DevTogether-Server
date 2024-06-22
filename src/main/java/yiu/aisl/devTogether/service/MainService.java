@@ -252,6 +252,9 @@ public class MainService {
             role = request.getRole();
         }
         if(user.getRole() == RoleCategory.관리자){
+            if (!passwordEncoder.matches(request.getPwd(), user.getPwd())) {
+                throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+            }
             role = request.getRole();
         }
         UserProfile userProfile = userProfileRepository.findByUserAndRole(user, role).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
