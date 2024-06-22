@@ -35,8 +35,8 @@ public class Comment {
     @Column
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_profile_id")
     @ManyToOne
-    private User user;
+    private UserProfile userProfile;
 
 }
