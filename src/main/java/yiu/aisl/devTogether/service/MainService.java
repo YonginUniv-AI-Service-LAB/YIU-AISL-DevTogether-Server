@@ -157,8 +157,15 @@ public class MainService {
                     .build();
 
             userRepository.save(user);
-
-            if(request.getRole() == 1) {
+            if(request.getRole() == 0){
+                UserProfile userProfile = UserProfile.builder()
+                        .role(0)
+                        .user(user)
+                        .nickname(request.getNickname())
+                        .build();
+                userProfileRepository.save(userProfile);
+            }
+            else if (request.getRole() == 1) {
                 UserProfile userProfile = UserProfile.builder()
                         .role(1)
                         .user(user)
@@ -244,6 +251,9 @@ public class MainService {
             if (!passwordEncoder.matches(request.getPwd(), user.getPwd()) || !user.getRole().equals(roleCategory)) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
+            role = request.getRole();
+        }
+        if(user.getRole() == RoleCategory.관리자){
             role = request.getRole();
         }
         UserProfile userProfile = userProfileRepository.findByUserAndRole(user, role).orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
