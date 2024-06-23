@@ -125,7 +125,7 @@ public class MainService {
         //400 - 데이터 미입력
         if (  request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getName().isEmpty()
                 || request.getNickname().isEmpty()   || request.getRole() == null
-                || request.getGender() == null  || request.getAge() == null || request.getBirth().isEmpty()
+                || request.getGender() == null  || request.getAge() == null || request.getBirth() ==null
                 || request.getQuestion()== null    || request.getAnswer().isEmpty()                        )
         {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -151,7 +151,7 @@ public class MainService {
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
-                    .birth(LocalDate.parse(request.getBirth()))
+                    .birth(request.getBirth())
                     .question(request.getQuestion())
                     .answer(request.getAnswer())
                     .build();

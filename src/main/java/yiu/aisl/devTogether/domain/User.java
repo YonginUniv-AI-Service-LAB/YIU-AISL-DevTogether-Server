@@ -45,9 +45,7 @@ public class User {
     private RoleCategory role;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyyMMdd")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
-    private LocalDate birth;
+    private String birth;
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)

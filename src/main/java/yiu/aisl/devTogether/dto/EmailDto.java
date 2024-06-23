@@ -15,7 +15,7 @@ public class EmailDto {
     private String name;
     private Integer question;
     private String answer;
-    private LocalDate birth;
+    private String birth;
 }
 
 
