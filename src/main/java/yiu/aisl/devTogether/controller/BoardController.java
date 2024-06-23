@@ -28,6 +28,7 @@ import java.util.List;
 @RequestMapping(value = "/board")
 public class BoardController {
     private final BoardService boardService;
+
     //게시판 전체조회
     @GetMapping
     public ResponseEntity<List> getList() throws Exception {
@@ -48,12 +49,14 @@ public class BoardController {
 
     @PostMapping("/mentor")
     public ResponseEntity<Boolean> createForMentor(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception {
-        return new ResponseEntity<Boolean>(boardService.create(user.getEmail(),1 ,request, file), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(boardService.create(user.getEmail(), 1, request, file), HttpStatus.OK);
     }
+
     @PostMapping("/mentee")
     public ResponseEntity<Boolean> createForMentee(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateDto request, List<MultipartFile> file) throws Exception {
         return new ResponseEntity<Boolean>(boardService.create(user.getEmail(), 2, request, file), HttpStatus.OK);
     }
+
     //게시판 삭제
     @DeleteMapping
     public ResponseEntity<Boolean> delete(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteDto request) throws Exception {
@@ -69,9 +72,10 @@ public class BoardController {
     public ResponseEntity<Boolean> updateMentor(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
         return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), 1, request, file), HttpStatus.OK);
     }
+
     @PutMapping("/mentee")
     public ResponseEntity<Boolean> updateMentee(@AuthenticationPrincipal CustomUserDetails user, @ModelAttribute BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
-        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(),2, request, file), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(boardService.update(user.getEmail(), 2, request, file), HttpStatus.OK);
     }
 
     //게시판 좋아요
@@ -92,10 +96,12 @@ public class BoardController {
     public ResponseEntity<Boolean> createCommentMentor(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateCommentDto request) throws Exception {
         return new ResponseEntity<Boolean>(boardService.createComment(user.getEmail(), request, 1), HttpStatus.OK);
     }
+
     @PostMapping("/comment/mentee")
     public ResponseEntity<Boolean> createCommentMentee(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreateCommentDto request) throws Exception {
         return new ResponseEntity<Boolean>(boardService.createComment(user.getEmail(), request, 2), HttpStatus.OK);
     }
+
     //댓글 삭제
     @DeleteMapping("/comment")
     public ResponseEntity<Boolean> deleteComment(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.DeleteCommentDto request) throws Exception {

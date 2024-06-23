@@ -63,5 +63,6 @@ public class Ask {
     @Column
     private LocalDateTime updatedAt;
 
-
+    public List<FilesResponseDto> getFilesList() {return null;
+    }
 }
