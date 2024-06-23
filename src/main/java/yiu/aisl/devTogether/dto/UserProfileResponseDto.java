@@ -38,7 +38,7 @@ public class UserProfileResponseDto {
         this.contents = userProfile.getContents();
         this.schedule = userProfile.getSchedule();
         this.method = userProfile.getMethod();
-        this.img = userProfile.getImg();
+        this.img = userProfile.getFiles();
         this.fee = userProfile.getFee();
         this.subject1 = userProfile.getSubject1();
         this.subject2 = userProfile.getSubject2();

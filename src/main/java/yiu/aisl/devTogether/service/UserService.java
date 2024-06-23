@@ -215,7 +215,7 @@ public class UserService {
         userProfile.setSubject3(dto.getSubject3());
         userProfile.setSubject4(dto.getSubject4());
         userProfile.setSubject5(dto.getSubject5());
-        userProfile.setImg(imgs);
+        userProfile.setFiles(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
         if (imgs) {
@@ -250,7 +250,7 @@ public class UserService {
         userProfile.setSubject3(dto.getSubject3());
         userProfile.setSubject4(dto.getSubject4());
         userProfile.setSubject5(dto.getSubject5());
-        userProfile.setImg(imgs);
+        userProfile.setFiles(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
         if (imgs) {

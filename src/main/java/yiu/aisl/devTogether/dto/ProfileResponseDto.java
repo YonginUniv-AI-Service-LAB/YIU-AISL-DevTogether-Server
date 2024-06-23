@@ -51,7 +51,7 @@ public class ProfileResponseDto {
         this.location1=user.getLocation1();
         this.location2=user.getLocation2();
         this.location3=user.getLocation3();
-        this.img = userProfile.getImg();
+        this.img = userProfile.getFiles();
         this.scrap=scrap;
 
 

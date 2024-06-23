@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,8 +25,15 @@ public class Comment {
     @JsonBackReference
     private Board board;
 
+    @JoinColumn(name = "user_profile_id")
+    @ManyToOne
+    private UserProfile userProfile;
+
     @Column(columnDefinition = "TEXT")
     private String contents;
+
+    @OneToMany(mappedBy = "typeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Likes> likes;
 
     @CreationTimestamp
     @Column
@@ -34,9 +42,4 @@ public class Comment {
     @UpdateTimestamp
     @Column
     private LocalDateTime updatedAt;
-
-    @JoinColumn(name = "user_profile_id")
-    @ManyToOne
-    private UserProfile userProfile;
-
 }

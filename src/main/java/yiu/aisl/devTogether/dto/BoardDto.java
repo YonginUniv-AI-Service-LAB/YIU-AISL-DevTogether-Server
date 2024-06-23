@@ -1,10 +1,7 @@
 package yiu.aisl.devTogether.dto;
 
 import lombok.*;
-import yiu.aisl.devTogether.domain.Board;
-import yiu.aisl.devTogether.domain.Comment;
-import yiu.aisl.devTogether.domain.Files;
-import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,38 +16,39 @@ public class BoardDto {
     private Long boardId;
     private String title;
     private String contents;
-    private Long userProfileId;
+    private UserProfileResponseDto2 userProfileId;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
     private Boolean files;
     private List<FilesResponseDto> filesList;
     private Integer likeCount;
     private List<CommentDto> comments;
+    private Integer countComment;
 
     public static BoardDto getboardDto(Board board) {
-        return new BoardDto(
-                board.getBoardId(),
-                board.getTitle(),
-                board.getContents(),
-                board.getUserProfile().getUser().getId(),
-                board.getCreatedAt(),
-                board.getUpdatedAt(),
-                board.getFiles(),
-                board.getFilesList(),
-                board.getLikes().size(),
-                board.getComments().stream()
-                        .map(CommentDto::new)
-                        .collect(Collectors.toList())
+        UserProfile userProfile = board.getUserProfile();
+        UserProfileResponseDto2 userProfileDto = new UserProfileResponseDto2(
+                userProfile.getUserProfileId(),
+                userProfile.getNickname(),
+                userProfile.getPr(),
+                userProfile.getFiles(),
+                userProfile.getFilesdata()
         );
+        return BoardDto.builder()
+                .boardId(board.getBoardId())
+                .title(board.getTitle())
+                .contents(board.getContents())
+                .userProfileId(userProfileDto)
+                .createAt(board.getCreatedAt())
+                .updatedAt(board.getUpdatedAt())
+                .files(board.getFiles())
+                .filesList(board.getFilesList())
+                .likeCount(board.getLikes().size())
+                .comments(board.getComments().stream()
+                        .map(CommentDto::new)
+                        .collect(Collectors.toList()))
+                .countComment(board.getComments().size())
+                .build();
     }
 
-        public BoardDto(Board board) {
-            this.boardId = board.getBoardId();
-            this.title = board.getTitle();
-            this.contents = board.getContents();
-            this.createAt = board.getCreatedAt();
-            this.updatedAt = board.getUpdatedAt();
-            this.files = board.getFiles();
-            this.filesList = board.getFilesList();
-        }
 }
