@@ -21,6 +21,7 @@ import yiu.aisl.devTogether.security.TokenProvider;
 import yiu.aisl.devTogether.repository.*;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -150,7 +151,7 @@ public class MainService {
                     .role(roleCategory)
                     .gender(genderCategory)
                     .age(request.getAge())
-                    .birth(request.getBirth())
+                    .birth(LocalDate.parse(request.getBirth()))
                     .question(request.getQuestion())
                     .answer(request.getAnswer())
                     .build();
@@ -203,7 +204,7 @@ public class MainService {
     public String  emailFind(EmailDto request) throws Exception {
 
 
-        if (request.getName().isEmpty() || request.getBirth().isEmpty()
+        if (request.getName().isEmpty() || request.getBirth() == null
                 || request.getQuestion() == null || request.getAnswer().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }

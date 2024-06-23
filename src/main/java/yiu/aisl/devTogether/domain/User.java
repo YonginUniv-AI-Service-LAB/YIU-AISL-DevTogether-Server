@@ -1,16 +1,19 @@
 package yiu.aisl.devTogether.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -42,7 +45,9 @@ public class User {
     private RoleCategory role;
 
     @Column(nullable = false)
-    private String birth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate birth;
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)

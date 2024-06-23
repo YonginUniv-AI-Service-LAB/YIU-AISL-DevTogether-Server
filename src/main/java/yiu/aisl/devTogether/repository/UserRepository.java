@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import yiu.aisl.devTogether.domain.User;
 
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -24,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User>findByName(String name);
 
 
-    Optional<User>findByNameAndBirthAndQuestionAndAnswer(String name, String birth,  Integer question, String answer);
+    Optional<User>findByNameAndBirthAndQuestionAndAnswer(String name, LocalDate birth, Integer question, String answer);
     Optional<User> findByRefreshToken(String refreshToken);
 
 
