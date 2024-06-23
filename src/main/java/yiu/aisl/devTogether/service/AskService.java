@@ -10,6 +10,7 @@ import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.*;
 import yiu.aisl.devTogether.dto.AskRequestDto;
 import yiu.aisl.devTogether.dto.AskResponseDto;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.AskRepository;
@@ -38,7 +39,13 @@ public class AskService {
         List<Ask> askList = askRepository.findByUser(user);
         List<AskResponseDto> getList = new ArrayList<>();
         askList.forEach(ask -> getList.add(AskResponseDto.GetAskDTO(ask)));
-
+        for (AskResponseDto ask : getList) {
+            List<FilesResponseDto> filesList = new ArrayList<>();
+            if (ask.getFiles()) {
+                filesList = filesService.getFiles(5, ask.getAskId());
+                ask.setFilesList(filesList);
+            }
+        }
         return getList;
     }
     //ask 조회(관리자용)
@@ -46,6 +53,13 @@ public class AskService {
         List<Ask> askAdminList = askRepository.findByOrderByCreatedAtDesc();
         List<AskResponseDto> getAdminList = new ArrayList<>();
         askAdminList.forEach(s->getAdminList.add(AskResponseDto.GetAskDTO(s)));
+        for (AskResponseDto ask : getAdminList) {
+            List<FilesResponseDto> filesList = new ArrayList<>();
+            if (ask.getFiles()) {
+                filesList = filesService.getFiles(5, ask.getAskId());
+                ask.setFilesList(filesList);
+            }
+        }
         return getAdminList;
 
     }

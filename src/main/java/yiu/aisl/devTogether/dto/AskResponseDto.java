@@ -9,6 +9,7 @@ import yiu.aisl.devTogether.domain.state.AskCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class AskResponseDto {
     private StatusCategory status;
     private String answer;
     private Boolean files;
+    private List<FilesResponseDto> filesList;
     private AskCategory askCategory;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
@@ -37,6 +39,7 @@ public class AskResponseDto {
                 ask.getStatus(),
                 ask.getAnswer(),
                 ask.getFiles(),
+                ask.getFilesList(),
                 ask.getAskCategory(),
                 ask.getCreatedAt(),
                 ask.getUpdatedAt()
