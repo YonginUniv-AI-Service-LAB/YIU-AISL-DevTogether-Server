@@ -7,9 +7,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 import yiu.aisl.devTogether.domain.state.AskCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.domain.state.StatusCategory;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 import yiu.aisl.devTogether.service.FilesService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -59,5 +61,6 @@ public class Ask {
     @Column
     private LocalDateTime updatedAt;
 
-
+    public List<FilesResponseDto> getFilesList() {return null;
+    }
 }

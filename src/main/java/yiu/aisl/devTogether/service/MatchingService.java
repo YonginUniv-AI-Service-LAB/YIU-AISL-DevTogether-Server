@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -126,12 +127,9 @@ public class MatchingService {
     // 신청하기(멘티가 멘토에게)
     public Boolean applyMentor(CustomUserDetails userDetails, MatchingRequestDto.MentorApplyDTO request) throws Exception {
         Long userId = userDetails.getUser().getId();
-
         UserProfile userProfile = findByUserIdAndRole(userId, 2);
         try {
-
             UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
-
             if (mentor.getRole() != 1) { // 대상이 멘티가 아닌 경우
                 throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
             }
@@ -140,12 +138,14 @@ public class MatchingService {
                     mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
                     mentor.getSubject4(), mentor.getSubject5()
             );
-            System.out.println("멘토" + mentorSubjects);
+
             if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
 
             List<String> menteeSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
+
+            menteeSubjects = menteeSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
             if (menteeSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
@@ -161,20 +161,21 @@ public class MatchingService {
                     .status("신청")
                     .mentee(userProfile)
                     .mentor(mentor)
-                    .subject1(request.getSubject1() != null ? request.getSubject1() : "Null")
-                    .subject2(request.getSubject2() != null ? request.getSubject1() : "Null")
-                    .subject3(request.getSubject3() != null ? request.getSubject1() : "Null")
-                    .subject4(request.getSubject4() != null ? request.getSubject1() : "Null")
-                    .subject5(request.getSubject5() != null ? request.getSubject1() :  "Null")
+                    .subject1(request.getSubject1())
+                    .subject2(request.getSubject2())
+                    .subject3(request.getSubject3())
+                    .subject4(request.getSubject4())
+                    .subject5(request.getSubject5())
 
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
             matchingRepository.save(matching);
-
+            System.out.println("매칭" + matching);
+            String nickname = userDetails.getUsername();
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents("과외를 신청했습니다.")
+                    .contents(nickname+"님이 과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -194,8 +195,6 @@ public class MatchingService {
         Long userId = userDetails.getUser().getId();
         UserProfile userProfile = findByUserIdAndRole(userId, 1);
         try {
-
-
             UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
             if (mentee.getRole() != 2) { // 대상이 멘티가 아닌 경우
                 throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
@@ -206,19 +205,20 @@ public class MatchingService {
                     mentee.getSubject4(), mentee.getSubject5()
             );
 
-
-            System.out.println("멘티" + menteeSubjects);
             if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
 
             List<String> mentorSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
 
+            // 필터링하여 null이 아닌 과목만 리스트에 추가
+            mentorSubjects = mentorSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
+
             if (mentorSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
             boolean matchingSubject = menteeSubjects.stream().anyMatch(mentorSubjects::contains);
-            System.out.println("멘토" + mentorSubjects);
+
 
             if (!matchingSubject) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
@@ -228,24 +228,25 @@ public class MatchingService {
                     .status("신청")
                     .mentor(userProfile)
                     .mentee(mentee)
-                    .subject1(request.getSubject1() != null ? request.getSubject1() : "Null")
-                    .subject2(request.getSubject2() != null ? request.getSubject1() : "Null")
-                    .subject3(request.getSubject3() != null ? request.getSubject1() :  "Null")
-                    .subject4(request.getSubject4() != null ? request.getSubject1() :  "Null")
-                    .subject5(request.getSubject5() != null ? request.getSubject1() :  "Null")
+                    .subject1(request.getSubject1())
+                    .subject2(request.getSubject2())
+                    .subject3(request.getSubject3())
+                    .subject4(request.getSubject4())
+                    .subject5(request.getSubject5())
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
             matchingRepository.save(matching);
+            System.out.println("매칭" + matching);
+            String nickname = userDetails.getUsername();
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents("과외를 신청했습니다.")
+                    .contents(nickname + "님이 과외를 신청했습니다.")
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
                     .build();
             pushRepository.save(push);
-
 
             return true;
         } catch (Exception e) {
@@ -253,6 +254,7 @@ public class MatchingService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
 
@@ -287,7 +289,7 @@ public class MatchingService {
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents("과외를 수락했습니다.")
+                        .contents(nickname + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
@@ -332,12 +334,14 @@ public class MatchingService {
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents("과외를 거절했습니다.")
+                        .contents(nickname + "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
                         .build();
                 pushRepository.save(push);
+            }else{
+                throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
 
@@ -369,6 +373,8 @@ public class MatchingService {
             if (matching.getStatus().equals("신청")) {
                 matchingRepository.deleteById(request.getMatchingId());
                 matching.setStatus("성사안됨");
+            }else{
+                throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
         } catch (Exception e) {
@@ -409,12 +415,14 @@ public class MatchingService {
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents("과외가 확정되었습니다.")
+                        .contents(nickname + "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
                         .build();
                 pushRepository.save(push);
+            }else{
+                throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
         } catch (Exception e) {
@@ -454,12 +462,14 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents("과외를 수락했습니다.")
+                        .contents(userProfile.getNickname() + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(0)
                         .build();
                 pushRepository.save(push);
+            }else{
+                throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
         } catch (CustomException e) {
