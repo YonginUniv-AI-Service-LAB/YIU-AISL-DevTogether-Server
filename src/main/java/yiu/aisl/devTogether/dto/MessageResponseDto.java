@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import yiu.aisl.devTogether.domain.Message;
 import yiu.aisl.devTogether.domain.User;
+import yiu.aisl.devTogether.domain.UserProfile;
 
 import java.time.LocalDateTime;
 
@@ -17,22 +18,26 @@ public class MessageResponseDto {
     private Long messageId;
     private String title;
     private String contents;
-    private User fromUserId;
-    private User toUserid;
+    private Long fromUserId;
+    private String fromUserNickName;
+    private Long toUserid;;
+    private String toUserNickName;
     private Integer status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public static MessageResponseDto getMessageDto(Message message){
-        return new MessageResponseDto(
-                message.getMessageId(),
-                message.getTitle(),
-                message.getContents(),
-                message.getFromUserId(),
-                message.getToUserid(),
-                message.getStatus(),
-                message.getCreatedAt(),
-                message.getUpdatedAt()
-        );
+        return MessageResponseDto.builder()
+                .messageId(message.getMessageId())
+                .title(message.getTitle())
+                .contents(message.getContents())
+                .fromUserId(message.getFromUserId().getUserProfileId())
+                .fromUserNickName(message.getFromUserId().getNickname())
+                .toUserid(message.getToUserid().getUserProfileId())
+                .toUserNickName(message.getToUserid().getNickname())
+                .status(message.getStatus())
+                .createdAt(message.getCreatedAt())
+                .updatedAt(message.getUpdatedAt())
+                .build();
     }
 }

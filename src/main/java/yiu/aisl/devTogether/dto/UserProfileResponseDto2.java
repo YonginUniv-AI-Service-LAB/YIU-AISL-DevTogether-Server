@@ -12,6 +12,7 @@ import yiu.aisl.devTogether.domain.UserProfile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfileResponseDto2 {
+
     private Long id;
     private String nickname;
     private String pr;

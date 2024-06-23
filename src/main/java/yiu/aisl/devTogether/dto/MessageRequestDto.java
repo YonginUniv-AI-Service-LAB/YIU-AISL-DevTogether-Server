@@ -2,6 +2,7 @@ package yiu.aisl.devTogether.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import yiu.aisl.devTogether.domain.UserProfile;
 
 public class MessageRequestDto {
 
@@ -10,6 +11,6 @@ public class MessageRequestDto {
     public static class sendDto{
         private String title;
         private String contents;
-        private String toUserId;
+        private Long toUserId;
     }
 }

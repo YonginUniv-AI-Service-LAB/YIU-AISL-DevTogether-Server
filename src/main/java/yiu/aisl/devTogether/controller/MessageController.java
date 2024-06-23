@@ -17,15 +17,37 @@ import java.util.List;
 public class MessageController {
     private final MessageService messageService;
 
+    //    //쪽지 보내기
+//    @PostMapping
+//    public ResponseEntity<Boolean> sendMessage(@AuthenticationPrincipal CustomUserDetails user, MessageRequestDto.sendDto request) throws Exception {
+//        return new ResponseEntity<Boolean>(messageService.send(user.getEmail(), request), HttpStatus.OK);
+//    }
+//
+//    //쪽지 조회
+//    @GetMapping
+//    public ResponseEntity<List> getMessage(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+//        return new ResponseEntity<List>(messageService.getAll(user.getEmail()), HttpStatus.OK);
+//    }
     //쪽지 보내기
-    @PostMapping
-    public ResponseEntity<Boolean> sendMessage(@AuthenticationPrincipal CustomUserDetails user, MessageRequestDto.sendDto request) throws Exception {
-        return new ResponseEntity<Boolean>(messageService.send(user.getEmail(), request), HttpStatus.OK);
+    @PostMapping("/mentor")
+    public ResponseEntity<Boolean> sendMessageMentor(@AuthenticationPrincipal CustomUserDetails user, MessageRequestDto.sendDto request) throws Exception {
+        return new ResponseEntity<Boolean>(messageService.send(user.getEmail(), 1, request), HttpStatus.OK);
     }
+
+    @PostMapping("/mentee")
+    public ResponseEntity<Boolean> sendMessageMentee(@AuthenticationPrincipal CustomUserDetails user, MessageRequestDto.sendDto request) throws Exception {
+        return new ResponseEntity<Boolean>(messageService.send(user.getEmail(), 2, request), HttpStatus.OK);
+    }
+
     //쪽지 조회
-    @GetMapping
-    public ResponseEntity<List> getMessage(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(messageService.getAll(user.getEmail()), HttpStatus.OK);
+    @GetMapping("/mentor")
+    public ResponseEntity<List> getMessageMentor(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(messageService.getAll(user.getEmail(), 1), HttpStatus.OK);
+    }
+
+    @GetMapping("/mentee")
+    public ResponseEntity<List> getMessageMentee(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
+        return new ResponseEntity<List>(messageService.getAll(user.getEmail(), 2), HttpStatus.OK);
     }
 //    //쪽지 삭제
 //    @DeleteMapping

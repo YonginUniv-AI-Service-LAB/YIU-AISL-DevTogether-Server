@@ -34,11 +34,11 @@ public class Message {
 
     @JoinColumn
     @ManyToOne
-    private User fromUserId;
+    private UserProfile fromUserId;
 
     @JoinColumn
     @ManyToOne
-    private User toUserid;
+    private UserProfile toUserid;
 
     @Column
     private Integer status;

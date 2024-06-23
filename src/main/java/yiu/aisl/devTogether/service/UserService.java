@@ -53,11 +53,11 @@ public class UserService {
 
     // [API] 내 정보 수정
     public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto) throws Exception {
-        if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
 
-        User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(()->
+        User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
         UserProfile userProfile = userProfileRepository.findByUser(user)
                 .orElseThrow(() -> new CustomException(ErrorCode.NO_AUTH));
@@ -195,8 +195,8 @@ public class UserService {
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
 
-        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
-                dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee()==null) {
+        if (dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
+                dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee() == null) {
             userProfile.setChecks(0);
         } else {
             userProfile.setChecks(1);
@@ -230,8 +230,8 @@ public class UserService {
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
 
-        if(dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
-        dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee()==null) {
+        if (dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
+                dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee() == null) {
             userProfile.setChecks(0);
         } else {
             userProfile.setChecks(1);
@@ -260,11 +260,11 @@ public class UserService {
 
     // [API] 알림 확인
     public Boolean checkAlarm(CustomUserDetails userDetails, Long pushId) {
-        if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
 
-        User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(()->
+        User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
 
         Push push = pushRepository.getReferenceById(pushId);
@@ -274,7 +274,7 @@ public class UserService {
 
     // [API] 알림 내역 조회
     public Object getMyAlarms(CustomUserDetails userDetails) {
-        if(userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
 
