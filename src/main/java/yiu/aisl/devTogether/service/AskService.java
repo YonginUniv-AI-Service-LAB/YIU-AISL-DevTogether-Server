@@ -36,7 +36,7 @@ public class AskService {
     //ask 조회(내가 쓴 글 조회)
     public List<AskResponseDto> getList(String email) throws Exception {
         User user = findByEmail(email);
-        List<Ask> askList = askRepository.findByUser(user);
+        List<Ask> askList = askRepository.findByUserOrderByCreatedAtDesc(user);
         List<AskResponseDto> getList = new ArrayList<>();
         askList.forEach(ask -> getList.add(AskResponseDto.GetAskDTO(ask)));
         for (AskResponseDto ask : getList) {
@@ -49,7 +49,7 @@ public class AskService {
         return getList;
     }
     //ask 조회(관리자용)
-    public List <AskResponseDto >getAdminList() throws  Exception {
+    public List <AskResponseDto >getAdminList() throws Exception {
         List<Ask> askAdminList = askRepository.findByOrderByCreatedAtDesc();
         List<AskResponseDto> getAdminList = new ArrayList<>();
         askAdminList.forEach(s->getAdminList.add(AskResponseDto.GetAskDTO(s)));

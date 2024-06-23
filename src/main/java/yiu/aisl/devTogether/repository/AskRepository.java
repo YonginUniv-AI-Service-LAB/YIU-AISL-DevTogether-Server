@@ -11,6 +11,7 @@ import java.util.Optional;
 @Transactional
 public interface AskRepository extends JpaRepository<Ask, Long> {
 
+    List<Ask> findByUserOrderByCreatedAtDesc(User user);
     List<Ask> findByOrderByCreatedAtDesc();
     Optional<Ask> findByAskId(Long askId);
     List<Ask> findByUser(User user);

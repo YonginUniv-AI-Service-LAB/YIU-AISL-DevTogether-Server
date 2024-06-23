@@ -25,7 +25,7 @@ public class AskResponseDto {
     private Boolean files;
     private List<FilesResponseDto> filesList;
     private AskCategory askCategory;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
 

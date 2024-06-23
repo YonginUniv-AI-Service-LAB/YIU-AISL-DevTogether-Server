@@ -35,7 +35,6 @@ public class MatchingService {
 
     //멘토 조회(멘티가 멘토 조회)
     public Object mentorList(CustomUserDetails userDetails) {
-        Long user = userDetails.getUser().getId();
         List<UserProfile> userProfiles = userProfileRepository.findByRole(1);
         return userProfiles.stream()
                 .filter(userProfile -> userProfile.getChecks() != null && userProfile.getChecks() == 1)
@@ -49,7 +48,6 @@ public class MatchingService {
 
     //멘티 조회(멘토가 멘티 조회)
     public Object menteeList(CustomUserDetails userDetails) {
-        Long user = userDetails.getUser().getId();
         List<UserProfile> userProfiles = userProfileRepository.findByRole(2);
 
         return userProfiles.stream()
@@ -130,29 +128,34 @@ public class MatchingService {
         UserProfile userProfile = findByUserIdAndRole(userId, 2);
         try {
             UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
-            if (mentor.getRole() != 1) { // 대상이 멘티가 아닌 경우
-                throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
+            //
+            if (mentor.getRole() != 1) {
+                throw new CustomException(ErrorCode.NO_AUTH);
+            }
+
+            if (request.getContents() == null || request.getTutoringFee() == null || request.getMentor() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+            //
+            if(request.getSubject1()== null && request.getSubject2()== null&& request.getSubject3()== null
+            && request.getSubject4()== null&& request.getSubject5()== null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
 
             List<String> mentorSubjects = Arrays.asList(
                     mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
                     mentor.getSubject4(), mentor.getSubject5()
             );
-
-            if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
-
             List<String> menteeSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
 
+            // 필터링하여 null이 아닌 과목만 리스트에 추가
             menteeSubjects = menteeSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
+            //
             if (menteeSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
-
             boolean matchingSubject = mentorSubjects.stream().anyMatch(menteeSubjects::contains);
-            System.out.println(menteeSubjects);
-
+            //
             if (!matchingSubject) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
@@ -166,7 +169,6 @@ public class MatchingService {
                     .subject3(request.getSubject3())
                     .subject4(request.getSubject4())
                     .subject5(request.getSubject5())
-
                     .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
                     .build();
@@ -196,34 +198,37 @@ public class MatchingService {
         UserProfile userProfile = findByUserIdAndRole(userId, 1);
         try {
             UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
-            if (mentee.getRole() != 2) { // 대상이 멘티가 아닌 경우
-                throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
+            //
+            if (mentee.getRole() != 2) {
+                throw new CustomException(ErrorCode.NO_AUTH);
             }
 
+            //
+            if (request.getContents() == null || request.getTutoringFee() == null || request.getMentee() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+            //
+            if(request.getSubject1() == null && request.getSubject2()== null&& request.getSubject3()== null
+                    && request.getSubject4()== null && request.getSubject5()== null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
             List<String> menteeSubjects = Arrays.asList(
                     mentee.getSubject1(), mentee.getSubject2(), mentee.getSubject3(),
                     mentee.getSubject4(), mentee.getSubject5()
             );
 
-            if (request.getContents().isEmpty() || request.getTutoringFee() == null) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
-
             List<String> mentorSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
-
             // 필터링하여 null이 아닌 과목만 리스트에 추가
             mentorSubjects = mentorSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
-
+            //
             if (mentorSubjects.isEmpty()) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
             boolean matchingSubject = menteeSubjects.stream().anyMatch(mentorSubjects::contains);
-
-
+            //
             if (!matchingSubject) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
-
             Matching matching = Matching.builder()
                     .status("신청")
                     .mentor(userProfile)
@@ -247,10 +252,9 @@ public class MatchingService {
                     .checks(0)
                     .build();
             pushRepository.save(push);
-
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
@@ -378,6 +382,7 @@ public class MatchingService {
             }
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
