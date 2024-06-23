@@ -13,5 +13,6 @@ public class LoginResponseDto {
     private String name;
     private String nickname;
     private Integer role;
+    private Long user_profile_id;
     private TokenDto token;
 }

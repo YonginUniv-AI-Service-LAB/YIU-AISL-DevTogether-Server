@@ -275,6 +275,7 @@ public class MainService {
                     .name(user.getName())
                     .nickname(userProfile.getNickname())
                     .role(role)
+                    .user_profile_id(userProfile.getUserProfileId())
                     .token(TokenDto.builder()
                             .accessToken(tokenProvider.createToken(user, role))
                             .refreshToken(user.getRefreshToken())
