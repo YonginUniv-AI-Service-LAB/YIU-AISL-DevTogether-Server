@@ -100,8 +100,8 @@ public class MainController {
 
     //email 찾기
     @PostMapping(value = "/email")
-    public ResponseEntity<Boolean>  emailFind( CustomUserDetails user,EmailDto request) throws  Exception{
-        return new ResponseEntity<Boolean>(mainService.emailFind(user.getEmail(),request), HttpStatus.OK);
+    public ResponseEntity<String >  emailFind( EmailDto request) throws  Exception{
+        return new ResponseEntity<String >(mainService.emailFind(request), HttpStatus.OK);
     }
 
     // accessToke 재발급

@@ -6,7 +6,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
-import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -47,7 +46,7 @@ public class UserService {
                 .location1(user.getLocation1())
                 .location2(user.getLocation2())
                 .location3(user.getLocation3())
-                .question(user.getQuestion().getValue())
+                .question(user.getQuestion())
                 .answer(user.getAnswer())
                 .build();
     }
@@ -78,7 +77,7 @@ public class UserService {
         user.setLocation2(dto.getLocation2());
         user.setLocation3(dto.getLocation3());
         user.setAnswer(dto.getAnswer());
-        user.setQuestion(QuestionCategory.fromInt(dto.getQuestion()));
+        user.setQuestion(dto.getQuestion());
 
         return true;
     }

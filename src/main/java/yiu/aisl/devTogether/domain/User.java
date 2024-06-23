@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
-import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 
 import java.io.File;
@@ -53,9 +52,8 @@ public class User {
     private Integer age;
 
 
-    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private QuestionCategory question;
+    private Integer question;
 
     @Column(nullable = false)
     private String answer;

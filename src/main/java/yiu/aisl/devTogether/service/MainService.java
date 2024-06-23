@@ -13,14 +13,13 @@ import yiu.aisl.devTogether.domain.Token;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
-import yiu.aisl.devTogether.domain.state.QuestionCategory;
 import yiu.aisl.devTogether.domain.state.RoleCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.security.TokenProvider;
 import yiu.aisl.devTogether.repository.*;
-import java.io.UnsupportedEncodingException;
+
 import java.time.Duration;
 import java.util.*;
 
@@ -121,7 +120,7 @@ public class MainService {
     public Boolean register(RegisterRequestDto request) throws Exception {
         RoleCategory roleCategory = RoleCategory.fromInt(request.getRole());
         GenderCategory genderCategory = GenderCategory.fromInt(request.getGender());
-        QuestionCategory question = QuestionCategory.fromInt(request.getQuestion());
+
         //400 - 데이터 미입력
         if (  request.getEmail().isEmpty() || request.getPwd().isEmpty() || request.getName().isEmpty()
                 || request.getNickname().isEmpty()   || request.getRole() == null
@@ -152,7 +151,7 @@ public class MainService {
                     .gender(genderCategory)
                     .age(request.getAge())
                     .birth(request.getBirth())
-                    .question(question)
+                    .question(request.getQuestion())
                     .answer(request.getAnswer())
                     .build();
             userRepository.save(user);
@@ -201,26 +200,34 @@ public class MainService {
         return true;
     }
     // 이메일 찾기
-    public Boolean emailFind(String email,EmailDto request) throws Exception {
-        User user = findByEmail(email);
+    public String  emailFind(EmailDto request) throws Exception {
 
-        // 404 - 회원없음
-        if (!user.getName().equals(request.getName()) ||
-                !user.getBirth().equals(request.getBirth())) {
-            throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
-        }
 
-        // 400 - 데이터 미입력
         if (request.getName().isEmpty() || request.getBirth().isEmpty()
-                || request.getQuestion() == null  || request.getAnswer().isEmpty()) {
+                || request.getQuestion() == null || request.getAnswer().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
+        Optional<User> user = userRepository.findByNameAndBirthAndQuestionAndAnswer(request.getName(), request.getBirth(), request.getQuestion(), request.getAnswer());
+        if (user.isEmpty()) {
+            throw new CustomException(ErrorCode.NO_AUTH);
+        }
+
+        User userInfo = user.get();
+
+
+        // 404 - 회원없음
+        if (!userInfo.getName().equals(request.getName()) || !userInfo.getBirth().equals(request.getBirth())) {
+            throw new CustomException(ErrorCode.NOT_EXIST_MEMBER);
+        }
+
         // 401 - 정보 불일치
-        if(!user.getQuestion().equals(request.getQuestion()) || !user.getAnswer().equals(request.getAnswer())) {
+        if (!userInfo.getQuestion().equals(request.getQuestion()) || !userInfo.getAnswer().equals(request.getAnswer())) {
             throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
         }
-        return true;
+        // 모든 검증을 통과했으면 사용자의 이메일 반환
+        return userInfo.getEmail();
+
     }
 
     //로그인

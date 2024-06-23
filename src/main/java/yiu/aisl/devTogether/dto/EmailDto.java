@@ -11,7 +11,7 @@ public class EmailDto {
 
 
     private String name;
-    private String question;
+    private Integer question;
     private String answer;
     private String birth;
 }
