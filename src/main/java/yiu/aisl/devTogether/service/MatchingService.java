@@ -126,22 +126,18 @@ public class MatchingService {
     public Boolean applyMentor(CustomUserDetails userDetails, MatchingRequestDto.MentorApplyDTO request) throws Exception {
         Long userId = userDetails.getUser().getId();
         UserProfile userProfile = findByUserIdAndRole(userId, 2);
-        try {
+
             UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
             //
             if (mentor.getRole() != 1) {
                 throw new CustomException(ErrorCode.NO_AUTH);
             }
 
-            if (request.getContents() == null || request.getTutoringFee() == null || request.getMentor() == null) {
+            if (request.getContents().isEmpty()|| request.getTutoringFee() == null || request.getMentor() == null ||
+                    ( request.getSubject1() == null && request.getSubject2()== null&& request.getSubject3()== null
+                            && request.getSubject4()== null && request.getSubject5()== null)) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
-            //
-            if(request.getSubject1()== null && request.getSubject2()== null&& request.getSubject3()== null
-            && request.getSubject4()== null&& request.getSubject5()== null) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
-
             List<String> mentorSubjects = Arrays.asList(
                     mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
                     mentor.getSubject4(), mentor.getSubject5()
@@ -159,7 +155,7 @@ public class MatchingService {
             if (!matchingSubject) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
-
+        try {
             Matching matching = Matching.builder()
                     .status("신청")
                     .mentee(userProfile)
@@ -196,7 +192,7 @@ public class MatchingService {
     public Boolean applyMentee(CustomUserDetails userDetails, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
         Long userId = userDetails.getUser().getId();
         UserProfile userProfile = findByUserIdAndRole(userId, 1);
-        try {
+
             UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
             //
             if (mentee.getRole() != 2) {
@@ -204,20 +200,18 @@ public class MatchingService {
             }
 
             //
-            if (request.getContents() == null || request.getTutoringFee() == null || request.getMentee() == null) {
+            if (request.getContents().isEmpty() || request.getTutoringFee() == null || request.getMentee() == null ||
+                    ( request.getSubject1() == null && request.getSubject2()== null&& request.getSubject3()== null
+                            && request.getSubject4()== null && request.getSubject5()== null)) {
                 throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
             }
-            //
-            if(request.getSubject1() == null && request.getSubject2()== null&& request.getSubject3()== null
-                    && request.getSubject4()== null && request.getSubject5()== null) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
+
             List<String> menteeSubjects = Arrays.asList(
                     mentee.getSubject1(), mentee.getSubject2(), mentee.getSubject3(),
                     mentee.getSubject4(), mentee.getSubject5()
             );
-
             List<String> mentorSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
+
             // 필터링하여 null이 아닌 과목만 리스트에 추가
             mentorSubjects = mentorSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
             //
@@ -229,6 +223,7 @@ public class MatchingService {
             if (!matchingSubject) {
                 throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
             }
+        try {
             Matching matching = Matching.builder()
                     .status("신청")
                     .mentor(userProfile)
@@ -254,7 +249,7 @@ public class MatchingService {
             pushRepository.save(push);
             return true;
         } catch (Exception e) {
-
+            e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
