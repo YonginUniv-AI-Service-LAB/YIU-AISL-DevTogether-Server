@@ -59,12 +59,11 @@ public class UserService {
 
         User user = userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(() ->
                 new CustomException(ErrorCode.NO_AUTH)); // 권한 오류 (403)
-        UserProfile userProfile = userProfileRepository.findByUser(user)
-                .orElseThrow(() -> new CustomException(ErrorCode.NO_AUTH));
 
 
         // 데이터 미입력 (400)
-        if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null) {
+        if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null ||
+        dto.getLocation1().isEmpty() || dto.getAnswer().isEmpty() || dto.getQuestion() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
