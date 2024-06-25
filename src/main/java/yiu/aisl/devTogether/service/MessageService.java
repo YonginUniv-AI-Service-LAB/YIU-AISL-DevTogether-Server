@@ -27,8 +27,9 @@ public class MessageService {
     private final MessageRepository messageRepository;
     public final PushRepository pushRepository;
     public final UserProfileRepository userProfileRepository;
+
     //메시지 보내기
-    public Boolean send(String email,Integer role, MessageRequestDto.sendDto request) throws Exception {
+    public Boolean send(String email, Integer role, MessageRequestDto.sendDto request) throws Exception {
         //400 데이터 미입력
         if (email == null || request.getTitle() == null || request.getContents() == null || request.getToUserId() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
@@ -67,7 +68,7 @@ public class MessageService {
     public List<MessageResponseDto> getAll(String email, Integer role) throws Exception {
         //403
         User user = findByUserEmail(email);
-        UserProfile userProfile =findByUserProfile(user, role);
+        UserProfile userProfile = findByUserProfile(user, role);
 
         try {
             List<Message> fromMessages = messageRepository.findByFromUserId(userProfile);
@@ -86,10 +87,12 @@ public class MessageService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
+
     public UserProfile findByUserProfile(User user, Integer role) {
         return userProfileRepository.findByUserAndRole(user, role)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
     }
+
     public UserProfile findByUserProfile(Long userProfileId) {
         return userProfileRepository.findByUserProfileId(userProfileId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_MEMBER));
