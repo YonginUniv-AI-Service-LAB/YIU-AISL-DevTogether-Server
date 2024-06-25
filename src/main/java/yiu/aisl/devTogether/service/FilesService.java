@@ -53,6 +53,11 @@ public class FilesService {
 //        }
         try {
 
+            if (!filesRepository.findByTypeAndTypeId(type, id).isEmpty()) {
+                Long fileId = filesRepository.findByTypeAndTypeId(type, id).get(0).getFileId();
+                System.out.println(filesRepository.findByTypeAndTypeId(type, id));
+                deleteFile(fileId);
+            }
             String originName = getFileName(file);
             String storageName = saveFileProj(file);
             String filedir = fileDir + storageName;

@@ -32,7 +32,7 @@ public class UserProfile {
     @Column
     private Integer role;
 
-    @Column(nullable = false,  length = 20)
+    @Column(nullable = false, length = 20)
     private String nickname;
 
 
@@ -59,9 +59,11 @@ public class UserProfile {
 
     @Column
     private Boolean files;
+
     public FilesResponseDto getFilesdata() {
         return null;
     }
+
     @Column
     @ColumnDefault("0")
     private Integer checks;
@@ -81,7 +83,6 @@ public class UserProfile {
     @Column
     private String subject5;
 
-
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt;
@@ -89,7 +90,4 @@ public class UserProfile {
     @UpdateTimestamp
     @Column
     private LocalDateTime updatedAt;
-
-
-
 }

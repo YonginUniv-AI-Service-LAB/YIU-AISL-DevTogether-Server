@@ -59,6 +59,8 @@ public class Board {
     @OneToMany(mappedBy = "typeId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Likes> likes;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<BoardScrap> boardScraps = new ArrayList<>();
     public List<FilesResponseDto> getFilesList() {
         return null;
     }
