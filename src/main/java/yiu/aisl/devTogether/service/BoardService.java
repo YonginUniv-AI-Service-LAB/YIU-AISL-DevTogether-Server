@@ -147,8 +147,10 @@ public class BoardService {
         if (!existingboard.getUserProfile().equals(userProfile)) {
             throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
         }
-
-        Boolean files = filesService.isMFile(file);
+        List<Files> filesList = filesRepository.findByTypeAndTypeId(2, request.getBoardId());
+        System.out.println(filesList.isEmpty());
+        Boolean files = filesService.isMFile(file) || !filesList.isEmpty();
+        System.out.println(files);
         try {
             existingboard.setTitle(request.getTitle());
             existingboard.setContents(request.getContents());

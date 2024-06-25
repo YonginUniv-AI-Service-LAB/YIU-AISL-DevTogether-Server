@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,7 @@ public class FilesService {
     public String saveFileProj(MultipartFile files) throws Exception {
         try {
             LocalDateTime currenTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
             String fileName = currenTime.format(formatter) + "_" + files.getOriginalFilename();
             File file = new File(fileDir, fileName);
             files.transferTo(file);
@@ -131,27 +132,38 @@ public class FilesService {
     }
 
     //파일 수정
-    public Boolean filesUpdate(Integer type, Long typeId, MultipartFile file, List<Long> fileId) throws Exception {
-        //리스트에 있는 파일 삭제
-        for (Long files : fileId) {
-            deleteFile(files);
-        }
+    public Boolean filesUpdate(Integer type, Long typeId, MultipartFile file, List<Long> deleteId) throws Exception {
+        List<Files> filesList = filesRepository.findByTypeAndTypeId(type, typeId);
+        Set<Long> filesIdSet = filesList.stream()
+                .map(Files::getFileId)
+                .collect(Collectors.toSet());
 
+        // deleteId에 있는 파일이 filesIdSet에 존재하는지 확인하고, 존재하는 경우에만 삭제
+        for (Long fileId : deleteId) {
+            if (filesIdSet.contains(fileId)) {
+                deleteFile(fileId);
+            }
+        }
         //파일 생성
         saveFileDb(file, type, typeId);
-
         return true;
     }
 
     public Boolean filesMUpdate(Integer type, Long typeId, List<MultipartFile> file, List<Long> deleteId) throws Exception {
-        //리스트에 있는 파일 삭제
-        for (Long files : deleteId) {
-            deleteFile(files);
-        }
 
+        List<Files> filesList = filesRepository.findByTypeAndTypeId(type, typeId);
+        Set<Long> filesIdSet = filesList.stream()
+                .map(Files::getFileId)
+                .collect(Collectors.toSet());
+
+        // deleteId에 있는 파일이 filesIdSet에 존재하는지 확인하고, 존재하는 경우에만 삭제
+        for (Long fileId : deleteId) {
+            if (filesIdSet.contains(fileId)) {
+                deleteFile(fileId);
+            }
+        }
         //파일 일괄 생성
         saveFileMDb(file, type, typeId);
-
         return true;
     }
 
