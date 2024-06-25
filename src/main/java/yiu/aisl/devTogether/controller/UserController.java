@@ -119,6 +119,22 @@ public class UserController {
 //        return new ResponseEntity<>(userService.getMyScrap(userDetails), HttpStatus.OK);
 //    }
 
+    // 내가 멘토일 때 스크랩한 게시글 조회
+    @GetMapping(value = "/scrap/board/mentor")
+    public ResponseEntity<Object> getMyBoardScrapMentor(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyScrapMentor(userDetails), HttpStatus.OK);
+    }
+
+    // 내가 멘토일 때 스크랩한 게시글 조회
+    @GetMapping(value = "/scrap/board/mentee")
+    public ResponseEntity<Object> getMyBoardScrapMentee(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyScrapMentee(userDetails), HttpStatus.OK);
+    }
+
     // 내가 스크랩한 멘토 매칭 조회 = test 완료
     @GetMapping(value = "/scrap/mentor")
     public ResponseEntity<Object> getMyMentorMatchingScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {

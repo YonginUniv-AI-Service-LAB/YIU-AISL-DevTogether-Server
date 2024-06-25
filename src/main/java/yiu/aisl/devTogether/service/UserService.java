@@ -121,6 +121,26 @@ public class UserService {
 //                .collect(Collectors.toList());
 //    }
 
+    // [API] 내가 멘토일 때 스크랩한 게시글 조회
+    public Object getMyScrapMentor(CustomUserDetails userDetails) {
+        Long user = userDetails.getUser().getId();
+        Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 1);
+        List<BoardScrap> myBoardScrapMentor = boardScrapRepository.findByUser(userProfile.get());
+        return myBoardScrapMentor.stream()
+                .map(BoardScrapDto::new)
+                .collect(Collectors.toList());
+    }
+
+    // [API] 내가 멘티일 때 스크랩한 게시글 조회
+    public Object getMyScrapMentee(CustomUserDetails userDetails) {
+        Long user = userDetails.getUser().getId();
+        Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 2);
+        List<BoardScrap> myBoardScrapMentor = boardScrapRepository.findByUser(userProfile.get());
+        return myBoardScrapMentor.stream()
+                .map(BoardScrapDto::new)
+                .collect(Collectors.toList());
+    }
+
     // [API] 내가 스크랩 멘토 프로필 조회
     public Object getMentorProfileScrap(CustomUserDetails userDetails) {
         User user = userDetails.getUser();
