@@ -19,7 +19,7 @@ public class BoardScrap {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_profile_id")
     @ManyToOne
     private UserProfile user;
 
