@@ -8,7 +8,7 @@ public class MessageRequestDto {
 
     @Getter
     @Setter
-    public static class sendDto{
+    public static class sendDto {
         private String title;
         private String contents;
         private Long toUserId;

@@ -20,20 +20,20 @@ public class MessageResponseDto {
     private String contents;
     private Long fromUserId;
     private String fromUserNickName;
-    private Long toUserid;;
+    private Long toUserId;
     private String toUserNickName;
     private Integer status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static MessageResponseDto getMessageDto(Message message){
+    public static MessageResponseDto getMessageDto(Message message) {
         return MessageResponseDto.builder()
                 .messageId(message.getMessageId())
                 .title(message.getTitle())
                 .contents(message.getContents())
                 .fromUserId(message.getFromUserId().getUserProfileId())
                 .fromUserNickName(message.getFromUserId().getNickname())
-                .toUserid(message.getToUserId().getUserProfileId())
+                .toUserId(message.getToUserId().getUserProfileId())
                 .toUserNickName(message.getToUserId().getNickname())
                 .status(message.getStatus())
                 .createdAt(message.getCreatedAt())
