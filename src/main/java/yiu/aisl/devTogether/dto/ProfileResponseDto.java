@@ -28,6 +28,12 @@ public class ProfileResponseDto {
     private Integer role;
     private GenderCategory gender;
     private Integer age;
+    private String nickname;
+    private String subject1;
+    private String subject2;
+    private String subject3;
+    private String subject4;
+    private String subject5;
     private String location1;
     private String location2;
     private String location3;
@@ -48,6 +54,12 @@ public class ProfileResponseDto {
         this.role = userProfile.getRole();
         this.gender = user.getGender();
         this.age=user.getAge();
+        this.nickname = userProfile.getNickname();
+        this.subject1 = userProfile.getSubject1();
+        this.subject2 = userProfile.getSubject2();
+        this.subject3 = userProfile.getSubject3();
+        this.subject4 = userProfile.getSubject4();
+        this.subject5 = userProfile.getSubject5();
         this.location1=user.getLocation1();
         this.location2=user.getLocation2();
         this.location3=user.getLocation3();

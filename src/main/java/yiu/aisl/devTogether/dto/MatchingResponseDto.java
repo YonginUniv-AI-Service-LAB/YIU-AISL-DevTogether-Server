@@ -26,6 +26,11 @@ public class MatchingResponseDto {
     private String subject5;
     private Integer tutoringFee;
     private String contents;
+    private String method;
+    private String schedule;
+    private String location1;
+    private String location2;
+    private String location3;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
     private LocalDateTime endedAt;
@@ -44,6 +49,11 @@ public class MatchingResponseDto {
                 matching.getSubject5(),
                 matching.getTutoringFee(),
                 matching.getContents(),
+                matching.getMethod(),
+                matching.getSchedule(),
+                matching.getLocation1(),
+                matching.getLocation2(),
+                matching.getLocation3(),
                 matching.getCreatedAt(),
                 matching.getUpdatedAt(),
                 matching.getEndedAt()
@@ -60,8 +70,13 @@ public class MatchingResponseDto {
         this.subject3 = matching.getSubject3();
         this.subject4 = matching.getSubject4();
         this.subject5 = matching.getSubject5();
-        this.contents = matching.getContents();
         this.tutoringFee = matching.getTutoringFee();
+        this.contents = matching.getContents();
+        this.method = matching.getMethod();
+        this.schedule = matching.getSchedule();
+        this.location1 = matching.getLocation1();
+        this.location2 = matching.getLocation2();
+        this.location3 = matching.getLocation3();
         this.createAt = matching.getCreatedAt();
         this.updatedAt = matching.getUpdatedAt();
         this.endedAt = matching.getEndedAt();
