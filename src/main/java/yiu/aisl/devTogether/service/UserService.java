@@ -53,6 +53,7 @@ public class UserService {
 
     // [API] 내 정보 수정
     public Boolean updateProfile(CustomUserDetails userDetails, MyProfileRequestDto dto) throws Exception {
+
         if (userRepository.findByEmail(userDetails.getUser().getEmail()).isEmpty()) {
             new CustomException(ErrorCode.NOT_EXIST_ID); // 해당 사용자 없음 (404)
         }
@@ -62,21 +63,14 @@ public class UserService {
 
 
         // 데이터 미입력 (400)
-        if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null ||
-        dto.getLocation1().isEmpty()) {
+        if (dto.getEmail().isEmpty()  || dto.getLocation1().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
         user.setEmail(dto.getEmail());
-        user.setName(dto.getName());
-        user.setRole(RoleCategory.values()[dto.getRole()]);
-        user.setGender(GenderCategory.values()[dto.getGender()]);
-        user.setAge(dto.getAge());
         user.setLocation1(dto.getLocation1());
         user.setLocation2(dto.getLocation2());
         user.setLocation3(dto.getLocation3());
-
-
         return true;
     }
 
@@ -257,6 +251,7 @@ public class UserService {
         Boolean imgs = filesService.isFile(img);
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
+        userProfile.setNickname(dto.getNickname());
         userProfile.setPortfolio(dto.getPortfolio());
         userProfile.setContents(dto.getContents());
         userProfile.setSchedule(dto.getSchedule());

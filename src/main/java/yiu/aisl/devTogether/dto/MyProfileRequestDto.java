@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class MyProfileRequestDto {
     private String email;
     private String name;
-    private String nickname;
+
     private Integer role;
     private Integer gender;
     private Integer age;
