@@ -46,6 +46,22 @@ public class Matching {
     @Column
     private Integer tutoringFee;
 
+    @Column
+    private String location1;
+
+    @Column
+    private String location2;
+
+    @Column
+    private String location3;
+
+    @Column
+    private String method;
+
+    @Column
+    private String schedule;
+
+
     @Column(columnDefinition = "TEXT")
     private String contents;
 

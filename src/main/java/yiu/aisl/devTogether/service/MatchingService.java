@@ -127,34 +127,39 @@ public class MatchingService {
         Long userId = userDetails.getUser().getId();
         UserProfile userProfile = findByUserIdAndRole(userId, 2);
 
-            UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
-            //
-            if (mentor.getRole() != 1) {
-                throw new CustomException(ErrorCode.NO_AUTH);
-            }
+        UserProfile mentor = findByUserProfileId(request.getMentor().getUserProfileId());
+        //403: 권한없음
+        if (mentor.getRole() != 1) {
+            throw new CustomException(ErrorCode.NO_AUTH);
+        }
+        //400: 데이터 미입력
+        if (request.getContents().isEmpty() || request.getTutoringFee() == null || request.getMentor() == null ||
+                (request.getSubject1() == null && request.getSubject2() == null && request.getSubject3() == null
+                        && request.getSubject4() == null && request.getSubject5() == null) ||
+                (request.getLocation1() == null && request.getLocation2() == null && request.getLocation3() == null) ||
+                request.getMethod().isEmpty() || request.getSchedule().isEmpty()) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+        // 과목
+        List<String> mentorSubjects = Arrays.asList(
+                mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
+                mentor.getSubject4(), mentor.getSubject5()
+        );
+        List<String> menteeSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
 
-            if (request.getContents().isEmpty()|| request.getTutoringFee() == null || request.getMentor() == null ||
-                    ( request.getSubject1() == null && request.getSubject2()== null&& request.getSubject3()== null
-                            && request.getSubject4()== null && request.getSubject5()== null)) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
-            List<String> mentorSubjects = Arrays.asList(
-                    mentor.getSubject1(), mentor.getSubject2(), mentor.getSubject3(),
-                    mentor.getSubject4(), mentor.getSubject5()
-            );
-            List<String> menteeSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
+        // 필터링하여 null이 아닌 과목만 리스트에 추가
+        menteeSubjects = menteeSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        //
+        if (menteeSubjects.isEmpty()) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+        boolean matchingSubject = mentorSubjects.stream().anyMatch(menteeSubjects::contains);
+        //401: 회원정보 불일치
+        if (!matchingSubject) {
+            throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+        }
+        // 지역
 
-            // 필터링하여 null이 아닌 과목만 리스트에 추가
-            menteeSubjects = menteeSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
-            //
-            if (menteeSubjects.isEmpty()) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
-            boolean matchingSubject = mentorSubjects.stream().anyMatch(menteeSubjects::contains);
-            //
-            if (!matchingSubject) {
-                throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
-            }
         try {
             Matching matching = Matching.builder()
                     .status("신청")
@@ -165,15 +170,21 @@ public class MatchingService {
                     .subject3(request.getSubject3())
                     .subject4(request.getSubject4())
                     .subject5(request.getSubject5())
-                    .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
+                    .tutoringFee(request.getTutoringFee())
+                    .method(request.getMethod())
+                    .schedule(request.getSchedule())
+                    .location1(request.getLocation1())
+                    .location2(request.getLocation2())
+                    .location3(request.getLocation3())
+
                     .build();
             matchingRepository.save(matching);
             System.out.println("매칭" + matching);
             String nickname = userDetails.getUsername();
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(nickname+"님이 과외를 신청했습니다.")
+                    .contents(nickname + "님이 과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(0)
@@ -187,42 +198,43 @@ public class MatchingService {
     }
 
 
-
     // 신청하기(멘토가 멘티에게)
     public Boolean applyMentee(CustomUserDetails userDetails, MatchingRequestDto.MenteeApplyDTO request) throws Exception {
         Long userId = userDetails.getUser().getId();
         UserProfile userProfile = findByUserIdAndRole(userId, 1);
 
-            UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
-            //
-            if (mentee.getRole() != 2) {
-                throw new CustomException(ErrorCode.NO_AUTH);
-            }
+        UserProfile mentee = findByUserProfileId(request.getMentee().getUserProfileId());
+        //403: 권한없음
+        if (mentee.getRole() != 2) {
+            throw new CustomException(ErrorCode.NO_AUTH);
+        }
 
-            //
-            if (request.getContents().isEmpty() || request.getTutoringFee() == null || request.getMentee() == null ||
-                    ( request.getSubject1() == null && request.getSubject2()== null&& request.getSubject3()== null
-                            && request.getSubject4()== null && request.getSubject5()== null)) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
+        //400: 데이터 미입력
+        if (request.getContents().isEmpty() || request.getTutoringFee() == null || request.getMentee() == null ||
+                (request.getSubject1() == null && request.getSubject2() == null && request.getSubject3() == null
+                        && request.getSubject4() == null && request.getSubject5() == null)  ||
+                (request.getLocation1() == null && request.getLocation2() == null && request.getLocation3() == null) ||
+                request.getMethod().isEmpty() || request.getSchedule().isEmpty()) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
 
-            List<String> menteeSubjects = Arrays.asList(
-                    mentee.getSubject1(), mentee.getSubject2(), mentee.getSubject3(),
-                    mentee.getSubject4(), mentee.getSubject5()
-            );
-            List<String> mentorSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
+        List<String> menteeSubjects = Arrays.asList(
+                mentee.getSubject1(), mentee.getSubject2(), mentee.getSubject3(),
+                mentee.getSubject4(), mentee.getSubject5()
+        );
+        List<String> mentorSubjects = List.of(request.getSubject1(), request.getSubject2(), request.getSubject3(), request.getSubject4(), request.getSubject5());
 
-            // 필터링하여 null이 아닌 과목만 리스트에 추가
-            mentorSubjects = mentorSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
-            //
-            if (mentorSubjects.isEmpty()) {
-                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-            }
-            boolean matchingSubject = menteeSubjects.stream().anyMatch(mentorSubjects::contains);
-            //
-            if (!matchingSubject) {
-                throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
-            }
+        // 필터링하여 null이 아닌 과목만 리스트에 추가
+        mentorSubjects = mentorSubjects.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        //
+        if (mentorSubjects.isEmpty()) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
+        boolean matchingSubject = menteeSubjects.stream().anyMatch(mentorSubjects::contains);
+        //401: 회원정보 불일치
+        if (!matchingSubject) {
+            throw new CustomException(ErrorCode.USER_DATA_INCONSISTENCY);
+        }
         try {
             Matching matching = Matching.builder()
                     .status("신청")
@@ -233,8 +245,13 @@ public class MatchingService {
                     .subject3(request.getSubject3())
                     .subject4(request.getSubject4())
                     .subject5(request.getSubject5())
-                    .tutoringFee(request.getTutoringFee())
                     .contents(request.getContents())
+                    .tutoringFee(request.getTutoringFee())
+                    .method(request.getMethod())
+                    .schedule(request.getSchedule())
+                    .location1(request.getLocation1())
+                    .location2(request.getLocation2())
+                    .location3(request.getLocation3())
                     .build();
             matchingRepository.save(matching);
             System.out.println("매칭" + matching);
@@ -253,8 +270,6 @@ public class MatchingService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
 
     // 신청 수락
@@ -303,7 +318,7 @@ public class MatchingService {
 
 
     //신청 거절
-    public Boolean refusal(CustomUserDetails userDetails,  MatchingRequestDto.RefusalDTO request) throws Exception {
+    public Boolean refusal(CustomUserDetails userDetails, MatchingRequestDto.RefusalDTO request) throws Exception {
         Long userId = userDetails.getUser().getId();
         Matching matching = findByMatchingId(request.getMatchingId());
 
@@ -339,12 +354,10 @@ public class MatchingService {
                         .checks(0)
                         .build();
                 pushRepository.save(push);
-            }else{
+            } else {
                 throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
-
-
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -372,7 +385,7 @@ public class MatchingService {
             if (matching.getStatus().equals("신청")) {
                 matchingRepository.deleteById(request.getMatchingId());
                 matching.setStatus("성사안됨");
-            }else{
+            } else {
                 throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
@@ -421,7 +434,7 @@ public class MatchingService {
                         .checks(0)
                         .build();
                 pushRepository.save(push);
-            }else{
+            } else {
                 throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
@@ -468,7 +481,7 @@ public class MatchingService {
                         .checks(0)
                         .build();
                 pushRepository.save(push);
-            }else{
+            } else {
                 throw new CustomException(ErrorCode.NO_AUTH);
             }
             return true;
@@ -476,8 +489,6 @@ public class MatchingService {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
 
     public UserProfile findByUserProfileId(Long userProfileId) {

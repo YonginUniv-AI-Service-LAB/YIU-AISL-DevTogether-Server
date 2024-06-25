@@ -18,6 +18,11 @@ public class MatchingRequestDto {
         private String subject5;
         private String contents;
         private Integer tutoringFee;
+        private String method;
+        private String schedule;
+        private String location1;
+        private String location2;
+        private String location3;
     }
     @Getter
     @Setter
@@ -30,6 +35,11 @@ public class MatchingRequestDto {
         private String subject5;
         private String contents;
         private Integer tutoringFee;
+        private String method;
+        private String schedule;
+        private String location1;
+        private String location2;
+        private String location3;
     }
     @Getter
     @Setter
