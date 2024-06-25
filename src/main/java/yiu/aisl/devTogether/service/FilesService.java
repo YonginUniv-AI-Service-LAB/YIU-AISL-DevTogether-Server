@@ -163,7 +163,9 @@ public class FilesService {
             }
         }
         //파일 일괄 생성
-        saveFileMDb(file, type, typeId);
+        if (isMFile(file)) {
+            saveFileMDb(file, type, typeId);
+        }
         return true;
     }
 
