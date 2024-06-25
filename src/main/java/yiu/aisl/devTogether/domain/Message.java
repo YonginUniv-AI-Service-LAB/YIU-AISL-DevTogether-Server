@@ -38,7 +38,7 @@ public class Message {
 
     @JoinColumn
     @ManyToOne
-    private UserProfile toUserid;
+    private UserProfile toUserId;
 
     @Column
     private Integer status;

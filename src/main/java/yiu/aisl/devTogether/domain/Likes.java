@@ -21,7 +21,7 @@ public class Likes {
 
     @JoinColumn
     @ManyToOne
-    private User userid;
+    private UserProfile userid;
 
     @Column
     private Long typeId;

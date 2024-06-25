@@ -45,12 +45,12 @@ public class MessageService {
                     .title(request.getTitle())
                     .contents(request.getContents())
                     .fromUserId(from_user_p)
-                    .toUserid(to_user_p)
+                    .toUserId(to_user_p)
                     .status(0)
                     .build();
             messageRepository.save(message);
             Push push = Push.builder()
-                    .user(message.getToUserid().getUser())
+                    .user(message.getToUserId().getUser())
                     .type(PushCategory.쪽지)
                     .typeId(message.getMessageId())
                     .contents("쪽지가 왔습니다.")
@@ -71,7 +71,7 @@ public class MessageService {
 
         try {
             List<Message> fromMessages = messageRepository.findByFromUserId(userProfile);
-            List<Message> toMessages = messageRepository.findByToUserid(userProfile);
+            List<Message> toMessages = messageRepository.findByToUserId(userProfile);
             List<MessageResponseDto> sumMessages = new ArrayList<>();
             fromMessages.forEach(s -> sumMessages.add(MessageResponseDto.getMessageDto(s)));
             toMessages.forEach(s -> sumMessages.add(MessageResponseDto.getMessageDto(s)));

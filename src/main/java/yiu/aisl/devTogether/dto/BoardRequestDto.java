@@ -9,40 +9,45 @@ import java.util.List;
 public class BoardRequestDto {
     @Getter
     @Setter
-    public class DetailDto{
+    public class DetailDto {
         private Long boardId;
     }
+
     @Getter
     @Setter
-    public static class CreateDto{
+    public static class CreateDto {
         private String title;
         private String contents;
         private Integer category;
 //        private List<MultipartFile> files;
     }
+
     @Getter
     @Setter
-    public class UpdateDto{
+    public class UpdateDto {
         private Long boardId;
         private String title;
         private String contents;
         private List<Long> deleteId;
     }
+
     @Getter
     @Setter
-    public class DeleteDto{
+    public class DeleteDto {
         private Long boardId;
 
     }
+
     @Getter
     @Setter
     public class likeDto {
         private Long boardId;
         private Boolean count;
     }
+
     @Getter
     @Setter
-    public class CreatScrapDto{
+    public class CreatScrapDto {
         private Long boardId;
     }
 
@@ -53,24 +58,24 @@ public class BoardRequestDto {
         private Long boardId;
         private String contents;
     }
+
     @Getter
     @Setter
     public class UpdateCommentDto {
-//        private Long boardId;
-        private Long CommentId;
+        private Long commentId;
         private String contents;
     }
+
     @Getter
     @Setter
-    public class DeleteCommentDto{
-//        private Long boardId;
+    public class DeleteCommentDto {
         private Long commentId;
     }
+
     @Getter
     @Setter
     public class likeCommentDto {
         private Long commentId;
-        private int type;
         private Boolean count;
 
     }

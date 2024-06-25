@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Transactional
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByToUserid(UserProfile toUser);
+    List<Message> findByToUserId(UserProfile toUser);
     List<Message> findByFromUserId(UserProfile fromUser);
 }

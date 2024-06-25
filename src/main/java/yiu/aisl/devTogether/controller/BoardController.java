@@ -79,16 +79,27 @@ public class BoardController {
     }
 
     //게시판 좋아요
-    @PostMapping("/like")
-    public ResponseEntity<Boolean> likeCount(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.likeDto request) throws Exception {
-        return new ResponseEntity<Boolean>(boardService.likes(user.getEmail(), request), HttpStatus.OK);
+    @PostMapping("/like/mentor")
+    public ResponseEntity<Boolean> likeCountMentor(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.likeDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.likes(user.getEmail(), 1, request), HttpStatus.OK);
+    }
+
+    @PostMapping("/like/mentee")
+    public ResponseEntity<Boolean> likeCountMentee(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.likeDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.likes(user.getEmail(), 2, request), HttpStatus.OK);
     }
 
     //게시글 스크렙
-    @PostMapping("/scrap")
-    public ResponseEntity<Boolean> scrap(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreatScrapDto request) throws Exception {
+    @PostMapping("/scrap/mentor")
+    public ResponseEntity<Boolean> scrapMentor(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreatScrapDto request) throws Exception {
         System.out.println(user);
-        return new ResponseEntity<Boolean>(boardService.createScrap(user.getEmail(), request), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(boardService.createScrap(user.getEmail(), 1, request), HttpStatus.OK);
+    }
+
+    @PostMapping("/scrap/mentee")
+    public ResponseEntity<Boolean> scrapMentee(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.CreatScrapDto request) throws Exception {
+        System.out.println(user);
+        return new ResponseEntity<Boolean>(boardService.createScrap(user.getEmail(), 2, request), HttpStatus.OK);
     }
 
     //댓글 등록
@@ -109,14 +120,24 @@ public class BoardController {
     }
 
     //댓글 수정
-    @PutMapping("/comment")
-    public ResponseEntity<Boolean> updateCommet(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.UpdateCommentDto request) throws Exception {
-        return new ResponseEntity<Boolean>(boardService.updateComment(user.getEmail(), request), HttpStatus.OK);
+    @PutMapping("/comment/mentor")
+    public ResponseEntity<Boolean> updateCommetMentor(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.UpdateCommentDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.updateComment(user.getEmail(), 1, request), HttpStatus.OK);
+    }
+
+    @PutMapping("/comment/mentee")
+    public ResponseEntity<Boolean> updateCommetMentee(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.UpdateCommentDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.updateComment(user.getEmail(), 2, request), HttpStatus.OK);
     }
 
     //댓글 좋아요
-    @PostMapping("/Comment/like")
-    public ResponseEntity<Boolean> likeCountComment(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.likeCommentDto request) throws Exception {
-        return new ResponseEntity<Boolean>(boardService.likeComment(user.getEmail(), request), HttpStatus.OK);
+    @PostMapping("/comment/like/mentor")
+    public ResponseEntity<Boolean> likeCountCommentMentor(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.likeCommentDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.likeComment(user.getEmail(), 1, request), HttpStatus.OK);
+    }
+
+    @PostMapping("/comment/like/mentee")
+    public ResponseEntity<Boolean> likeCountCommentMentee(@AuthenticationPrincipal CustomUserDetails user, BoardRequestDto.likeCommentDto request) throws Exception {
+        return new ResponseEntity<Boolean>(boardService.likeComment(user.getEmail(), 2, request), HttpStatus.OK);
     }
 }

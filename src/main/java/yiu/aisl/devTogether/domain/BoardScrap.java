@@ -21,7 +21,7 @@ public class BoardScrap {
 
     @JoinColumn(name = "user_id")
     @ManyToOne
-    private User user;
+    private UserProfile user;
 
     @JoinColumn(name = "board_id")
     @ManyToOne

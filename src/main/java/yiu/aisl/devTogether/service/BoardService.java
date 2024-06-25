@@ -129,7 +129,7 @@ public class BoardService {
     }
 
     //게시판 수정 -- 이미지 코드 확인 필요
-    public Boolean update(String email,Integer role, BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
+    public Boolean update(String email, Integer role, BoardRequestDto.UpdateDto request, List<MultipartFile> file) throws Exception {
         User user = findByUserEmail(email);
         UserProfile userProfile = findByUserProfile(user, role);
         //400: 데이터 미입력
@@ -174,19 +174,20 @@ public class BoardService {
     }
 
     //게시글 좋아요
-    public boolean likes(String email, BoardRequestDto.likeDto request) throws Exception {
-        // 403: 권한 없음
-        User user = findByUserEmail(email);
-        // 404: id 없음
-        Board board = findByBoardId(request.getBoardId());
+    public boolean likes(String email, Integer type, BoardRequestDto.likeDto request) throws Exception {
         try {
+            // 403: 권한 없음
+            User user = findByUserEmail(email);
+            UserProfile userProfile = findByUserProfile(user, type);
+            // 404: id 없음
+            Board board = findByBoardId(request.getBoardId());
             // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
             if (request.getCount()) {
-                if (likeRepository.findByUseridAndTypeId(user, request.getBoardId()).isPresent()) {
+                if (likeRepository.findByUseridAndTypeId(userProfile, request.getBoardId()).isPresent()) {
                     throw new CustomException(ErrorCode.DUPLICATE);
                 } else {//만약 없으면 좋아요 db 만들기
                     Likes makelike = Likes.builder()
-                            .userid(user)
+                            .userid(userProfile)
                             .typeId(request.getBoardId())
                             .type(0)
                             .build();
@@ -202,68 +203,69 @@ public class BoardService {
 
                 }
             } else {// 취소 했을때
-                if (likeRepository.findByUseridAndTypeId(user, request.getBoardId()).isPresent()) {
-                    Likes likes = findByLikesId(user, request.getBoardId());
+                if (likeRepository.findByUseridAndTypeId(userProfile, request.getBoardId()).isPresent()) {
+                    Likes likes = findByLikesId(userProfile, request.getBoardId());
                     likeRepository.delete(likes);
                 } else {//만약 없으면 오류
                     throw new Exception();
                 }
             }
             return true;
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     //게시글 스크랩
-    public Boolean createScrap(String email, BoardRequestDto.CreatScrapDto request) throws Exception {
-        //400: 데이터 미입력
-        if (request.getBoardId() == null) {
-            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        }
-        //404: id 없음"
+    public Boolean createScrap(String email, Integer type, BoardRequestDto.CreatScrapDto request) throws Exception {
+        try {
+            //400: 데이터 미입력
+            if (request.getBoardId() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+            //404: id 없음"
 //        Optional<Board> board = boardRepository.findByBoardId(request.getBoardId());
 //        if (board.isEmpty()) {
 //            throw new CustomException(ErrorCode.NOT_EXIST_ID);
 //        }
-        Board board = findByBoardId(request.getBoardId());
+            Board board = findByBoardId(request.getBoardId());
 
-        //403: 권한없음
-        User user = findByUserEmail(email);
-
-        if (boardScrapRepository.findByUserAndBoard(user, board).isPresent()) {
-            boardScrapRepository.deleteByUserAndBoard(user, board);
-            return true;
-        } else {
-            try {
+            //403: 권한없음
+            User user = findByUserEmail(email);
+            UserProfile userProfile = findByUserProfile(user, type);
+            if (boardScrapRepository.findByUserAndBoard(userProfile, board).isPresent()) {
+                boardScrapRepository.deleteByUserAndBoard(userProfile, board);
+                return true;
+            } else {
                 BoardScrap scrap = BoardScrap.builder()
-                        .user(user)
+                        .user(userProfile)
                         .board(board)
                         .build();
                 boardScrapRepository.save(scrap);
                 return true;
-            } catch (Exception e) {
-                throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+
             }
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
     //댓글 등록
     public Boolean createComment(String email, BoardRequestDto.CreateCommentDto request, Integer role) throws Exception {
-
-        //400: 데이터 미입력
-        if (request.getContents() == null) {
-            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        }
-        //403: 권한없음
-        User user = findByUserEmail(email);
-        UserProfile userProfile = findByUserProfile(user, role);
-        //404: 보드 id 없음
-        Board board = findByBoardId(request.getBoardId());
         try {
-
-
+            //400: 데이터 미입력
+            if (request.getContents() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+            //403: 권한없음
+            User user = findByUserEmail(email);
+            UserProfile userProfile = findByUserProfile(user, role);
+            //404: 보드 id 없음
+            Board board = findByBoardId(request.getBoardId());
             Comment comment = Comment.builder()
                     .board(board)
                     .contents(request.getContents())
@@ -280,6 +282,8 @@ public class BoardService {
                     .build();
             pushRepository.save(push);
             return true;
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -287,31 +291,32 @@ public class BoardService {
 
     //댓글 삭제
     public Boolean deleteComment(String email, BoardRequestDto.DeleteCommentDto request) throws Exception {
-        //400: 데이터 미입력
-        if (request.getCommentId() == null) {
-            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        }
-        //404: id 없음"
-        Optional<Comment> comment = commentRepository.findByCommentId(request.getCommentId());
-        if (comment.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
-        Optional<Board> board = boardRepository.findByBoardId(comment.get().getBoard().getBoardId());
-        if (board.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
+        try {
+            //400: 데이터 미입력
+            if (request.getCommentId() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+            //404: id 없음"
+            Optional<Comment> comment = commentRepository.findByCommentId(request.getCommentId());
+            if (comment.isEmpty()) {
+                throw new CustomException(ErrorCode.NOT_EXIST_ID);
+            }
+            Optional<Board> board = boardRepository.findByBoardId(comment.get().getBoard().getBoardId());
+            if (board.isEmpty()) {
+                throw new CustomException(ErrorCode.NOT_EXIST_ID);
+            }
 //        Board board = findByBoardId(request.getBoardId());
 
-        //403: 권한없음 -- 다시 확인하기
+            //403: 권한없음 -- 다시 확인하기
 //        Board existingboard = board.get();
-        Comment existingComment = comment.get();
-        if (!existingComment.getUserProfile().getUser().getEmail().equals(email)) {
-            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
-        }
-
-        try {
+            Comment existingComment = comment.get();
+            if (!existingComment.getUserProfile().getUser().getEmail().equals(email)) {
+                throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+            }
             commentRepository.deleteById(request.getCommentId());
             return true;
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -319,29 +324,33 @@ public class BoardService {
     }
 
     //댓글 수정
-    public Boolean updateComment(String email, BoardRequestDto.UpdateCommentDto request) throws Exception {
-        User user = findByUserEmail(email);
-        //400: 데이터 미입력
-        if (request.getCommentId() == null || request.getContents() == null) {
-            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
-        }
-
-        //404: id 없음
-        Optional<Comment> comment = commentRepository.findByCommentId(request.getCommentId());
-        Optional<Board> board = boardRepository.findByBoardId(comment.get().getBoard().getBoardId());
-
-        if (board.isEmpty() || comment.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_EXIST_ID);
-        }
-        //403: 권한없음
-        Comment existingboard = comment.get();
-        if (!existingboard.getUserProfile().getUser().getEmail().equals(email)) {
-            throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
-        }
+    public Boolean updateComment(String email, Integer type, BoardRequestDto.UpdateCommentDto request) throws Exception {
         try {
+            User user = findByUserEmail(email);
+            UserProfile userProfile = findByUserProfile(user, type);
+            //400: 데이터 미입력
+            if (request.getCommentId() == null || request.getContents() == null) {
+                throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+            }
+
+            //404: id 없음
+            Optional<Comment> comment = commentRepository.findByCommentId(request.getCommentId());
+            Optional<Board> board = boardRepository.findByBoardId(comment.get().getBoard().getBoardId());
+
+            if (board.isEmpty() || comment.isEmpty()) {
+                throw new CustomException(ErrorCode.NOT_EXIST_ID);
+            }
+            //403: 권한없음
+            Comment existingboard = comment.get();
+            if (!existingboard.getUserProfile().getUser().equals(user)) {
+                throw new CustomException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+            }
+
             existingboard.setContents(request.getContents());
             commentRepository.save(existingboard);
             return true;
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
@@ -349,20 +358,23 @@ public class BoardService {
     }
 
     //댓글 좋아요
-    public Boolean likeComment(String email, BoardRequestDto.likeCommentDto request) throws Exception {
-        // 403: 권한 없음
-        User user = findByUserEmail(email);
-        // 404: id 없음
-        Comment comment = commentRepository.findByCommentId(request.getCommentId())
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
+    public Boolean likeComment(String email, Integer type, BoardRequestDto.likeCommentDto request) throws Exception {
         try {
+            // 403: 권한 없음
+            User user = findByUserEmail(email);
+            UserProfile userProfile = findByUserProfile(user, type);
+            // 404: id 없음
+
+            Comment comment = findByCommentId(request.getCommentId());
+
+
             // 1 값 들어올 때 좋아요 누를때 // 0 좋아요 취소
             if (request.getCount()) {
-                if (likeRepository.findByUseridAndTypeId(user, request.getCommentId()).isPresent()) {
+                if (likeRepository.findByUseridAndTypeId(userProfile, request.getCommentId()).isPresent()) {
                     throw new CustomException(ErrorCode.DUPLICATE);
                 } else {//만약 없으면 좋아요 db 만들기
                     Likes makelike = Likes.builder()
-                            .userid(user)
+                            .userid(userProfile)
                             .typeId(request.getCommentId())
                             .type(1)
                             .build();
@@ -377,26 +389,33 @@ public class BoardService {
                     pushRepository.save(push);
                 }
             } else {// 취소 했을때
-                if (likeRepository.findByUseridAndTypeId(user, request.getCommentId()).isPresent()) {
-                    Likes likes = findByLikesId(user, request.getCommentId());
+                if (likeRepository.findByUseridAndTypeId(userProfile, request.getCommentId()).isPresent()) {
+                    Likes likes = findByLikesId(userProfile, request.getCommentId());
                     likeRepository.delete(likes);
                 } else {//만약 없으면 좋아요 db 만들기
                     throw new CustomException(ErrorCode.DUPLICATE);
                 }
             }
             return true;
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public Likes findByLikesId(User user, Long typeId) {
+    public Likes findByLikesId(UserProfile user, Long typeId) {
         return likeRepository.findByUseridAndTypeId(user, typeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
 
     public Board findByBoardId(Long boardId) {
         return boardRepository.findByBoardId(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
+    }
+
+    public Comment findByCommentId(Long commentId) {
+        return commentRepository.findByCommentId(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_ID));
     }
 

@@ -111,16 +111,16 @@ public class UserService {
     }
 
     // [API] 내가 스크랩한 게시글 조회
-    public Object getMyScrap(CustomUserDetails userDetails) {
-        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
-                () -> new CustomException(ErrorCode.NO_AUTH)
-        ));
-
-        List<BoardScrap> myBoardScrap = boardScrapRepository.findByUser(user.get());
-        return myBoardScrap.stream()
-                .map(BoardScrapDto::new)
-                .collect(Collectors.toList());
-    }
+//    public Object getMyScrap(CustomUserDetails userDetails) {
+//        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
+//                () -> new CustomException(ErrorCode.NO_AUTH)
+//        ));
+//
+//        List<BoardScrap> myBoardScrap = boardScrapRepository.findByUser(user.get());
+//        return myBoardScrap.stream()
+//                .map(BoardScrapDto::new)
+//                .collect(Collectors.toList());
+//    }
 
     // [API] 내가 스크랩 멘토 프로필 조회
     public Object getMentorProfileScrap(CustomUserDetails userDetails) {

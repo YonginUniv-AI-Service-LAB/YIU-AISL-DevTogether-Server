@@ -112,12 +112,12 @@ public class UserController {
     }
 
     // 내가 스크랩한 게시글 조회 = test 완료
-    @GetMapping(value = "/scrap/board")
-    public ResponseEntity<Object> getMyBoardScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(userService.getMyScrap(userDetails), HttpStatus.OK);
-    }
+//    @GetMapping(value = "/scrap/board")
+//    public ResponseEntity<Object> getMyBoardScrap(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+//        return new ResponseEntity<>(userService.getMyScrap(userDetails), HttpStatus.OK);
+//    }
 
     // 내가 스크랩한 멘토 매칭 조회 = test 완료
     @GetMapping(value = "/scrap/mentor")
