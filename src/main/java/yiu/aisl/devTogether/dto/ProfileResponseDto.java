@@ -9,6 +9,7 @@ import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,6 +40,7 @@ public class ProfileResponseDto {
     private String location3;
     private Boolean img;
     private Integer scrap;
+    private byte[] filesList;
 
     public ProfileResponseDto(UserProfile userProfile, User user,Integer scrap) {
         this.userProfileId = userProfile.getUserProfileId();
@@ -65,8 +67,6 @@ public class ProfileResponseDto {
         this.location3=user.getLocation3();
         this.img = userProfile.getFiles();
         this.scrap=scrap;
-
-
-
+        this.filesList = userProfile.getFilesdata().getFileData();
     }
 }

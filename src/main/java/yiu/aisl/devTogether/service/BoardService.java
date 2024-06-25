@@ -37,6 +37,7 @@ public class BoardService {
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
         try {
+
             List<Board> board = boardRepository.findAll();
             List<BoardDto> getList = new ArrayList<>();
             board.forEach(s -> getList.add(BoardDto.getboardDto(s)));

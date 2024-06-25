@@ -203,8 +203,7 @@ public class AskService {
             modifyAsk.get().setAskCategory(askCategory);
             askRepository.save(ask);
             if (files) {
-                filesService.filesMUpdate(4, modifyAsk.get().getAskId(), file, request.getDeleteId());
-
+                filesService.filesMUpdate(5, modifyAsk.get().getAskId(), file, request.getDeleteId());
             }
             return true;
         }catch (Exception e){
