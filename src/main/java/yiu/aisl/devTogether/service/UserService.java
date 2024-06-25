@@ -63,7 +63,7 @@ public class UserService {
 
         // 데이터 미입력 (400)
         if (dto.getEmail().isEmpty() || dto.getName().isEmpty() || dto.getNickname().isEmpty() || dto.getRole() == null || dto.getGender() == null || dto.getAge() == null ||
-        dto.getLocation1().isEmpty() || dto.getAnswer().isEmpty() || dto.getQuestion() == null) {
+        dto.getLocation1().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
@@ -75,8 +75,7 @@ public class UserService {
         user.setLocation1(dto.getLocation1());
         user.setLocation2(dto.getLocation2());
         user.setLocation3(dto.getLocation3());
-        user.setAnswer(dto.getAnswer());
-        user.setQuestion(dto.getQuestion());
+
 
         return true;
     }
