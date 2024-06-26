@@ -1,13 +1,16 @@
 package yiu.aisl.devTogether.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
 import yiu.aisl.devTogether.domain.state.GenderCategory;
+import yiu.aisl.devTogether.repository.FilesRepository;
+import yiu.aisl.devTogether.service.FilesService;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,13 +44,11 @@ public class ProfileResponseDto {
     private String location3;
     private Boolean img;
     private Integer scrap;
-    private byte[] filesList;
-
-    public ProfileResponseDto(UserProfile userProfile, User user,Integer scrap) {
+    public ProfileResponseDto(UserProfile userProfile, User user, Integer scrap) {
         this.userProfileId = userProfile.getUserProfileId();
         this.name = user.getName();
         this.introduction = userProfile.getIntroduction();
-        this.pr= userProfile.getPr();
+        this.pr = userProfile.getPr();
         this.portfolio = userProfile.getPortfolio();
         this.contents = userProfile.getContents();
         this.schedule = userProfile.getSchedule();
@@ -57,18 +58,17 @@ public class ProfileResponseDto {
         this.updatedAt = userProfile.getUpdatedAt();
         this.role = userProfile.getRole();
         this.gender = user.getGender();
-        this.age=user.getAge();
+        this.age = user.getAge();
         this.nickname = userProfile.getNickname();
         this.subject1 = userProfile.getSubject1();
         this.subject2 = userProfile.getSubject2();
         this.subject3 = userProfile.getSubject3();
         this.subject4 = userProfile.getSubject4();
         this.subject5 = userProfile.getSubject5();
-        this.location1=user.getLocation1();
-        this.location2=user.getLocation2();
-        this.location3=user.getLocation3();
+        this.location1 = user.getLocation1();
+        this.location2 = user.getLocation2();
+        this.location3 = user.getLocation3();
         this.img = userProfile.getFiles();
-        this.scrap=scrap;
-        this.filesList = userProfile.getFilesdata().getFileData();
+        this.scrap = scrap;
     }
 }

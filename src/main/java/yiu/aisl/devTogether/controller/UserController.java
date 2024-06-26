@@ -87,14 +87,14 @@ public class UserController {
 
     // 내 멘토 프로필 수정 = test 완료
     @PutMapping(value = "/mentor")
-    public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("img") MultipartFile img, UserProfileRequestDto request) throws Exception {
-        return new ResponseEntity<Boolean>(userService.changeMentorProfile(customUserDetails, request,img), HttpStatus.OK);
+    public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, UserProfileRequestDto request) throws Exception {
+        return new ResponseEntity<Boolean>(userService.changeMentorProfile(customUserDetails, request), HttpStatus.OK);
     }
 
     // 내 멘티 프로필 수정 = test 완료
     @PutMapping(value = "/mentee")
-    public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails,  @RequestParam("img") MultipartFile img, UserProfileRequestDto request) throws Exception {
-        return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request,img), HttpStatus.OK);
+    public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, UserProfileRequestDto request) throws Exception {
+        return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request), HttpStatus.OK);
     }
 
     // 알림 확인 = test 완료
