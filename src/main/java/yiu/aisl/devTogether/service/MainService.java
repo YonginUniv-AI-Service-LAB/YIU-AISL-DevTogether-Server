@@ -53,13 +53,13 @@ public class MainService {
 
 
     //main
-    public Map<String, List<String>> getList() {
-        List<String> subject = new ArrayList<>(getSubjects());
+    public Map<Object, List<Object>> getList() {
+        List<Object> subject = new ArrayList<>(getSubjects());
         List<UserProfile> mentorList = userProfileRepository.findByRole(1);
         List<UserProfile> menteeList = userProfileRepository.findByRole(2);
-        Map<String, List<String>> result = new HashMap<>();
+        Map<Object, List<Object>> result = new HashMap<>();
         // Mentor 정보 저장
-        List<String> mentorInfoList = new ArrayList<>();
+        List<Object> mentorInfoList = new ArrayList<>();
         for (UserProfile mentor : mentorList) {
             StringBuilder mentorInfo = new StringBuilder();
             appendUserInfo(mentor, mentorInfo);
@@ -70,7 +70,7 @@ public class MainService {
             mentorInfoList.add(null);
         }
         // Mentee 정보 저장
-        List<String> menteeInfoList = new ArrayList<>();
+        List<Object> menteeInfoList = new ArrayList<>();
         for (UserProfile mentee : menteeList) {
             StringBuilder menteeInfo = new StringBuilder();
             appendUserInfo(mentee, menteeInfo);
@@ -85,9 +85,9 @@ public class MainService {
         Collections.shuffle(menteeInfoList);
         Collections.shuffle(mentorInfoList);
 
-        List<String> randomSubject = subject.subList(0, 5);
-        List<String> randoMentor = menteeInfoList.subList(0, 5);
-        List<String> randomMentee = mentorInfoList.subList(0, 5);
+        List<Object> randomSubject = subject.subList(0, 5);
+        List<Object> randoMentor = menteeInfoList.subList(0, 5);
+        List<Object> randomMentee = mentorInfoList.subList(0, 5);
 
         result.put("subjects", randomSubject);
         result.put("mentors", randoMentor);

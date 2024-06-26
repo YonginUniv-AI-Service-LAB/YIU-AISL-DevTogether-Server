@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProfileResponseDto {
     private Long userProfileId;
+    private String name;
     private String introduction;
     private String pr;
     private String portfolio;
@@ -44,6 +45,7 @@ public class ProfileResponseDto {
 
     public ProfileResponseDto(UserProfile userProfile, User user,Integer scrap) {
         this.userProfileId = userProfile.getUserProfileId();
+        this.name = user.getName();
         this.introduction = userProfile.getIntroduction();
         this.pr= userProfile.getPr();
         this.portfolio = userProfile.getPortfolio();

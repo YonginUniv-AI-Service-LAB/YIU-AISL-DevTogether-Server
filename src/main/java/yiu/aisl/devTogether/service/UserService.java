@@ -210,6 +210,7 @@ public class UserService {
         if (dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
                 dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee() == null) {
             userProfile.setChecks(0);
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         } else {
             userProfile.setChecks(1);
         }
@@ -245,6 +246,7 @@ public class UserService {
         if (dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() || dto.getPortfolio().isEmpty() ||
                 dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee() == null) {
             userProfile.setChecks(0);
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         } else {
             userProfile.setChecks(1);
         }
