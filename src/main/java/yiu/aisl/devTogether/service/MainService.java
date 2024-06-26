@@ -53,28 +53,26 @@ public class MainService {
 
 
     //main
-    public Map<Object, List<Object>> getList() {
+    public Map<String, Object> getList() {
         List<Object> subject = new ArrayList<>(getSubjects());
         List<UserProfile> mentorList = userProfileRepository.findByRole(1);
         List<UserProfile> menteeList = userProfileRepository.findByRole(2);
-        Map<Object, List<Object>> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+
         // Mentor 정보 저장
-        List<Object> mentorInfoList = new ArrayList<>();
+        List<MainDto> mentorInfoList = new ArrayList<>();
         for (UserProfile mentor : mentorList) {
-            StringBuilder mentorInfo = new StringBuilder();
-            appendUserInfo(mentor, mentorInfo);
-            mentorInfoList.add(mentorInfo.toString());
+            mentorInfoList.add(new MainDto(mentor));
         }
         // Mentor가 5개 미만인 경우 null 추가
         while (mentorInfoList.size() < 5) {
             mentorInfoList.add(null);
         }
+
         // Mentee 정보 저장
-        List<Object> menteeInfoList = new ArrayList<>();
+        List<MainDto> menteeInfoList = new ArrayList<>();
         for (UserProfile mentee : menteeList) {
-            StringBuilder menteeInfo = new StringBuilder();
-            appendUserInfo(mentee, menteeInfo);
-            menteeInfoList.add(menteeInfo.toString());
+            menteeInfoList.add(new MainDto(mentee));
         }
         // Mentee가 5개 미만인 경우 null 추가
         while (menteeInfoList.size() < 5) {
@@ -86,32 +84,19 @@ public class MainService {
         Collections.shuffle(mentorInfoList);
 
         List<Object> randomSubject = subject.subList(0, 5);
-        List<Object> randoMentor = menteeInfoList.subList(0, 5);
-        List<Object> randomMentee = mentorInfoList.subList(0, 5);
+        List<MainDto> randomMentor = mentorInfoList.subList(0, 5);
+        List<MainDto> randomMentee = menteeInfoList.subList(0, 5);
+
 
         result.put("subjects", randomSubject);
-        result.put("mentors", randoMentor);
+        result.put("mentors", randomMentor);
         result.put("mentees", randomMentee);
 
         return result;
     }
 
-    private void appendUserInfo(UserProfile userProfile, StringBuilder userInfo) {
-        userInfo.append(", 닉네임: ").append(userProfile.getNickname())
-                .append(", 역할: ").append(userProfile.getUser().getRole())
-                .append(", 나이: ").append(userProfile.getUser().getAge())
-                .append(", 성별: ").append(userProfile.getUser().getGender())
-                .append(", 수업료: ").append(userProfile.getFee())
-                .append(", 수업 방식: ").append(userProfile.getMethod())
-                .append(", 지역1: ").append(userProfile.getUser().getLocation1())
-                .append(", 지역2: ").append(userProfile.getUser().getLocation2())
-                .append(", 지역3: ").append(userProfile.getUser().getLocation3())
-                .append(", 과목1: ").append(userProfile.getSubject1())
-                .append(", 과목2: ").append(userProfile.getSubject2())
-                .append(", 과목3: ").append(userProfile.getSubject3())
-                .append(", 과목4: ").append(userProfile.getSubject4())
-                .append(", 과목5: ").append(userProfile.getSubject5());
-    }
+
+
 
 
 
