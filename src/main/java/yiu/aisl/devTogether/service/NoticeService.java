@@ -3,6 +3,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import yiu.aisl.devTogether.domain.Files;
 import yiu.aisl.devTogether.domain.Notice;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.NoticeCategory;
@@ -12,6 +13,7 @@ import yiu.aisl.devTogether.dto.NoticeRequestDto;
 import yiu.aisl.devTogether.dto.NoticeResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
+import yiu.aisl.devTogether.repository.FilesRepository;
 import yiu.aisl.devTogether.repository.NoticeRepository;
 import yiu.aisl.devTogether.repository.UserRepository;
 
@@ -26,7 +28,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private  final UserRepository userRepository;
     private final FilesService filesService;
-
+private final FilesRepository filesRepository;
 
     //공지사항 전체조회
     public List<NoticeResponseDto> getList() throws  Exception{
@@ -119,7 +121,9 @@ public class NoticeService {
         // 404 - id 없음
         Notice notice = findByNoticeId(request.getNoticeId());
         NoticeCategory noticeCategory = NoticeCategory.fromInt(request.getNoticeCategory());
-        Boolean files = filesService.isMFile(file);
+        List<Files> filesList = filesRepository.findByTypeAndTypeId(4, request.getNoticeId());
+        System.out.println(filesList.isEmpty());
+        Boolean files = filesService.isMFile(file) || !filesList.isEmpty();
         // 400 - 데이터 미입력
         if (request.getTitle().isEmpty()|| request.getContents().isEmpty()
                 || request.getNoticeCategory() == null || request.getNoticeId() == null) {

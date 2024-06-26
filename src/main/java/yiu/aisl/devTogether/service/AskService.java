@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Ask;
+import yiu.aisl.devTogether.domain.Files;
 import yiu.aisl.devTogether.domain.Push;
 import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.state.*;
@@ -14,6 +15,7 @@ import yiu.aisl.devTogether.dto.FilesResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
 import yiu.aisl.devTogether.repository.AskRepository;
+import yiu.aisl.devTogether.repository.FilesRepository;
 import yiu.aisl.devTogether.repository.PushRepository;
 import yiu.aisl.devTogether.repository.UserRepository;
 
@@ -32,6 +34,7 @@ public class AskService {
     private final UserRepository userRepository;
     private final FilesService filesService;
     private final PushRepository pushRepository;
+    private final FilesRepository filesRepository;
 
     //ask 조회(내가 쓴 글 조회)
     public List<AskResponseDto> getList(String email) throws Exception {
@@ -175,7 +178,8 @@ public class AskService {
         User user = findByEmail(email);
         AskCategory askCategory = AskCategory.fromInt(request.getAskCategory());
         StatusCategory status = StatusCategory.신청;
-        Boolean files = filesService.isMFile(file);
+        List<Files> filesList = filesRepository.findByTypeAndTypeId(5, request.getAskId());
+        Boolean files = filesService.isMFile(file)|| !filesList.isEmpty();
         //404 - id없음
         Ask ask = findByAskId(request.getAskId());
 
