@@ -41,6 +41,7 @@ public class BoardService {
             List<Board> board = boardRepository.findAll();
             List<BoardDto> getList = new ArrayList<>();
             board.forEach(s -> getList.add(BoardDto.getboardDto(s)));
+            getList.sort((m1, m2) -> m2.getCreatedAt().compareTo(m1.getCreatedAt()));
             return getList;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

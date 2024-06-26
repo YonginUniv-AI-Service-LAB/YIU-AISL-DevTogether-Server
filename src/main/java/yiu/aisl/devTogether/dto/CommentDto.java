@@ -32,6 +32,7 @@ public class CommentDto {
                 userProfile.getUserProfileId(),
                 userProfile.getNickname(),
                 userProfile.getPr(),
+                userProfile.getIntroduction(),
                 userProfile.getFiles(),
                 userProfile.getFilesdata()
         );

@@ -16,6 +16,7 @@ public class UserProfileResponseDto2 {
     private Long id;
     private String nickname;
     private String pr;
+    private String introduction;
     private Boolean files;
     private FilesResponseDto filesResponseDto;
 
@@ -24,6 +25,7 @@ public class UserProfileResponseDto2 {
                 userProfile.getUserProfileId(),
                 userProfile.getNickname(),
                 userProfile.getPr(),
+                userProfile.getIntroduction(),
                 userProfile.getFiles(),
                 userProfile.getFilesdata()
         );
