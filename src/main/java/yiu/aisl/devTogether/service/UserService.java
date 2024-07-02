@@ -217,6 +217,7 @@ public class UserService {
 //        Boolean imgs = filesService.isFile(img);
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
+        userProfile.setNickname(dto.getNickname());
         userProfile.setPortfolio(dto.getPortfolio());
         userProfile.setContents(dto.getContents());
         userProfile.setSchedule(dto.getSchedule());

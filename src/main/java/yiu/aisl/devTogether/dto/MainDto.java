@@ -24,7 +24,7 @@ public class MainDto {
     private String subject4;
     private String subject5;
 
-    // 생성자: UserProfile 객체를 기반으로 MainDto 객체를 생성
+
     public MainDto(UserProfile userProfile) {
         this.nickname = userProfile.getNickname();
         this.location1 = userProfile.getUser().getLocation1();
