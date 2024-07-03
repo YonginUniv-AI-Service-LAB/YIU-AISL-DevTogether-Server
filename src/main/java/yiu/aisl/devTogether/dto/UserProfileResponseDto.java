@@ -16,6 +16,7 @@ public class UserProfileResponseDto {
     private Long id;
     private String introduction;
     private String pr;
+    private String nickname;
     private String portfolio;
     private String contents;
     private String schedule;
@@ -34,6 +35,7 @@ public class UserProfileResponseDto {
         this.id = userProfile.getUserProfileId();
         this.introduction = userProfile.getIntroduction();
         this.pr = userProfile.getPr();
+        this.nickname = userProfile.getNickname();
         this.portfolio = userProfile.getPortfolio();
         this.contents = userProfile.getContents();
         this.schedule = userProfile.getSchedule();
