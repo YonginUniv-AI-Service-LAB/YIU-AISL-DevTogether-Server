@@ -229,7 +229,7 @@ public class MatchingService {
         //400: 데이터 미입력
         if (request.getContents().isEmpty() || request.getTutoringFee() == null || request.getMentee() == null ||
                 (request.getSubject1() == null && request.getSubject2() == null && request.getSubject3() == null
-                        && request.getSubject4() == null && request.getSubject5() == null)  ||
+                        && request.getSubject4() == null && request.getSubject5() == null) ||
                 (request.getLocation1() == null && request.getLocation2() == null && request.getLocation3() == null) ||
                 request.getMethod().isEmpty() || request.getSchedule().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);

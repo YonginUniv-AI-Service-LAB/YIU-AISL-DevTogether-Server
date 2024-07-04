@@ -227,7 +227,7 @@ public class UserService {
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
         );
 
-        if (dto.getIntroduction().isEmpty() || dto.getPr().isEmpty()  ||
+        if (dto.getIntroduction().isEmpty() || dto.getPr().isEmpty() ||
                 dto.getContents().isEmpty() || dto.getSchedule().isEmpty() || dto.getMethod().isEmpty() || dto.getFee() == null) {
             userProfile.setChecks(0);
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
