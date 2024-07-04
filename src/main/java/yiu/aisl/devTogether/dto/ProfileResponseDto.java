@@ -43,8 +43,10 @@ public class ProfileResponseDto {
     private String location2;
     private String location3;
     private Boolean img;
+    private FilesResponseDto imgDto;
     private Integer scrap;
-    public ProfileResponseDto(UserProfile userProfile, User user, Integer scrap) {
+
+    public ProfileResponseDto(UserProfile userProfile, User user, Integer scrap, FilesResponseDto filesResponseDto) {
         this.userProfileId = userProfile.getUserProfileId();
         this.name = user.getName();
         this.introduction = userProfile.getIntroduction();
@@ -69,6 +71,7 @@ public class ProfileResponseDto {
         this.location2 = user.getLocation2();
         this.location3 = user.getLocation3();
         this.img = userProfile.getFiles();
+        this.imgDto = filesResponseDto;
         this.scrap = scrap;
     }
 }

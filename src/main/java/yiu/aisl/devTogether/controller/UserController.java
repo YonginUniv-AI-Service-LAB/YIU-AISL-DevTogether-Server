@@ -31,10 +31,10 @@ public class UserController {
 
     // 내 정보 수정 = 수정 필요
     @PutMapping(value = "")
-    public ResponseEntity<Boolean> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails,  @RequestBody  MyProfileRequestDto dto) throws Exception {
+    public ResponseEntity<Boolean> updateProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MyProfileRequestDto dto) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-       return new ResponseEntity<Boolean>(userService.updateProfile(customUserDetails, dto), HttpStatus.OK);
+        return new ResponseEntity<Boolean>(userService.updateProfile(customUserDetails, dto), HttpStatus.OK);
     }
 
     // 내가 작성한 댓글 조회 = test 완료
@@ -70,12 +70,12 @@ public class UserController {
     }
 
     // 내 멘토 프로필 조회
-    @GetMapping(value = "/mentor")
-    public ResponseEntity<Object> getMyMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(userService.getMyMentorProfile(customUserDetails), HttpStatus.OK);
-    }
+//    @GetMapping(value = "/mentor")
+//    public ResponseEntity<Object> getMyMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+//        return new ResponseEntity<>(userService.getMyMentorProfile(customUserDetails), HttpStatus.OK);
+//    }
 
     // 내 멘티 프로필 조회
     @GetMapping(value = "/mentee")
@@ -87,14 +87,14 @@ public class UserController {
 
     // 내 멘토 프로필 수정 = test 완료
     @PutMapping(value = "/mentor")
-    public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, UserProfileRequestDto request) throws Exception {
-        return new ResponseEntity<Boolean>(userService.changeMentorProfile(customUserDetails, request), HttpStatus.OK);
+    public ResponseEntity<Boolean> changeMentorProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, UserProfileRequestDto request, MultipartFile img) throws Exception {
+        return new ResponseEntity<Boolean>(userService.changeMentorProfile(customUserDetails, request, img), HttpStatus.OK);
     }
 
     // 내 멘티 프로필 수정 = test 완료
     @PutMapping(value = "/mentee")
-    public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, UserProfileRequestDto request) throws Exception {
-        return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request), HttpStatus.OK);
+    public ResponseEntity<Boolean> changeMenteeProfile(@AuthenticationPrincipal CustomUserDetails customUserDetails, UserProfileRequestDto request, MultipartFile img) throws Exception {
+        return new ResponseEntity<Boolean>(userService.changeMenteeProfile(customUserDetails, request, img), HttpStatus.OK);
     }
 
     // 알림 확인 = test 완료

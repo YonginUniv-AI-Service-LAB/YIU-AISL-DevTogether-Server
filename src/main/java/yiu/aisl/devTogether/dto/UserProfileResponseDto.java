@@ -22,6 +22,7 @@ public class UserProfileResponseDto {
     private String schedule;
     private String method;
     private Boolean img;
+    private FilesResponseDto imgDto;
     private Integer fee;
     private String subject1;
     private String subject2;
@@ -31,7 +32,7 @@ public class UserProfileResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public UserProfileResponseDto(UserProfile userProfile) {
+    public UserProfileResponseDto(UserProfile userProfile, FilesResponseDto filesResponseDto) {
         this.id = userProfile.getUserProfileId();
         this.introduction = userProfile.getIntroduction();
         this.pr = userProfile.getPr();
@@ -41,6 +42,7 @@ public class UserProfileResponseDto {
         this.schedule = userProfile.getSchedule();
         this.method = userProfile.getMethod();
         this.img = userProfile.getFiles();
+        this.imgDto = filesResponseDto;
         this.fee = userProfile.getFee();
         this.subject1 = userProfile.getSubject1();
         this.subject2 = userProfile.getSubject2();

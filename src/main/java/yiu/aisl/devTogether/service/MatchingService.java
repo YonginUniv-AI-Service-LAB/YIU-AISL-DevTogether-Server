@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import yiu.aisl.devTogether.config.CustomUserDetails;
 import yiu.aisl.devTogether.domain.*;
 import yiu.aisl.devTogether.domain.state.PushCategory;
+import yiu.aisl.devTogether.dto.FilesResponseDto;
 import yiu.aisl.devTogether.dto.MatchingRequestDto;
 import yiu.aisl.devTogether.dto.ProfileResponseDto;
 import yiu.aisl.devTogether.exception.CustomException;
@@ -31,7 +32,7 @@ public class MatchingService {
     private final UserProfileRepository userProfileRepository;
     private final MatchingScrapRepository matchingScrapRepository;
     private final PushRepository pushRepository;
-
+    private final FilesService filesService;
 
     //멘토 조회(멘티가 멘토 조회)
     public Object mentorList(CustomUserDetails userDetails) {
@@ -39,9 +40,17 @@ public class MatchingService {
         return userProfiles.stream()
                 .filter(userProfile -> userProfile.getChecks() != null && userProfile.getChecks() == 1)
                 .map(userProfile -> {
+                    FilesResponseDto imgDto = null;
+                    try {
+                        if (userProfile.getFiles() != null) {
+                            imgDto = filesService.downloadProfileFile(1, userProfile.getUserProfileId());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     // 스크랩 여부를 확인하여 1 또는 0으로 설정
                     Integer scrap = matchingScrapRepository.findByUserAndUserProfileAndStatus(userDetails.getUser(), userProfile, 1).isPresent() ? 1 : 0;
-                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap);
+                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap, imgDto);
                 })
                 .collect(Collectors.toList());
     }
@@ -53,9 +62,17 @@ public class MatchingService {
         return userProfiles.stream()
                 .filter(userProfile -> userProfile.getChecks() != null && userProfile.getChecks() == 1)
                 .map(userProfile -> {
+                    FilesResponseDto imgDto = null;
+                    try {
+                        if (userProfile.getFiles()) {
+                            imgDto = filesService.downloadProfileFile(1, userProfile.getUserProfileId());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     // 스크랩 여부를 확인하여 1 또는 0으로 설정
                     Integer scrap = matchingScrapRepository.findByUserAndUserProfileAndStatus(userDetails.getUser(), userProfile, 2).isPresent() ? 1 : 0;
-                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap);
+                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap, imgDto);
                 })
                 .collect(Collectors.toList());
     }

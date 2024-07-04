@@ -6,6 +6,7 @@ import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import yiu.aisl.devTogether.domain.Files;
 import yiu.aisl.devTogether.dto.FilesResponseDto;
@@ -180,12 +181,14 @@ public class FilesService {
 
         try {
             Files files = filesRepository.findById(fileId).get();
-
+            File file = new File(files.getPath());
+            System.out.println(file);
             String fileName = files.getOriginName();
 //            File downloadFile = new File(files.getPath());
 //            byte[] fileByte = FileUtil.readAsByteArray(downloadFile);
             Path imagePath = Path.of(files.getPath());
-            byte[] fileByte = java.nio.file.Files.readAllBytes(imagePath);
+//            byte[] fileByte = java.nio.file.Files.readAllBytes(imagePath);
+            byte[] fileByte = FileCopyUtils.copyToByteArray(file);
             Long bytes = java.nio.file.Files.size(Path.of(files.getPath())) / 1024;
 
             return FilesResponseDto.builder()
@@ -200,7 +203,34 @@ public class FilesService {
         }
 
     }
+    public FilesResponseDto downloadProfileFile(Integer type, Long fileId) throws Exception {
 
+
+        try {
+            List<Files> filesList  = filesRepository.findByTypeAndTypeId(type,fileId);
+            Files files = filesList.get(0);
+            File file = new File(files.getPath());
+            System.out.println(file);
+            String fileName = files.getOriginName();
+//            File downloadFile = new File(files.getPath());
+//            byte[] fileByte = FileUtil.readAsByteArray(downloadFile);
+            Path imagePath = Path.of(files.getPath());
+//            byte[] fileByte = java.nio.file.Files.readAllBytes(imagePath);
+            byte[] fileByte = FileCopyUtils.copyToByteArray(file);
+            Long bytes = java.nio.file.Files.size(Path.of(files.getPath())) / 1024;
+
+            return FilesResponseDto.builder()
+                    .fileId(fileId)
+                    .originName(fileName)
+                    .fileSize(bytes)
+                    .fileData(fileByte)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+    }
     //파일 원본 이름 추출
     public String getFileName(MultipartFile file) {
         return file.getOriginalFilename();

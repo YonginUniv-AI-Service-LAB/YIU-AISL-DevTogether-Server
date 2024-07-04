@@ -63,7 +63,7 @@ public class UserService {
 
 
         // 데이터 미입력 (400)
-        if (dto.getEmail().isEmpty()  || dto.getLocation1().isEmpty()) {
+        if (dto.getEmail().isEmpty() || dto.getLocation1().isEmpty()) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
 
@@ -186,7 +186,17 @@ public class UserService {
 
         Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 1);
         return userProfile.stream()
-                .map(UserProfileResponseDto::new)
+                .map(UserProfileResponseDto -> {
+                    FilesResponseDto imgDto = null;
+                    try {
+                        if (UserProfileResponseDto.getFiles() != null) {
+                            imgDto = filesService.downloadProfileFile(1, UserProfileResponseDto.getUserProfileId());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return new UserProfileResponseDto(UserProfileResponseDto, imgDto);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -196,12 +206,22 @@ public class UserService {
 
         Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 2);
         return userProfile.stream()
-                .map(UserProfileResponseDto::new)
+                .map(UserProfileResponseDto -> {
+                    FilesResponseDto imgDto = null;
+                    try {
+                        if (UserProfileResponseDto.getFiles() != null) {
+                            imgDto = filesService.downloadProfileFile(1, UserProfileResponseDto.getUserProfileId());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return new UserProfileResponseDto(UserProfileResponseDto, imgDto);
+                })
                 .collect(Collectors.toList());
     }
 
     // [API] 내 멘토 프로필 변경하기
-    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) throws Exception {
+    public Boolean changeMentorProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
         Long user = userDetails.getUser().getId();
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 1).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
@@ -214,7 +234,7 @@ public class UserService {
         } else {
             userProfile.setChecks(1);
         }
-//        Boolean imgs = filesService.isFile(img);
+        Boolean imgs = filesService.isFile(img);
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
         userProfile.setNickname(dto.getNickname());
@@ -228,17 +248,17 @@ public class UserService {
         userProfile.setSubject3(dto.getSubject3());
         userProfile.setSubject4(dto.getSubject4());
         userProfile.setSubject5(dto.getSubject5());
-//        userProfile.setFiles(imgs);
+        userProfile.setFiles(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
-//        if (imgs) {
-//            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
-//        }
+        if (imgs) {
+            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
+        }
         return true;
     }
 
     // [API] 내 멘티 프로필 변경하기
-    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto) throws Exception {
+    public Boolean changeMenteeProfile(CustomUserDetails userDetails, UserProfileRequestDto dto, MultipartFile img) throws Exception {
         Long user = userDetails.getUser().getId();
         UserProfile userProfile = userProfileRepository.findByUserIdAndRole(user, 2).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH) // 권한 오류 (403)
@@ -251,7 +271,7 @@ public class UserService {
         } else {
             userProfile.setChecks(1);
         }
-//        Boolean imgs = filesService.isFile(img);
+        Boolean imgs = filesService.isFile(img);
         userProfile.setIntroduction(dto.getIntroduction());
         userProfile.setPr(dto.getPr());
         userProfile.setNickname(dto.getNickname());
@@ -265,12 +285,12 @@ public class UserService {
         userProfile.setSubject3(dto.getSubject3());
         userProfile.setSubject4(dto.getSubject4());
         userProfile.setSubject5(dto.getSubject5());
-//        userProfile.setFiles(imgs);
+        userProfile.setFiles(imgs);
         userProfile.setUpdatedAt(LocalDateTime.now());
         userProfileRepository.save(userProfile);
-//        if (imgs) {
-//            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
-//        }
+        if (imgs) {
+            filesService.saveFileDb(img, 1, userProfile.getUserProfileId());
+        }
         return true;
     }
 
