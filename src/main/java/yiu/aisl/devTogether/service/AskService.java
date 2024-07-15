@@ -124,7 +124,7 @@ public class AskService {
                     .contents("관리자님이 답변을 남겼습니다.")
                     .user(ask.getUser())
                     .typeId(ask.getAskId())
-                    .checks(0)
+                    .checks(1)
                     .build();
             askRepository.save(ask);
             pushRepository.save(push);

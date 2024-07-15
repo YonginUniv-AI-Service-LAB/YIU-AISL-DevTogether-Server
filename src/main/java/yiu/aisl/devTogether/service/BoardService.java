@@ -199,7 +199,7 @@ public class BoardService {
                             .type(PushCategory.게시판)
                             .typeId(board.getBoardId())
                             .contents("게시글에 좋아요가 달렸습니다.")
-                            .checks(0)
+                            .checks(1)
                             .build();
                     pushRepository.save(push);
 
@@ -280,7 +280,7 @@ public class BoardService {
                     .type(PushCategory.댓글)
                     .typeId(board.getBoardId())
                     .contents("게시글에 댓글이 달렸습니다.")
-                    .checks(0)
+                    .checks(1)
                     .build();
             pushRepository.save(push);
             return true;
@@ -386,7 +386,7 @@ public class BoardService {
                             .type(PushCategory.댓글)
                             .typeId(comment.getCommentId())
                             .contents("댓글에 좋아요가 달렸습니다.")
-                            .checks(0)
+                            .checks(1)
                             .build();
                     pushRepository.save(push);
                 }

@@ -60,6 +60,11 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.hibernate:hibernate-core:6.4.4.Final'
+	implementation 'net.bytebuddy:byte-buddy:1.12.3'
 }
 
 tasks.named('test') {

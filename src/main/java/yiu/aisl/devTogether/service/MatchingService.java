@@ -204,7 +204,7 @@ public class MatchingService {
                     .contents(nickname + "님이 과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
-                    .checks(0)
+                    .checks(1)
                     .build();
             pushRepository.save(push);
             return true;
@@ -278,7 +278,7 @@ public class MatchingService {
                     .contents(nickname + "님이 과외를 신청했습니다.")
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
-                    .checks(0)
+                    .checks(1)
                     .build();
             pushRepository.save(push);
             return true;
@@ -323,7 +323,7 @@ public class MatchingService {
                         .contents(nickname + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(0)
+                        .checks(1)
                         .build();
                 pushRepository.save(push);
             }
@@ -368,7 +368,7 @@ public class MatchingService {
                         .contents(nickname + "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(0)
+                        .checks(1)
                         .build();
                 pushRepository.save(push);
             } else {
@@ -448,7 +448,7 @@ public class MatchingService {
                         .contents(nickname + "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(0)
+                        .checks(1)
                         .build();
                 pushRepository.save(push);
             } else {
@@ -495,7 +495,7 @@ public class MatchingService {
                         .contents(userProfile.getNickname() + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
-                        .checks(0)
+                        .checks(1)
                         .build();
                 pushRepository.save(push);
             } else {

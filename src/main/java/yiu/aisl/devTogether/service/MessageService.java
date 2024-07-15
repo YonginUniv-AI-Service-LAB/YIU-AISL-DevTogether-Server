@@ -54,7 +54,7 @@ public class MessageService {
                     .type(PushCategory.쪽지)
                     .typeId(message.getMessageId())
                     .contents("쪽지가 왔습니다.")
-                    .checks(0)
+                    .checks(1)
                     .build();
             pushRepository.save(push);
             return true;
