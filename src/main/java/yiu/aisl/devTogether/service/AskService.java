@@ -209,6 +209,10 @@ public class AskService {
             if (files) {
                 filesService.filesMUpdate(5, modifyAsk.get().getAskId(), file, request.getDeleteId());
             }
+            filesList = filesRepository.findByTypeAndTypeId(5, request.getAskId());
+            files = !filesList.isEmpty();
+            modifyAsk.get().setFiles(files);
+            askRepository.save(ask);
             return true;
         }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

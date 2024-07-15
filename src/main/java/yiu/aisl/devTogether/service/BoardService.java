@@ -168,6 +168,10 @@ public class BoardService {
 //                //파일 일괄 생성
 //                filesService.saveFileMDb(file, 2, request.getBoardId());
             }
+            filesList = filesRepository.findByTypeAndTypeId(2, request.getBoardId());
+            files = !filesList.isEmpty();
+            existingboard.setFiles(files);
+            boardRepository.save(existingboard);
             return true;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
