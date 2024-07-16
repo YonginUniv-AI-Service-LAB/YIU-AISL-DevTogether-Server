@@ -245,6 +245,8 @@ public class UserService {
         userProfile.setFee(dto.getFee());
         userProfile.setSubject1(dto.getSubject1());
         userProfile.setSubject2(dto.getSubject2());
+
+        
         userProfile.setSubject3(dto.getSubject3());
         userProfile.setSubject4(dto.getSubject4());
         userProfile.setSubject5(dto.getSubject5());

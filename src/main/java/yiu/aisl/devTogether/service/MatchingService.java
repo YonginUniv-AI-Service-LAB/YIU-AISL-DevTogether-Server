@@ -467,7 +467,10 @@ public class MatchingService {
         UserProfile userProfile = findByUserAndRole(user, 1);
         Matching matching = findByMatchingId(request.getMatchingId());
         Integer profileRole = userProfile.getRole();
-
+        // 400: 데이터 미입력
+        if (request.getMatchingId() == null) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
+        }
 
         // 매칭 ID가 자기랑 관련 있는지 확인
         boolean isRelatedToUser = matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId()) ||
@@ -480,6 +483,9 @@ public class MatchingService {
         if (profileRole.equals(2)) {
             throw new CustomException(ErrorCode.NO_AUTH);
         }
+
+
+
         try {
             if (matching.getStatus().equals("진행")) {
                 matching.setStatus("완료");
