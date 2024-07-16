@@ -20,6 +20,7 @@ public class PushResponseDto {
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private int checks;
 
     public PushResponseDto(Push push) {
         this.pushId = push.getId();
@@ -28,5 +29,6 @@ public class PushResponseDto {
         this.contents = push.getContents();
         this.createdAt = push.getCreatedAt();
         this.updatedAt = push.getUpdatedAt();
+        this.checks = push.getChecks();
     }
 }
