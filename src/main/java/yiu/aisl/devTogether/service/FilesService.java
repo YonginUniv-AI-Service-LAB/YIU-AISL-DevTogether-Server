@@ -214,7 +214,7 @@ public class FilesService {
             String fileName = files.getOriginName();
 //            File downloadFile = new File(files.getPath());
 //            byte[] fileByte = FileUtil.readAsByteArray(downloadFile);
-            Path imagePath = Path.of(files.getPath());
+//            Path imagePath = Path.of(files.getPath());
 //            byte[] fileByte = java.nio.file.Files.readAllBytes(imagePath);
             byte[] fileByte = FileCopyUtils.copyToByteArray(file);
             Long bytes = java.nio.file.Files.size(Path.of(files.getPath())) / 1024;
@@ -225,6 +225,9 @@ public class FilesService {
                     .fileSize(bytes)
                     .fileData(fileByte)
                     .build();
+        } catch (CustomException e) {
+            // CustomException은 그대로 다시 던짐
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

@@ -189,7 +189,8 @@ public class UserService {
                 .map(UserProfileResponseDto -> {
                     FilesResponseDto imgDto = null;
                     try {
-                        if (UserProfileResponseDto.getFiles() != null) {
+                        System.out.println(UserProfileResponseDto.getFiles());
+                        if (UserProfileResponseDto.getFiles()) {
                             imgDto = filesService.downloadProfileFile(1, UserProfileResponseDto.getUserProfileId());
                         }
                     } catch (Exception e) {
@@ -206,16 +207,16 @@ public class UserService {
 
         Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 2);
         return userProfile.stream()
-                .map(UserProfileResponseDto -> {
+                .map(userProfileEntity -> {
                     FilesResponseDto imgDto = null;
                     try {
-                        if (UserProfileResponseDto.getFiles() != null) {
-                            imgDto = filesService.downloadProfileFile(1, UserProfileResponseDto.getUserProfileId());
+                        if (userProfileEntity.getFiles()) {
+                            imgDto = filesService.downloadProfileFile(1, userProfileEntity.getUserProfileId());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    return new UserProfileResponseDto(UserProfileResponseDto, imgDto);
+                    return new UserProfileResponseDto(userProfileEntity, imgDto);
                 })
                 .collect(Collectors.toList());
     }

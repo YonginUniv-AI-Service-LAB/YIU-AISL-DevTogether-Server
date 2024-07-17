@@ -42,7 +42,7 @@ public class MatchingService {
                 .map(userProfile -> {
                     FilesResponseDto imgDto = null;
                     try {
-                        if (userProfile.getFiles() != null) {
+                        if (userProfile.getFiles()) {
                             imgDto = filesService.downloadProfileFile(1, userProfile.getUserProfileId());
                         }
                     } catch (Exception e) {
