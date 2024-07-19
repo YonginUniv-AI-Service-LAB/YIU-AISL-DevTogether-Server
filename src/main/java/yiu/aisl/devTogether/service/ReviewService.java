@@ -96,7 +96,8 @@ public class ReviewService {
     //리뷰 작성
     public Boolean creatreview(String email, ReviewRequestDto.creatDto request, Integer role) throws Exception {
         //400: 데이터 미입력
-        if (request.contents == null || request.matchingId == null) {
+        if (request.contents == null || request.matchingId == null ||
+                request.star1 == null || request.star2 == null || request.star3 == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         //404 : 매칭 아이디 없음

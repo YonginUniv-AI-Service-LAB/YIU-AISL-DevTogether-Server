@@ -18,7 +18,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
-    @JoinColumn
+    @JoinColumn(name = "matching_id")
     @ManyToOne
     private Matching matchingId;
 
