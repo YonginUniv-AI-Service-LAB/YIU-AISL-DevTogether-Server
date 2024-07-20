@@ -153,10 +153,11 @@ public class BoardService {
         System.out.println(filesList.isEmpty());
         Boolean files = filesService.isMFile(file) || !filesList.isEmpty();
         System.out.println(files);
+        BoardCategory boardCategory = BoardCategory.fromInt(request.getCategory());
         try {
             existingboard.setTitle(request.getTitle());
             existingboard.setContents(request.getContents());
-            existingboard.setCategory(request.getCategory());
+            existingboard.setCategory(boardCategory);
             existingboard.setFiles(files);
             boardRepository.save(existingboard);
             //파일 관련 코드
