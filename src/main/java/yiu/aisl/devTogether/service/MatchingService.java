@@ -201,7 +201,7 @@ public class MatchingService {
             String nickname = userDetails.getUsername();
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(nickname + "님이 과외를 신청했습니다.")
+                    .contents(userProfile.getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(1)
@@ -275,7 +275,7 @@ public class MatchingService {
             String nickname = userDetails.getUsername();
             Push push = Push.builder()
                     .type(PushCategory.매칭)
-                    .contents(nickname + "님이 과외를 신청했습니다.")
+                    .contents(userProfile.getNickname() + "님이 과외를 신청했습니다.")
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(1)
@@ -313,14 +313,14 @@ public class MatchingService {
                 matching.setStatus("성사됨");
                 UserProfile recipientProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = menteeProfile;
-                } else {
                     recipientProfile = mentorProfile;
+                } else {
+                    recipientProfile = menteeProfile;
                 }
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(nickname + "님이 과외를 수락했습니다.")
+                        .contents(recipientProfile.getNickname() + "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -357,15 +357,15 @@ public class MatchingService {
                 matching.setStatus("거절");
                 UserProfile recipientProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = menteeProfile;
-                } else {
                     recipientProfile = mentorProfile;
+                } else {
+                    recipientProfile = menteeProfile;
                 }
 
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(nickname + "님이 과외를 거절했습니다.")
+                        .contents(recipientProfile.getNickname() + "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -437,15 +437,15 @@ public class MatchingService {
                 matching.setStatus("진행");
                 UserProfile recipientProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = menteeProfile;
-                } else {
                     recipientProfile = mentorProfile;
+                } else {
+                    recipientProfile = menteeProfile;
                 }
 
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(nickname + "님과의 과외가 확정되었습니다.")
+                        .contents(recipientProfile.getNickname() + "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -498,7 +498,7 @@ public class MatchingService {
 
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(userProfile.getNickname() + "님이 과외를 수락했습니다.")
+                        .contents(userProfile.getNickname() + "님이 과외를 종료했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
