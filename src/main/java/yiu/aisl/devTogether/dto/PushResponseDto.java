@@ -18,6 +18,7 @@ public class PushResponseDto {
     private PushCategory type;
     private Long typeId;
     private String contents;
+    private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int checks;
@@ -27,6 +28,7 @@ public class PushResponseDto {
         this.type = push.getType();
         this.typeId = push.getTypeId();
         this.contents = push.getContents();
+        this.status = push.getStatus();
         this.createdAt = push.getCreatedAt();
         this.updatedAt = push.getUpdatedAt();
         this.checks = push.getChecks();

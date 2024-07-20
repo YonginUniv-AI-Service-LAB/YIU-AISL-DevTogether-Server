@@ -330,7 +330,7 @@ public class MatchingService {
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
-                        .status("성사됨")
+                        .status("진행")
                         .build();
                 pushRepository.save(push);
             }
