@@ -312,15 +312,19 @@ public class MatchingService {
             if ("신청".equals(matching.getStatus())) {
                 matching.setStatus("성사됨");
                 UserProfile recipientProfile;
+                UserProfile senderProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = mentorProfile;
-                } else {
                     recipientProfile = menteeProfile;
+                    senderProfile = mentorProfile;
+
+                } else {
+                    recipientProfile = mentorProfile;
+                    senderProfile = menteeProfile;
                 }
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(recipientProfile.getNickname() + "님이 과외를 수락했습니다.")
+                        .contents(senderProfile.getNickname()+ "님이 과외를 수락했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -356,16 +360,19 @@ public class MatchingService {
             if (matching.getStatus().equals("신청")) {
                 matching.setStatus("거절");
                 UserProfile recipientProfile;
+                UserProfile senderProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = mentorProfile;
-                } else {
                     recipientProfile = menteeProfile;
+                    senderProfile = mentorProfile;
+                } else {
+                    recipientProfile = mentorProfile;
+                    senderProfile = menteeProfile;
                 }
 
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(recipientProfile.getNickname() + "님이 과외를 거절했습니다.")
+                        .contents(senderProfile.getNickname() + "님이 과외를 거절했습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
@@ -436,16 +443,19 @@ public class MatchingService {
             if (matching.getStatus().equals("성사됨")) {
                 matching.setStatus("진행");
                 UserProfile recipientProfile;
+                UserProfile senderProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = mentorProfile;
-                } else {
                     recipientProfile = menteeProfile;
+                    senderProfile = mentorProfile;
+                } else {
+                    recipientProfile = mentorProfile;
+                    senderProfile = menteeProfile;
                 }
-
+it
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
-                        .contents(recipientProfile.getNickname() + "님과의 과외가 확정되었습니다.")
+                        .contents(senderProfile.getNickname() + "님과의 과외가 확정되었습니다.")
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
