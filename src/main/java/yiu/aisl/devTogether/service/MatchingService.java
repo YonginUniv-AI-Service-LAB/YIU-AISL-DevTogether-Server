@@ -451,7 +451,7 @@ public class MatchingService {
                     recipientProfile = mentorProfile;
                     senderProfile = menteeProfile;
                 }
-it
+
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
                         .type(PushCategory.매칭)
