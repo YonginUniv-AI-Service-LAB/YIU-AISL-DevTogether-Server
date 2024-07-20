@@ -39,6 +39,9 @@ public class Push {
     @Column(columnDefinition = "TEXT")
     private String contents;
 
+    @Column(columnDefinition = "TEXT")
+    private String status;
+
     @CreationTimestamp
     @Column
     private LocalDateTime createdAt;

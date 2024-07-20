@@ -205,6 +205,7 @@ public class MatchingService {
                     .user(mentor.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(1)
+                    .status("신청")
                     .build();
             pushRepository.save(push);
             return true;
@@ -279,6 +280,7 @@ public class MatchingService {
                     .user(mentee.getUser())
                     .typeId(matching.getMatchingId())
                     .checks(1)
+                    .status("신청")
                     .build();
             pushRepository.save(push);
             return true;
@@ -328,6 +330,7 @@ public class MatchingService {
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
+                        .status("성사됨")
                         .build();
                 pushRepository.save(push);
             }
@@ -376,6 +379,7 @@ public class MatchingService {
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
+                        .status("거절")
                         .build();
                 pushRepository.save(push);
             } else {
@@ -459,6 +463,7 @@ public class MatchingService {
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
+                        .status("진행")
                         .build();
                 pushRepository.save(push);
             } else {
@@ -512,6 +517,7 @@ public class MatchingService {
                         .user(recipientProfile.getUser())
                         .typeId(matching.getMatchingId())
                         .checks(1)
+                        .status("완료")
                         .build();
                 pushRepository.save(push);
             } else {
