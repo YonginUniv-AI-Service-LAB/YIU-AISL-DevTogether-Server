@@ -95,11 +95,15 @@ public class ReviewService {
 
     //리뷰 작성
     public Boolean creatreview(String email, ReviewRequestDto.creatDto request, Integer role) throws Exception {
+        System.out.println("컨트롤러 입장");
+        System.out.println("400통과전 입력  "+request.contents+"  contents: "+request.contents+"  별점 :  "+request.star1+request.star2+request.star3);
         //400: 데이터 미입력
         if (request.contents == null || request.matchingId == null ||
                 request.star1 == null || request.star2 == null || request.star3 == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
+        System.out.println("400 통과:: "+request.contents+"  contents: "+request.contents+"  별점 :  "+request.star1+request.star2+request.star3);
+
         //404 : 매칭 아이디 없음
         Matching matching = findByMachingId(request.matchingId);
 
@@ -109,8 +113,26 @@ public class ReviewService {
 
         User user = findByUserEmail(email);
         UserProfile userProfile = findByUserProfile(user, role);
-//        Integer profileRole = userProfile.getRole();
+        Long profileId = userProfile.getUserProfileId();
+        Long mathingId = null;
+        boolean flag =false;
 
+        //매칭 아이디 유저와 접속하는 유저 판별 및 리뷰 작성 유무 반별
+        if (role == 1) {
+            mathingId = matching.getMentor().getUserProfileId();
+            if (mathingId.equals(profileId)){
+                flag =true;
+            }
+        } else if (role == 2) {
+            mathingId = matching.getMentee().getUserProfileId();
+            if (mathingId.equals(profileId)){
+                flag =true;
+            }
+        }
+
+        if (flag){
+            throw new CustomException(ErrorCode.DUPLICATE);
+        }
         // N일 지나기 전 true
         if (ChronoUnit.DAYS.between(endAt, now) <= 7) {
             try {

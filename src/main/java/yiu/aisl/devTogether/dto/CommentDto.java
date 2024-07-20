@@ -10,6 +10,7 @@ import yiu.aisl.devTogether.domain.User;
 import yiu.aisl.devTogether.domain.UserProfile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -22,6 +23,7 @@ public class CommentDto {
     private String contents;
     private UserProfileResponseDto2 userProfileId;
     private Long likeCount;
+    private List<Long> likePeople;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
 
@@ -41,6 +43,9 @@ public class CommentDto {
         this.contents = comment.getContents();
         this.userProfileId = userProfileDto;
         this.likeCount = (long) comment.getLikes().size();
+        this.likePeople= comment.getLikes().stream()
+                .map(likes -> likes.getUserid().getUserProfileId())
+                .collect(Collectors.toList());
         this.createAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
 

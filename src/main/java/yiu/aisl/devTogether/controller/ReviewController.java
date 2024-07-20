@@ -49,6 +49,8 @@ public class ReviewController {
     //리뷰 작성
     @PostMapping("/mentor")
     public ResponseEntity<Boolean> creatReportMentor(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.creatDto request) throws Exception {
+        System.out.println(user.getEmail());
+        System.out.println("서비스 들어가기전 입력  " + request.contents + "  contents: " + request.contents + "  별점 :  " + request.star1 + request.star2 + request.star3);
         return new ResponseEntity<Boolean>(reviewService.creatreview(user.getEmail(), request, 1), HttpStatus.OK);
     }
 
@@ -62,6 +64,7 @@ public class ReviewController {
     public ResponseEntity<Boolean> hideReportMentor(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.hideDto request) throws Exception {
         return new ResponseEntity<Boolean>(reviewService.switchHide(user.getEmail(), request, 1), HttpStatus.OK);
     }
+
     @PostMapping("/hide/mentee")
     public ResponseEntity<Boolean> hideReportMentee(@AuthenticationPrincipal CustomUserDetails user, ReviewRequestDto.hideDto request) throws Exception {
         return new ResponseEntity<Boolean>(reviewService.switchHide(user.getEmail(), request, 2), HttpStatus.OK);
