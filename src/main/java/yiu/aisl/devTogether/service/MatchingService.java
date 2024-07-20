@@ -313,9 +313,9 @@ public class MatchingService {
                 matching.setStatus("성사됨");
                 UserProfile recipientProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = menteeProfile;
-                } else {
                     recipientProfile = mentorProfile;
+                } else {
+                    recipientProfile = menteeProfile;
                 }
                 String nickname = userDetails.getUsername();
                 Push push = Push.builder()
@@ -357,9 +357,9 @@ public class MatchingService {
                 matching.setStatus("거절");
                 UserProfile recipientProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = menteeProfile;
-                } else {
                     recipientProfile = mentorProfile;
+                } else {
+                    recipientProfile = menteeProfile;
                 }
 
                 String nickname = userDetails.getUsername();
@@ -437,9 +437,9 @@ public class MatchingService {
                 matching.setStatus("진행");
                 UserProfile recipientProfile;
                 if (mentorProfile.getUser().getId().equals(userId)) {
-                    recipientProfile = menteeProfile;
-                } else {
                     recipientProfile = mentorProfile;
+                } else {
+                    recipientProfile = menteeProfile;
                 }
 
                 String nickname = userDetails.getUsername();
