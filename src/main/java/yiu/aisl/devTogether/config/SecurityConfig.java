@@ -73,8 +73,8 @@ public class SecurityConfig {
                         authorize
                                 //공통 ***************************8(권한 필요한 놈들 먼저 배치하기)************************************
                                 .requestMatchers("/admin/faq","/admin/notice","/admin/ask/answer", "/amin/ask ").hasRole("ADMIN")
-                                .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee","/matching/application/mentee", "/user/scrap/board/mentor").hasRole("MENTOR")
-                                .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor","/matching/application/mentor", "/user/scrap/board/mentee").hasRole("MENTEE")
+                                .requestMatchers("/user/matching/mentee", "/user/mentor", "/user/scrap/mentee", "/mentee", "/scrap/mentee","/matching/application/mentee", "/user/scrap/board/mentor", "/review/mentor").hasRole("MENTOR")
+                                .requestMatchers("/user/matching/mentor", "/user/mentee", "/user/scrap/mentor", "/mentor", "/scrap/mentor","/matching/application/mentor", "/user/scrap/board/mentee", "/review/mentee").hasRole("MENTEE")
                                 .requestMatchers(  "/register","/login" , "/main", "register/email", "pwd/email", "/pwd/change",
                                         "/email" ,"token/change", "/token/refresh", "/mentee/nickname", "/mentor/nickname",
                                         "/board", "/board/post", "/board/like", "/board/scrap","/subject",
