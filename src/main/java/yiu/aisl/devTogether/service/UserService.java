@@ -75,30 +75,31 @@ public class UserService {
     }
 
     // [API] 내가 댓글을 달았던 글 조회
-    public Object getMyComment(CustomUserDetails userDetails) {
+    public Object getMyComment(CustomUserDetails userDetails, Integer role) {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
-        Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUser(userDetails.getUser()).orElseThrow(
+        Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUserIdAndRole(user.get().getId(), role).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
         List<Comment> myComments = commentRepository.findByUserProfile(userProfile.get());
         return myComments.stream()
-                .map(CommentRequestDto::new)
+                .map(CommentDto::new)
                 .collect(Collectors.toList());
     }
 
     // [API] 내가 작성한 글 조회
-    public Object getMyBoard(CustomUserDetails userDetails) {
+    public Object getMyBoard(CustomUserDetails userDetails, Integer role) {
         Optional<User> user = Optional.ofNullable(userRepository.findByEmail(userDetails.getUser().getEmail()).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
-        Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUser(userDetails.getUser()).orElseThrow(
+        Optional<UserProfile> userProfile = Optional.ofNullable(userProfileRepository.findByUserIdAndRole(user.get().getId(), role).orElseThrow(
                 () -> new CustomException(ErrorCode.NO_AUTH)
         ));
-        List<Board> myBoards = boardRepository.findByUserProfile(userProfile.get());
+        UserProfile userProfile1 = userProfile.get();
+        List<Board> myBoards = boardRepository.findByUserProfile(userProfile1);
         return myBoards.stream()
-                .map(MyBoardDto::new)
+                .map(BoardDto::getboardDto)
                 .collect(Collectors.toList());
     }
 
@@ -247,7 +248,7 @@ public class UserService {
         userProfile.setSubject1(dto.getSubject1());
         userProfile.setSubject2(dto.getSubject2());
 
-        
+
         userProfile.setSubject3(dto.getSubject3());
         userProfile.setSubject4(dto.getSubject4());
         userProfile.setSubject5(dto.getSubject5());

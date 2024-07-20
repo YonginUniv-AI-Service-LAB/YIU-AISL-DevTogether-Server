@@ -38,19 +38,33 @@ public class UserController {
     }
 
     // 내가 작성한 댓글 조회 = test 완료
-    @GetMapping(value = "/comment")
-    public ResponseEntity<Object> getMyComment(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    @GetMapping(value = "/comment/mentor")
+    public ResponseEntity<Object> getMyCommentMentor(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(userService.getMyComment(customUserDetails), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getMyComment(customUserDetails, 1), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/comment/mentee")
+    public ResponseEntity<Object> getMyCommentMentee(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyComment(customUserDetails, 2), HttpStatus.OK);
     }
 
     // 내가 작성한 글 조회 = test 완료
-    @GetMapping(value = "/board")
-    public ResponseEntity<Object> getMyBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    @GetMapping(value = "/board/mentor")
+    public ResponseEntity<Object> getMyBoardMentor(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-        return new ResponseEntity<>(userService.getMyBoard(customUserDetails), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getMyBoard(customUserDetails, 1), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/board/mentee")
+    public ResponseEntity<Object> getMyBoardMentee(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+        return new ResponseEntity<>(userService.getMyBoard(customUserDetails, 2), HttpStatus.OK);
     }
 
     // 내 멘티 정보 조회 = test 완료

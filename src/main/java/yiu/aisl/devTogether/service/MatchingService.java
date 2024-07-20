@@ -504,6 +504,7 @@ public class MatchingService {
         try {
             if (matching.getStatus().equals("진행")) {
                 matching.setStatus("완료");
+                matching.setCheckReview(0);
                 UserProfile recipientProfile;
                 if (matching.getMentor().getUserProfileId().equals(userProfile.getUserProfileId())) {
                     recipientProfile = matching.getMentee();
