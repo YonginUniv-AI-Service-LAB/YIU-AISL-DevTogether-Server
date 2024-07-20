@@ -61,9 +61,11 @@ public class Matching {
     @Column
     private String schedule;
 
-
     @Column(columnDefinition = "TEXT")
     private String contents;
+    // 1 = 멘토만 , 2 = 멘티만, 3 = 둘다
+    @Column
+    private Integer checkReview;
 
     @CreationTimestamp
     @Column

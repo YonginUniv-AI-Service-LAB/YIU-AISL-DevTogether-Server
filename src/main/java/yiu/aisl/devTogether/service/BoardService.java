@@ -135,7 +135,7 @@ public class BoardService {
         User user = findByUserEmail(email);
         UserProfile userProfile = findByUserProfile(user, role);
         //400: 데이터 미입력
-        if (request.getTitle().isEmpty() || request.getContents().isEmpty()) {
+        if (request.getTitle().isEmpty() || request.getContents().isEmpty() || request.getCategory() == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
         //404: id 없음
@@ -156,6 +156,7 @@ public class BoardService {
         try {
             existingboard.setTitle(request.getTitle());
             existingboard.setContents(request.getContents());
+            existingboard.setCategory(request.getCategory());
             existingboard.setFiles(files);
             boardRepository.save(existingboard);
             //파일 관련 코드

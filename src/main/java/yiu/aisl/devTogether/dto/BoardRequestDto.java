@@ -3,6 +3,7 @@ package yiu.aisl.devTogether.dto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+import yiu.aisl.devTogether.domain.state.BoardCategory;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class BoardRequestDto {
         private Long boardId;
         private String title;
         private String contents;
+        private BoardCategory category;
         private List<Long> deleteId;
     }
 
