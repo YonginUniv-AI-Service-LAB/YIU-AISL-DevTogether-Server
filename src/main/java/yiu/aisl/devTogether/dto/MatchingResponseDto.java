@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class MatchingResponseDto {
 
     private Long matchingId;
+    private Integer checkReview;
     private Long mentor;
     private Long mentee;
     private String status;
@@ -37,8 +38,8 @@ public class MatchingResponseDto {
 
     public static MatchingResponseDto GetMatchingDTO(Matching matching) {
         return new MatchingResponseDto(
-
                 matching.getMatchingId(),
+                matching.getCheckReview(),
                 matching.getMentor().getUserProfileId(),
                 matching.getMentee().getUserProfileId(),
                 matching.getStatus(),

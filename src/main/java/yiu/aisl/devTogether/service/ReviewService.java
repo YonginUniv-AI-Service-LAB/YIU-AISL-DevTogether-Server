@@ -96,13 +96,13 @@ public class ReviewService {
     //리뷰 작성
     public Boolean creatreview(String email, ReviewRequestDto.creatDto request, Integer role) throws Exception {
         System.out.println("컨트롤러 입장");
-        System.out.println("400통과전 입력  "+request.contents+"  contents: "+request.contents+"  별점 :  "+request.star1+request.star2+request.star3);
+        System.out.println("400통과전 입력  " + request.contents + "  contents: " + request.contents + "  별점 :  " + request.star1 + request.star2 + request.star3);
         //400: 데이터 미입력
         if (request.contents == null || request.matchingId == null ||
                 request.star1 == null || request.star2 == null || request.star3 == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-        System.out.println("400 통과:: "+request.contents+"  contents: "+request.contents+"  별점 :  "+request.star1+request.star2+request.star3);
+        System.out.println("400 통과:: " + request.contents + "  contents: " + request.contents + "  별점 :  " + request.star1 + request.star2 + request.star3);
 
         //404 : 매칭 아이디 없음
         Matching matching = findByMachingId(request.matchingId);
@@ -115,22 +115,24 @@ public class ReviewService {
         UserProfile userProfile = findByUserProfile(user, role);
         Long profileId = userProfile.getUserProfileId();
         Long mathingId = null;
-        boolean flag =false;
+        boolean flag = false;
+        // 매칭 한 유저가 맞는지 확인 코드
+
 
         //매칭 아이디 유저와 접속하는 유저 판별 및 리뷰 작성 유무 반별
         if (role == 1) {
             mathingId = matching.getMentor().getUserProfileId();
-            if (mathingId.equals(profileId)){
-                flag =true;
+            if (mathingId.equals(profileId)) {
+                flag = true;
             }
         } else if (role == 2) {
             mathingId = matching.getMentee().getUserProfileId();
-            if (mathingId.equals(profileId)){
-                flag =true;
+            if (mathingId.equals(profileId)) {
+                flag = true;
             }
         }
 
-        if (flag){
+        if (!flag) {
             throw new CustomException(ErrorCode.DUPLICATE);
         }
         // N일 지나기 전 true
@@ -146,6 +148,11 @@ public class ReviewService {
                         .star3(request.star3)
                         .build();
                 reviewRepository.save(review);
+
+                Matching matching1 =Matching.builder()
+                        .checkReview(2)
+                        .build();
+                matchingRepository.save(matching1);
                 return true;
             } catch (Exception e) {
                 throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

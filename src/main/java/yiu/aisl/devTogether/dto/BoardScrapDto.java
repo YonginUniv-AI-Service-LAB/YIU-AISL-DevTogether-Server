@@ -30,7 +30,7 @@ public class BoardScrapDto {
     private LocalDateTime createdAt;
 
     public BoardScrapDto(BoardScrap scrap) {
-        UserProfile userProfile = scrap.getUser();
+        UserProfile userProfile = scrap.getBoard().getUserProfile();
         UserProfileResponseDto2 userProfileDto = new UserProfileResponseDto2(
                 userProfile.getUserProfileId(),
                 userProfile.getNickname(),
@@ -46,6 +46,7 @@ public class BoardScrapDto {
         this.userProfileId = userProfileDto;
         this.createdAt = scrap.getCreatedAt();
         this.likes = scrap.getBoard().getLikes().size();
+        this.countComment = scrap.getBoard().getComments().size();
         this.likePeople =scrap.getBoard().getLikes().stream()
                 .map(likes -> likes.getUserid().getUserProfileId())
                 .collect(Collectors.toList());
