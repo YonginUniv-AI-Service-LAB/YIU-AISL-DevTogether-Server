@@ -5,8 +5,7 @@ import yiu.aisl.devTogether.domain.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import yiu.aisl.devTogether.domain.state.GenderCategory;
-import yiu.aisl.devTogether.domain.state.RoleCategory;
+import yiu.aisl.devTogether.domain.state.PushCategory;
 import yiu.aisl.devTogether.dto.*;
 import yiu.aisl.devTogether.exception.CustomException;
 import yiu.aisl.devTogether.exception.ErrorCode;
@@ -31,6 +30,8 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final PushRepository pushRepository;
     private final FilesService filesService;
+    private final MessageRepository messageRepository;
+    private final AskRepository askRepository;
 
     // [API]  내 정보 조회
     public Object getMyProfile(CustomUserDetails userDetails) {
@@ -324,7 +325,38 @@ public class UserService {
         user.setChecks(0);
         List<Push> myPush = pushRepository.findByUser(user);
         return myPush.stream()
-                .map(PushResponseDto::new)
+                .map(pushdata -> new PushResponseDto(pushdata, selectRepos(pushdata.getType(),pushdata.getTypeId())))
                 .collect(Collectors.toList());
     }
+
+    public String selectRepos(PushCategory type, Long typeId) {
+        String datas = "";
+//  게시판(0),
+//    댓글(1),
+//    쪽지(2),
+//    매칭(3),
+//    문의(4);
+        switch (type) {
+            case 게시판:
+                datas = boardRepository.findByBoardId(typeId).get().getContents();
+                break;
+            case 댓글:
+                datas = commentRepository.findByCommentId(typeId).get().getContents();
+                break;
+            case 쪽지:
+                datas = messageRepository.findByMessageId(typeId).get().getContents();
+                break;
+            case 매칭:
+                break;
+            case 문의:
+                datas = askRepository.findByAskId(typeId).get().getContents();
+                break;
+            default:
+                datas = "";
+        }
+
+
+        return datas;
+    }
+
 }

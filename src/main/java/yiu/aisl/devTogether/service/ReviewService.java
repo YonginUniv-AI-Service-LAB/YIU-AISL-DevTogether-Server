@@ -58,7 +58,7 @@ public class ReviewService {
         try {
             // Review를 ReviewResponseDto로 변환
             return reviewList.stream()
-                    .map(ReviewResponseDto::new)
+                    .map(review -> new ReviewResponseDto(review, role))
                     .collect(Collectors.toList());
 //            return null;
         } catch (Exception e) {
@@ -75,8 +75,11 @@ public class ReviewService {
         List<Matching> matchingList = new ArrayList<>();
         if (role == 1) {
             matchingList = matchingRepository.findByMentor(userProfile);
+            role = 2;
+            System.out.println(matchingList);
         } else if (role == 2) {
             matchingList = matchingRepository.findByMentee(userProfile);
+            role = 1;
         }
         List<Review> reviewList = new ArrayList<>();
         for (Matching matching : matchingList) {
@@ -85,8 +88,9 @@ public class ReviewService {
         }
         try {
             // Review를 ReviewResponseDto로 변환
+            Integer finalRole = role;
             return reviewList.stream()
-                    .map(ReviewResponseDto::new)
+                    .map(review -> new ReviewResponseDto(review, finalRole))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
@@ -95,6 +99,7 @@ public class ReviewService {
 
     //리뷰 작성
     public Boolean creatreview(String email, ReviewRequestDto.creatDto request, Integer role) throws Exception {
+
         System.out.println("컨트롤러 입장");
         System.out.println("400통과전 입력  " + request.contents + "  contents: " + request.contents + "  별점 :  " + request.star1 + request.star2 + request.star3);
         //400: 데이터 미입력
@@ -149,7 +154,7 @@ public class ReviewService {
                         .build();
                 reviewRepository.save(review);
 
-                Matching matching1 =Matching.builder()
+                Matching matching1 = Matching.builder()
                         .checkReview(2)
                         .build();
                 matchingRepository.save(matching1);

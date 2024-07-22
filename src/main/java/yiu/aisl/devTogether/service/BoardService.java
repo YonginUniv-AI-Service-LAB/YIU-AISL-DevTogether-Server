@@ -204,7 +204,7 @@ public class BoardService {
                             .user(board.getUserProfile().getUser())
                             .type(PushCategory.게시판)
                             .typeId(board.getBoardId())
-                            .contents("게시글에 좋아요가 달렸습니다.")
+                            .contents(userProfile.getNickname() + "님이 게시글에 좋아요를 남겼습니다")
                             .checks(1)
                             .build();
                     pushRepository.save(push);
@@ -285,7 +285,7 @@ public class BoardService {
                     .user(board.getUserProfile().getUser())
                     .type(PushCategory.댓글)
                     .typeId(board.getBoardId())
-                    .contents("게시글에 댓글이 달렸습니다.")
+                    .contents(userProfile.getNickname() + "님이 게시글에 댓글을 남겼습니다")
                     .checks(1)
                     .build();
             pushRepository.save(push);
@@ -391,7 +391,7 @@ public class BoardService {
                             .user(comment.getUserProfile().getUser())
                             .type(PushCategory.댓글)
                             .typeId(comment.getCommentId())
-                            .contents("댓글에 좋아요가 달렸습니다.")
+                            .contents(userProfile.getNickname() + "님이 댓글에 좋아요를 남겼습니다")
                             .checks(1)
                             .build();
                     pushRepository.save(push);

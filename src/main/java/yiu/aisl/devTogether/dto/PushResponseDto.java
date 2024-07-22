@@ -22,8 +22,8 @@ public class PushResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int checks;
-
-    public PushResponseDto(Push push) {
+    private String texts;
+    public PushResponseDto(Push push, String texts) {
         this.pushId = push.getId();
         this.type = push.getType();
         this.typeId = push.getTypeId();
@@ -32,5 +32,6 @@ public class PushResponseDto {
         this.createdAt = push.getCreatedAt();
         this.updatedAt = push.getUpdatedAt();
         this.checks = push.getChecks();
+        this.texts = texts;
     }
 }

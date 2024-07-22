@@ -53,7 +53,7 @@ public class MessageService {
                     .user(message.getToUserId().getUser())
                     .type(PushCategory.쪽지)
                     .typeId(message.getMessageId())
-                    .contents("쪽지가 왔습니다.")
+                    .contents(from_user_p.getNickname() + "님이 쪽지를 보냈습니다")
                     .checks(1)
                     .build();
             pushRepository.save(push);

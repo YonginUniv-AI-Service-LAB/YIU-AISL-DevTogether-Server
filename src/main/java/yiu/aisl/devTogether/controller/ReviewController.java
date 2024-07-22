@@ -38,12 +38,12 @@ public class ReviewController {
     //받은 리뷰 조회
     @GetMapping("/receive/mentor")
     public ResponseEntity<List> creatReportMentor(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), 2), HttpStatus.OK);
+        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), 1), HttpStatus.OK);
     }
 
     @GetMapping("/receive/mentee")
     public ResponseEntity<List> creatReportMentee(@AuthenticationPrincipal CustomUserDetails user) throws Exception {
-        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), 1), HttpStatus.OK);
+        return new ResponseEntity<List>(reviewService.getReceive(user.getEmail(), 2), HttpStatus.OK);
     }
 
     //리뷰 작성
