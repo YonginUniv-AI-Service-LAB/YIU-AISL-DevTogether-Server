@@ -28,7 +28,7 @@ public class CommentDto {
     private LocalDateTime updatedAt;
 
 
-    public CommentDto(Comment comment) {
+    public CommentDto(Comment comment, FilesResponseDto filesResponseDto) {
         UserProfile userProfile = comment.getUserProfile();
         UserProfileResponseDto2 userProfileDto = new UserProfileResponseDto2(
                 userProfile.getUserProfileId(),
@@ -36,7 +36,7 @@ public class CommentDto {
                 userProfile.getPr(),
                 userProfile.getIntroduction(),
                 userProfile.getFiles(),
-                userProfile.getFilesdata()
+                filesResponseDto
         );
         this.boardId = comment.getBoard().getBoardId();
         this.commentId =comment.getCommentId();

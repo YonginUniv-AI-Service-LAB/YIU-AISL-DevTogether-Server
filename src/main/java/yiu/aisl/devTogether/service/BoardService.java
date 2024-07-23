@@ -40,7 +40,20 @@ public class BoardService {
 
             List<Board> board = boardRepository.findAll();
             List<BoardDto> getList = new ArrayList<>();
-            board.forEach(s -> getList.add(BoardDto.getboardDto(s)));
+            board.forEach(s -> {
+                try {
+                    getList.add(BoardDto.getboardDto(s, filesService.downloadProfileFile(1, s.getUserProfile().getUserProfileId()),null));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+//            board.forEach(s -> {
+//                try {
+//                    System.out.println(filesService.downloadProfileFile(1,s.getUserProfile().getUserProfileId()));
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
             getList.sort((m1, m2) -> m2.getCreatedAt().compareTo(m1.getCreatedAt()));
             return getList;
         } catch (Exception e) {
@@ -56,7 +69,7 @@ public class BoardService {
         });
 
         try {
-            BoardDto response = BoardDto.getboardDto(board);
+            BoardDto response = BoardDto.getboardDto(board, filesService.downloadProfileFile(1, board.getUserProfile().getUserProfileId()), null);
 
             if (board.getFiles()) {
                 List<FilesResponseDto> filesList = filesService.getFiles(2, board.getBoardId());

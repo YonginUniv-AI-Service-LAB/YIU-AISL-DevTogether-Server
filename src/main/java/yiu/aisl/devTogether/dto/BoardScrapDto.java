@@ -29,7 +29,7 @@ public class BoardScrapDto {
     private List<Long> scrapPeople;
     private LocalDateTime createdAt;
 
-    public BoardScrapDto(BoardScrap scrap) {
+    public BoardScrapDto(BoardScrap scrap, FilesResponseDto filesResponseDto) {
         UserProfile userProfile = scrap.getBoard().getUserProfile();
         UserProfileResponseDto2 userProfileDto = new UserProfileResponseDto2(
                 userProfile.getUserProfileId(),
@@ -37,7 +37,7 @@ public class BoardScrapDto {
                 userProfile.getPr(),
                 userProfile.getIntroduction(),
                 userProfile.getFiles(),
-                userProfile.getFilesdata()
+                filesResponseDto
         );
         this.id = scrap.getId();
         this.board = Math.toIntExact(scrap.getBoard().getBoardId());

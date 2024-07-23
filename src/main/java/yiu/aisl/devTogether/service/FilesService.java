@@ -203,11 +203,11 @@ public class FilesService {
         }
 
     }
-    public FilesResponseDto downloadProfileFile(Integer type, Long fileId) throws Exception {
+    public FilesResponseDto downloadProfileFile(Integer type, Long typeId) throws Exception {
 
 
         try {
-            List<Files> filesList  = filesRepository.findByTypeAndTypeId(type,fileId);
+            List<Files> filesList  = filesRepository.findByTypeAndTypeId(type,typeId);
             Files files = filesList.get(0);
             File file = new File(files.getPath());
             System.out.println(file);
@@ -220,7 +220,7 @@ public class FilesService {
             Long bytes = java.nio.file.Files.size(Path.of(files.getPath())) / 1024;
 
             return FilesResponseDto.builder()
-                    .fileId(fileId)
+                    .fileId(files.getFileId())
                     .originName(fileName)
                     .fileSize(bytes)
                     .fileData(fileByte)

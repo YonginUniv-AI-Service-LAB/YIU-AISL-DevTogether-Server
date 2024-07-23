@@ -37,7 +37,7 @@ public class ReviewResponseDto {
 //        );
 //    }
 
-    public ReviewResponseDto(Review review, Integer role) {
+    public ReviewResponseDto(Review review, Integer role, FilesResponseDto filesResponseDto) {
         UserProfile userProfile = null;
         if (role == 1) {
             userProfile = review.getMatchingId().getMentor();
@@ -51,7 +51,7 @@ public class ReviewResponseDto {
                 userProfile.getPr(),
                 userProfile.getIntroduction(),
                 userProfile.getFiles(),
-                userProfile.getFilesdata()
+                filesResponseDto
         );
         this.reviewId = review.getReviewId();
         this.matchingId = review.getMatchingId().getMatchingId();

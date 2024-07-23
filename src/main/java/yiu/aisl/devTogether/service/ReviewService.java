@@ -32,6 +32,7 @@ public class ReviewService {
     public final ReviewRepository reviewRepository;
     public final UserProfileRepository userProfileRepository;
     public final MatchingRepository matchingRepository;
+    public final FilesService filesService;
 
     //보낸 리뷰 조회 -- 모든 리뷰 보이게? 내 룰과 리뷰 카테고리가 같은거 가져오기
     public List<ReviewResponseDto> getSend(String email, Integer role) throws Exception {
@@ -58,7 +59,13 @@ public class ReviewService {
         try {
             // Review를 ReviewResponseDto로 변환
             return reviewList.stream()
-                    .map(review -> new ReviewResponseDto(review, role))
+                    .map(review -> {
+                        try {
+                            return new ReviewResponseDto(review, role, filesService.downloadProfileFile(1, userProfile.getUserProfileId()));
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
                     .collect(Collectors.toList());
 //            return null;
         } catch (Exception e) {
@@ -90,7 +97,19 @@ public class ReviewService {
             // Review를 ReviewResponseDto로 변환
             Integer finalRole = role;
             return reviewList.stream()
-                    .map(review -> new ReviewResponseDto(review, finalRole))
+                    .map(review -> {
+                        Long getId = null;
+                        if (finalRole == 1) {
+                            getId = review.getMatchingId().getMentor().getUserProfileId();
+                        } else {
+                            getId = review.getMatchingId().getMentee().getUserProfileId();
+                        }
+                        try {
+                            return new ReviewResponseDto(review, finalRole, filesService.downloadProfileFile(1, getId));
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);

@@ -85,7 +85,13 @@ public class UserService {
         ));
         List<Comment> myComments = commentRepository.findByUserProfile(userProfile.get());
         return myComments.stream()
-                .map(CommentDto::new)
+                .map(s -> {
+                    try {
+                        return new CommentDto(s, filesService.downloadProfileFile(1, s.getUserProfile().getUserProfileId()));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +106,13 @@ public class UserService {
         UserProfile userProfile1 = userProfile.get();
         List<Board> myBoards = boardRepository.findByUserProfile(userProfile1);
         return myBoards.stream()
-                .map(BoardDto::getboardDto)
+                .map(board -> {
+                    try {
+                        return BoardDto.getboardDto(board, filesService.downloadProfileFile(1, board.getUserProfile().getUserProfileId()),null);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }) // FilesResponseDto 부분을 null로 처리함
                 .collect(Collectors.toList());
     }
 
@@ -122,7 +134,13 @@ public class UserService {
         Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 1);
         List<BoardScrap> myBoardScrapMentor = boardScrapRepository.findByUser(userProfile.get());
         return myBoardScrapMentor.stream()
-                .map(BoardScrapDto::new)
+                .map(Board -> {
+                    try {
+                        return new BoardScrapDto(Board, filesService.downloadProfileFile(1, Board.getUser().getUserProfileId()));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
@@ -132,7 +150,13 @@ public class UserService {
         Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 2);
         List<BoardScrap> myBoardScrapMentor = boardScrapRepository.findByUser(userProfile.get());
         return myBoardScrapMentor.stream()
-                .map(BoardScrapDto::new)
+                .map(Board -> {
+                    try {
+                        return new BoardScrapDto(Board, filesService.downloadProfileFile(1, Board.getUser().getUserProfileId()));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
@@ -325,7 +349,7 @@ public class UserService {
         user.setChecks(0);
         List<Push> myPush = pushRepository.findByUser(user);
         return myPush.stream()
-                .map(pushdata -> new PushResponseDto(pushdata, selectRepos(pushdata.getType(),pushdata.getTypeId())))
+                .map(pushdata -> new PushResponseDto(pushdata, selectRepos(pushdata.getType(), pushdata.getTypeId())))
                 .collect(Collectors.toList());
     }
 
