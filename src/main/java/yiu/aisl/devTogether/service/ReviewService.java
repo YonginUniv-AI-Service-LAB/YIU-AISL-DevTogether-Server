@@ -119,14 +119,11 @@ public class ReviewService {
     //리뷰 작성
     public Boolean creatreview(String email, ReviewRequestDto.creatDto request, Integer role) throws Exception {
 
-        System.out.println("컨트롤러 입장");
-        System.out.println("400통과전 입력  " + request.contents + "  contents: " + request.contents + "  별점 :  " + request.star1 + request.star2 + request.star3);
         //400: 데이터 미입력
         if (request.contents == null || request.matchingId == null ||
                 request.star1 == null || request.star2 == null || request.star3 == null) {
             throw new CustomException(ErrorCode.INSUFFICIENT_DATA);
         }
-        System.out.println("400 통과:: " + request.contents + "  contents: " + request.contents + "  별점 :  " + request.star1 + request.star2 + request.star3);
 
         //404 : 매칭 아이디 없음
         Matching matching = findByMachingId(request.matchingId);
@@ -140,8 +137,6 @@ public class ReviewService {
         Long profileId = userProfile.getUserProfileId();
         Long mathingId = null;
         boolean flag = false;
-        // 매칭 한 유저가 맞는지 확인 코드
-
 
         //매칭 아이디 유저와 접속하는 유저 판별 및 리뷰 작성 유무 반별
         if (role == 1) {
@@ -162,21 +157,66 @@ public class ReviewService {
         // N일 지나기 전 true
         if (ChronoUnit.DAYS.between(endAt, now) <= 7) {
             try {
-                Review review = Review.builder()
-                        .matchingId(matching)
-                        .contents(request.getContents())
-                        .hide(false)
-                        .category(role)
-                        .star1(request.star1)
-                        .star2(request.star2)
-                        .star3(request.star3)
-                        .build();
-                reviewRepository.save(review);
+                Matching matchingToUpdate = matchingRepository.findByMatchingId(request.matchingId).orElseThrow(()
+                        -> new CustomException(ErrorCode.NOT_EXIST_ID));
+                Integer num = matchingToUpdate.getCheckReview();
+                if (num == 0) {//둘다 작성 가능
+                    if (role == 1) {//멘토 작성 해야됨
+                        Review review = Review.builder()
+                                .matchingId(matching)
+                                .contents(request.getContents())
+                                .hide(false)
+                                .category(role)
+                                .star1(request.star1)
+                                .star2(request.star2)
+                                .star3(request.star3)
+                                .build();
+                        reviewRepository.save(review);
+                        num = 1;
+                    } else {//멘티 작성 해야됨
+                        Review review = Review.builder()
+                                .matchingId(matching)
+                                .contents(request.getContents())
+                                .hide(false)
+                                .category(role)
+                                .star1(request.star1)
+                                .star2(request.star2)
+                                .star3(request.star3)
+                                .build();
+                        reviewRepository.save(review);
+                        num = 2;
+                    }
+                } else if (num == 1) {//멘티 작성 해야됨
+                    Review review = Review.builder()
+                            .matchingId(matching)
+                            .contents(request.getContents())
+                            .hide(false)
+                            .category(role)
+                            .star1(request.star1)
+                            .star2(request.star2)
+                            .star3(request.star3)
+                            .build();
+                    reviewRepository.save(review);
+                    num = 3;
+                } else if (num == 2) {//멘토 작성 해야됨
+                    Review review = Review.builder()
+                            .matchingId(matching)
+                            .contents(request.getContents())
+                            .hide(false)
+                            .category(role)
+                            .star1(request.star1)
+                            .star2(request.star2)
+                            .star3(request.star3)
+                            .build();
+                    reviewRepository.save(review);
+                    num = 3;
+                } else {//num==3 둘다 작성 했음
+                    throw new CustomException(ErrorCode.DUPLICATE);
+                }
+                matchingToUpdate.setCheckReview(num);
+                matchingRepository.save(matchingToUpdate);
 
-                Matching matching1 = Matching.builder()
-                        .checkReview(2)
-                        .build();
-                matchingRepository.save(matching1);
+
                 return true;
             } catch (Exception e) {
                 throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
