@@ -36,6 +36,29 @@ public class MatchingResponseDto {
     private LocalDateTime updatedAt;
     private LocalDateTime endedAt;
 
+    public MatchingResponseDto(Matching matching) {
+        this.matchingId = matching.getMatchingId();
+        this.checkReview = matching.getCheckReview();
+        this.mentor = matching.getMentor().getUserProfileId();
+        this.mentee = matching.getMentee().getUserProfileId();
+        this.status = matching.getStatus();
+        this.subject1 = matching.getSubject1();
+        this.subject2 = matching.getSubject2();
+        this.subject3 = matching.getSubject3();
+        this.subject4 = matching.getSubject4();
+        this.subject5 = matching.getSubject5();
+        this.tutoringFee = matching.getTutoringFee();
+        this.contents = matching.getContents();
+        this.method = matching.getMethod();
+        this.schedule = matching.getSchedule();
+        this.location1 = matching.getLocation1();
+        this.location2 = matching.getLocation2();
+        this.location3 = matching.getLocation3();
+        this.createAt = matching.getCreatedAt();
+        this.updatedAt = matching.getUpdatedAt();
+        this.endedAt = matching.getEndedAt();
+    }
+
     public static MatchingResponseDto GetMatchingDTO(Matching matching) {
         return new MatchingResponseDto(
                 matching.getMatchingId(),
@@ -61,25 +84,4 @@ public class MatchingResponseDto {
         );
     }
 
-    public MatchingResponseDto(Matching matching) {
-        this.matchingId = matching.getMatchingId();
-        this.mentor = matching.getMentor().getUserProfileId();
-        this.mentee = matching.getMentee().getUserProfileId();
-        this.status = matching.getStatus();
-        this.subject1 = matching.getSubject1();
-        this.subject2 = matching.getSubject2();
-        this.subject3 = matching.getSubject3();
-        this.subject4 = matching.getSubject4();
-        this.subject5 = matching.getSubject5();
-        this.tutoringFee = matching.getTutoringFee();
-        this.contents = matching.getContents();
-        this.method = matching.getMethod();
-        this.schedule = matching.getSchedule();
-        this.location1 = matching.getLocation1();
-        this.location2 = matching.getLocation2();
-        this.location3 = matching.getLocation3();
-        this.createAt = matching.getCreatedAt();
-        this.updatedAt = matching.getUpdatedAt();
-        this.endedAt = matching.getEndedAt();
-    }
 }

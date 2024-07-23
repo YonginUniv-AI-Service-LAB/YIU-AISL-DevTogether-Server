@@ -190,6 +190,7 @@ public class UserService {
         Optional<UserProfile> userProfile = userProfileRepository.findByUserIdAndRole(user, 1);
 
         List<Matching> myMentee = matchingRepository.findByMentor(userProfile);
+        System.out.println(myMentee);
         return myMentee.stream()
                 .map(MatchingResponseDto::new)
                 .collect(Collectors.toList());
