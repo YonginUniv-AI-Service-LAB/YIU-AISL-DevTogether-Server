@@ -203,11 +203,12 @@ public class FilesService {
         }
 
     }
+
     public FilesResponseDto downloadProfileFile(Integer type, Long typeId) throws Exception {
 
 
         try {
-            List<Files> filesList  = filesRepository.findByTypeAndTypeId(type,typeId);
+            List<Files> filesList = filesRepository.findByTypeAndTypeId(type, typeId);
             Files files = filesList.get(0);
             File file = new File(files.getPath());
             System.out.println(file);
@@ -234,6 +235,7 @@ public class FilesService {
         }
 
     }
+
     //파일 원본 이름 추출
     public String getFileName(MultipartFile file) {
         return file.getOriginalFilename();

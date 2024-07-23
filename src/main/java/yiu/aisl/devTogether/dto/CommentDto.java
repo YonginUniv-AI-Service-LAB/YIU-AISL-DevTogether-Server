@@ -39,11 +39,11 @@ public class CommentDto {
                 filesResponseDto
         );
         this.boardId = comment.getBoard().getBoardId();
-        this.commentId =comment.getCommentId();
+        this.commentId = comment.getCommentId();
         this.contents = comment.getContents();
         this.userProfileId = userProfileDto;
         this.likeCount = (long) comment.getLikes().size();
-        this.likePeople= comment.getLikes().stream()
+        this.likePeople = comment.getLikes().stream()
                 .map(likes -> likes.getUserid().getUserProfileId())
                 .collect(Collectors.toList());
         this.createAt = comment.getCreatedAt();

@@ -29,7 +29,8 @@ public class BoardDto {
     private Integer countComment;
     private List<Long> likePeople;
     private List<Long> scrapPeople;
-    public static BoardDto getboardDto(Board board, FilesResponseDto filesResponseDto, FilesResponseDto commentFilesResponseDto) {
+
+    public static BoardDto getboardDto(Board board, FilesResponseDto filesResponseDto, FilesService filesService) {
         UserProfile userProfile = board.getUserProfile();
         UserProfileResponseDto2 userProfileDto = new UserProfileResponseDto2(
                 userProfile.getUserProfileId(),
@@ -52,7 +53,18 @@ public class BoardDto {
                 .filesList(board.getFilesList())
                 .likeCount(board.getLikes().size())
                 .comments(board.getComments().stream()
-                        .map(s->new CommentDto(s,commentFilesResponseDto))
+                        .map(s -> {
+                            FilesResponseDto filesResponseDto1 = null;
+                            if (filesService != null && s.getUserProfile().getFiles()) {
+                                try {
+                                    filesResponseDto1 = filesService.downloadProfileFile(1, s.getUserProfile().getUserProfileId());
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            return new CommentDto(s, filesResponseDto1);
+
+                        })
                         .collect(Collectors.toList()))
                 .countComment(board.getComments().size())
                 .likePeople(board.getLikes().stream()

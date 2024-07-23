@@ -37,12 +37,12 @@ public class BoardService {
     //게시판 전체 조회
     public List<BoardDto> getListAll() throws Exception {
         try {
-
+            System.out.println(filesService);
             List<Board> board = boardRepository.findAll();
             List<BoardDto> getList = new ArrayList<>();
             board.forEach(s -> {
                 try {
-                    getList.add(BoardDto.getboardDto(s, filesService.downloadProfileFile(1, s.getUserProfile().getUserProfileId()),null));
+                    getList.add(BoardDto.getboardDto(s, filesService.downloadProfileFile(1, s.getUserProfile().getUserProfileId()), null));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -67,9 +67,8 @@ public class BoardService {
         Board board = boardRepository.findByBoardId(request.getBoardId()).orElseThrow(() -> {
             throw new CustomException(ErrorCode.NOT_EXIST_ID);
         });
-
         try {
-            BoardDto response = BoardDto.getboardDto(board, filesService.downloadProfileFile(1, board.getUserProfile().getUserProfileId()), null);
+            BoardDto response = BoardDto.getboardDto(board, filesService.downloadProfileFile(1, board.getUserProfile().getUserProfileId()), filesService);
 
             if (board.getFiles()) {
                 List<FilesResponseDto> filesList = filesService.getFiles(2, board.getBoardId());

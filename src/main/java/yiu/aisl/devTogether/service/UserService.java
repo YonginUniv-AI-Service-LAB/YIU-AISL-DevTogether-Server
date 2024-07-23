@@ -108,7 +108,7 @@ public class UserService {
         return myBoards.stream()
                 .map(board -> {
                     try {
-                        return BoardDto.getboardDto(board, filesService.downloadProfileFile(1, board.getUserProfile().getUserProfileId()),null);
+                        return BoardDto.getboardDto(board, filesService.downloadProfileFile(1, board.getUserProfile().getUserProfileId()), null);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
