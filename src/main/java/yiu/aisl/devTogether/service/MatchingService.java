@@ -33,7 +33,7 @@ public class MatchingService {
     private final MatchingScrapRepository matchingScrapRepository;
     private final PushRepository pushRepository;
     private final FilesService filesService;
-
+    private final ReviewService reviewService;
     //멘토 조회(멘티가 멘토 조회)
     public Object mentorList(CustomUserDetails userDetails) {
         List<UserProfile> userProfiles = userProfileRepository.findByRole(1);
@@ -50,7 +50,12 @@ public class MatchingService {
                     }
                     // 스크랩 여부를 확인하여 1 또는 0으로 설정
                     Integer scrap = matchingScrapRepository.findByUserAndUserProfileAndStatus(userDetails.getUser(), userProfile, 1).isPresent() ? 1 : 0;
-                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap, imgDto);
+
+                    try {
+                        return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap, imgDto, reviewService.getReceive(userProfile.getUser().getEmail(),1));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .collect(Collectors.toList());
     }
@@ -72,7 +77,12 @@ public class MatchingService {
                     }
                     // 스크랩 여부를 확인하여 1 또는 0으로 설정
                     Integer scrap = matchingScrapRepository.findByUserAndUserProfileAndStatus(userDetails.getUser(), userProfile, 2).isPresent() ? 1 : 0;
-                    return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap, imgDto);
+
+                    try {
+                        return new ProfileResponseDto(userProfile, userProfile.getUser(), scrap, imgDto, reviewService.getReceive(userProfile.getUser().getEmail(),2));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 })
                 .collect(Collectors.toList());
     }
