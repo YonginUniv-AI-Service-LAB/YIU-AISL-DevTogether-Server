@@ -32,7 +32,7 @@ public class UserProfile {
     @Column
     private Integer role;
 
-    @Column(nullable = false, length = 20)
+    @Column( length = 20)
     private String nickname;
 
 
